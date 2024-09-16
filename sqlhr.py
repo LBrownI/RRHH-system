@@ -57,9 +57,26 @@ def hrdb():
 
         CREATE TABLE Prevision (
             IdPrevision INTEGER PRIMARY KEY AUTOINCREMENT,
-            NombrePrevision VARCHAR(100),  -- Type (e.g., Isapre, Fonasa)
-            TipoPrevision VARCHAR(50),
-            PlanSalud DECIMAL(10,2)  -- Monetary value of the health plan
+            NombrePrevision VARCHAR(100),  -- Generic health plan name (e.g., Public or Private)
+            TipoPrevision VARCHAR(50),  -- Either "Fonasa" or "Isapre"
+            IdFonasa INTEGER,  -- Foreign key to the Fonasa table (nullable)
+            IdIsapre INTEGER,  -- Foreign key to the Isapre table (nullable)
+            PlanSalud DECIMAL(10,2),  -- Monetary value of the health plan
+            FOREIGN KEY (IdFonasa) REFERENCES Fonasa(IdFonasa),
+            FOREIGN KEY (IdIsapre) REFERENCES Isapre(IdIsapre)
+        );
+
+        CREATE TABLE Fonasa (
+            IdFonasa INTEGER PRIMARY KEY AUTOINCREMENT,
+            GrupoFonasa VARCHAR(50),  -- Fonasa group
+            Cobertura DECIMAL(5,2)  -- Coverage percentage
+        );
+        
+        CREATE TABLE Isapre (
+            IdIsapre INTEGER PRIMARY KEY AUTOINCREMENT,
+            NombreIsapre VARCHAR(100),  -- Isapre company name
+            PlanPrivado DECIMAL(10,2),  -- Private insurance plan value
+            CoberturaPrivada DECIMAL(5,2)  -- Private coverage percentage
         );
 
         CREATE TABLE Colaborador (
