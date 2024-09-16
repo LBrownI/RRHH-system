@@ -44,7 +44,9 @@ def hrdb():
         CREATE TABLE Cargo (
             IdCargo INTEGER PRIMARY KEY AUTOINCREMENT,
             NombreCargo VARCHAR(100),
-            Descripcion VARCHAR(255)
+            Descripcion VARCHAR(255),
+            IdDepartamento INTEGER,
+            FOREIGN KEY (IdDepartamento) REFERENCES Departamento(IdDepartamento)
         );
 
         CREATE TABLE AFP (
@@ -68,7 +70,9 @@ def hrdb():
             FechaIngreso DATE,  -- Date of employment start
             Telefono VARCHAR(20),
             Salario DECIMAL(10,2),  -- Salary in local currency
-            Nacionalidad VARCHAR(50)
+            Nacionalidad VARCHAR(50),
+            IdDepartamento INTEGER,  -- Relates Colaborador to Departamento
+            FOREIGN KEY (IdDepartamento) REFERENCES Departamento(IdDepartamento)
         );
 
         CREATE TABLE ColaboradorCargo (
@@ -96,7 +100,6 @@ def hrdb():
             FechaPago DATE,  -- Payment date
             MontoBruto DECIMAL(10,2),  -- Gross amount before deductions
             Impuesto DECIMAL(5,2),  -- Tax percentage
-            Deducciones DECIMAL(10,2),  -- Deductions from salary
             MontoLiquido DECIMAL(10,2),  -- Net amount after all deductions
             RUT_Colaborador VARCHAR(20),
             IdAFP INTEGER,  -- Foreign key to AFP table
