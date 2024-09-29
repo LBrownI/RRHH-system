@@ -7,7 +7,7 @@ from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-config = {'host': 'localhost', 'database_name': 'mycardb', 'user': 'root', 'password': 'rootpass'}
+config = {'host': 'localhost', 'database_name': 'hr', 'user': 'root', 'password': 'rootpass'}
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
 
 with engine.connect() as conn:
@@ -196,36 +196,54 @@ session = Session()
 
 # Insert data into Empresa table
 empresa_data = [
-    {'id': 1, 'nombre': 'Empresa A', 'direccion': '123 Main St', 'telefono': '555-1234', 'giro': 'Tech'},
-    {'id': 2, 'nombre': 'Empresa B', 'direccion': '456 Market Ave', 'telefono': '555-5678', 'giro': 'Finance'},
-    {'id': 3, 'nombre': 'Empresa C', 'direccion': '789 Broadway Blvd', 'telefono': '555-9101', 'giro': 'Health'},
-    {'id': 4, 'nombre': 'Empresa D', 'direccion': '321 Elm St', 'telefono': '555-1123', 'giro': 'Education'},
-    {'id': 5, 'nombre': 'Empresa E', 'direccion': '654 Pine Rd', 'telefono': '555-1415', 'giro': 'Retail'}
+    {'id': 1, 'rut': '61.234.567-8', 'nombre': 'Empresa A', 'direccion': '123 Main St', 'telefono': '555-1234', 'giro': 'Tech'},
+    {'id': 2, 'rut': '62.234.567-9', 'nombre': 'Empresa B', 'direccion': '456 Market Ave', 'telefono': '555-5678', 'giro': 'Finance'},
+    {'id': 3, 'rut': '63.234.567-0', 'nombre': 'Empresa C', 'direccion': '789 Broadway Blvd', 'telefono': '555-9101', 'giro': 'Health'},
+    {'id': 4, 'rut': '64.234.567-1', 'nombre': 'Empresa D', 'direccion': '321 Elm St', 'telefono': '555-1123', 'giro': 'Education'},
+    {'id': 5, 'rut': '65.234.567-2', 'nombre': 'Empresa E', 'direccion': '654 Pine Rd', 'telefono': '555-1415', 'giro': 'Retail'}
 ]
 
 for data in empresa_data:
     empresa = Empresa(**data)
     session.add(empresa)
-    session.commit()
+session.commit()
 
 colaborador_data = [
-    {'id': 1, 'nombre': 'Juan', 'apellido': 'Perez', 'fecha_nacimiento': date(1980, 5, 12), 'fecha_ingreso': date(2020, 1, 15), 'telefono': '555-2345', 'salario': 2000.00, 'nacionalidad': 'Chilena'},
-    {'id': 2, 'nombre': 'Maria', 'apellido': 'Gonzalez', 'fecha_nacimiento': date(1985, 9, 22), 'fecha_ingreso': date(2019, 3, 10), 'telefono': '555-6789', 'salario': 2500.00, 'nacionalidad': 'Chilena'},
-    {'id': 3, 'nombre': 'Carlos', 'apellido': 'Sanchez', 'fecha_nacimiento': date(1990, 7, 18), 'fecha_ingreso': date(2021, 6, 5), 'telefono': '555-9102', 'salario': 1800.00, 'nacionalidad': 'Chilena'},
-    {'id': 4, 'nombre': 'Ana', 'apellido': 'Rodriguez', 'fecha_nacimiento': date(1992, 11, 2), 'fecha_ingreso': date(2018, 9, 25), 'telefono': '555-1124', 'salario': 2300.00, 'nacionalidad': 'Chilena'},
-    {'id': 5, 'nombre': 'Luis', 'apellido': 'Torres', 'fecha_nacimiento': date(1995, 2, 15), 'fecha_ingreso': date(2022, 2, 1), 'telefono': '555-1416', 'salario': 2100.00, 'nacionalidad': 'Chilena'},
-    {'id': 6, 'nombre': 'Laura', 'apellido': 'Ramirez', 'fecha_nacimiento': date(1997, 6, 25), 'fecha_ingreso': date(2020, 8, 14), 'telefono': '555-1718', 'salario': 2400.00, 'nacionalidad': 'Chilena'},
-    {'id': 7, 'nombre': 'Roberto', 'apellido': 'Flores', 'fecha_nacimiento': date(1987, 4, 8), 'fecha_ingreso': date(2017, 10, 12), 'telefono': '555-1920', 'salario': 2200.00, 'nacionalidad': 'Chilena'},
-    {'id': 8, 'nombre': 'Fernanda', 'apellido': 'Morales', 'fecha_nacimiento': date(1988, 1, 3), 'fecha_ingreso': date(2021, 4, 8), 'telefono': '555-2021', 'salario': 2700.00, 'nacionalidad': 'Chilena'},
-    {'id': 9, 'nombre': 'Jorge', 'apellido': 'Vega', 'fecha_nacimiento': date(1986, 12, 20), 'fecha_ingreso': date(2020, 3, 14), 'telefono': '555-2223', 'salario': 2600.00, 'nacionalidad': 'Chilena'},
-    {'id': 10, 'nombre': 'Claudia', 'apellido': 'Pizarro', 'fecha_nacimiento': date(1983, 10, 30), 'fecha_ingreso': date(2016, 7, 3), 'telefono': '555-2324', 'salario': 1900.00, 'nacionalidad': 'Chilena'}
+    {'id': 1, 'rut': '12.345.678-9', 'nombre': 'Juan', 'apellido': 'Perez', 'fecha_nacimiento': date(1980, 5, 12), 'fecha_ingreso': date(2020, 1, 15), 'telefono': '555-2345', 'salario': 2000.00, 'nacionalidad': 'Chilena'},
+    {'id': 2, 'rut': '12.345.678-1', 'nombre': 'Maria', 'apellido': 'Gonzalez', 'fecha_nacimiento': date(1985, 9, 22), 'fecha_ingreso': date(2019, 3, 10), 'telefono': '555-6789', 'salario': 2500.00, 'nacionalidad': 'Chilena'},
+    {'id': 3, 'rut': '13.345.678-2', 'nombre': 'Carlos', 'apellido': 'Sanchez', 'fecha_nacimiento': date(1990, 7, 18), 'fecha_ingreso': date(2021, 6, 5), 'telefono': '555-9102', 'salario': 1800.00, 'nacionalidad': 'Chilena'},
+    {'id': 4, 'rut': '14.345.678-3', 'nombre': 'Ana', 'apellido': 'Rodriguez', 'fecha_nacimiento': date(1992, 11, 2), 'fecha_ingreso': date(2018, 9, 25), 'telefono': '555-1124', 'salario': 2300.00, 'nacionalidad': 'Chilena'},
+    {'id': 5, 'rut': '18.145.678-4', 'nombre': 'Luis', 'apellido': 'Torres', 'fecha_nacimiento': date(1995, 2, 15), 'fecha_ingreso': date(2022, 2, 1), 'telefono': '555-1416', 'salario': 2100.00, 'nacionalidad': 'Chilena'},
+    {'id': 6, 'rut': '16.245.678-5', 'nombre': 'Laura', 'apellido': 'Ramirez', 'fecha_nacimiento': date(1997, 6, 25), 'fecha_ingreso': date(2020, 8, 14), 'telefono': '555-1718', 'salario': 2400.00, 'nacionalidad': 'Chilena'},
+    {'id': 7, 'rut': '16.645.678-6', 'nombre': 'Roberto', 'apellido': 'Flores', 'fecha_nacimiento': date(1987, 4, 8), 'fecha_ingreso': date(2017, 10, 12), 'telefono': '555-1920', 'salario': 2200.00, 'nacionalidad': 'Chilena'},
+    {'id': 8, 'rut': '12.945.678-7', 'nombre': 'Fernanda', 'apellido': 'Morales', 'fecha_nacimiento': date(1988, 1, 3), 'fecha_ingreso': date(2021, 4, 8), 'telefono': '555-2021', 'salario': 2700.00, 'nacionalidad': 'Chilena'},
+    {'id': 9, 'rut': '14.745.678-8', 'nombre': 'Jorge', 'apellido': 'Vega', 'fecha_nacimiento': date(1986, 12, 20), 'fecha_ingreso': date(2020, 3, 14), 'telefono': '555-2223', 'salario': 2600.00, 'nacionalidad': 'Chilena'},
+    {'id': 10, 'rut': '10.345.678-K', 'nombre': 'Claudia', 'apellido': 'Pizarro', 'fecha_nacimiento': date(1983, 10, 30), 'fecha_ingreso': date(2016, 7, 3), 'telefono': '555-2324', 'salario': 1900.00, 'nacionalidad': 'Chilena'},
+    {'id': 11, 'rut': '12.987.654-3', 'nombre': 'Jean', 'apellido': 'Baptiste', 'fecha_nacimiento': date(1990, 3, 18), 'fecha_ingreso': date(2021, 7, 12), 'telefono': '555-3456', 'salario': 2100.00, 'nacionalidad': 'Haitiana'}
 ]
 
 for data in colaborador_data:
     colaborador = Colaborador(**data)
     session.add(colaborador)
-    session.commit()
+session.commit()
 
+# Insert data into AFP table
+afp_data = [
+    {'id': 1, 'nombre': 'AFP Capital', 'comision_porcentaje': 1.44},
+    {'id': 2, 'nombre': 'AFP Cuprum', 'comision_porcentaje': 1.44},
+    {'id': 3, 'nombre': 'AFP Habitat', 'comision_porcentaje': 1.27},
+    {'id': 4, 'nombre': 'AFP Modelo', 'comision_porcentaje': 0.58},
+    {'id': 5, 'nombre': 'AFP Planvital', 'comision_porcentaje': 1.16},
+    {'id': 6, 'nombre': 'AFP Provida', 'comision_porcentaje': 1.45},
+    {'id': 7, 'nombre': 'AFP Uno', 'comision_porcentaje': 0.49}
+]
+
+for data in afp_data:
+    afp = AFP(**data)
+    session.add(afp)
+session.commit()
+
+# Insert user and password into User table
 new_user = User(username='LBrownI')
 new_user.set_password('Ingreso_07')
 session.add(new_user)
