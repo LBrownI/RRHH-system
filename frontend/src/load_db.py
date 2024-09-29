@@ -3,6 +3,8 @@ from sqlalchemy import text
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
+from datetime import date
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 config = {'host': 'localhost', 'database_name': 'mycardb', 'user': 'root', 'password': 'rootpass'}
@@ -26,6 +28,7 @@ class Empresa(Base):
 class Colaborador(Base):
     __tablename__ = 'Colaborador'
     id = Column(Integer, primary_key=True)
+    rut = 
     nombre = Column(String(50))
     apellido = Column(String(50))
     fecha_nacimiento = Column(Date)
@@ -39,22 +42,6 @@ class Colaborador(Base):
     capacitaciones = relationship('Capacitacion', back_populates='colaborador')
     remuneraciones = relationship('Remuneracion', back_populates='colaborador')
     cargos = relationship('Cargo', secondary='ColaboradorCargo', back_populates='colaboradores')
-
-
-# AFP model
-class AFP(Base):
-    __tablename__ = 'AFP'
-    id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    comision_porcentaje = Column(DECIMAL(5, 2))
-    remuneraciones = relationship('Remuneracion', back_populates='afp')
-
-# Departamento model
-class Departamento(Base):
-    __tablename__ = 'Departamento'
-    id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    contratos = relationship('Contrato', back_populates='departamento')
 
 # Cargo model
 class Cargo(Base):
@@ -70,6 +57,20 @@ class ColaboradorCargo(Base):
     colaborador_id = Column(Integer, ForeignKey('Colaborador.id'), primary_key=True)
     cargo_id = Column(Integer, ForeignKey('Cargo.id'), primary_key=True)
     
+# AFP model
+class AFP(Base):
+    __tablename__ = 'AFP'
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String(100))
+    comision_porcentaje = Column(DECIMAL(5, 2))
+    remuneraciones = relationship('Remuneracion', back_populates='afp')
+
+# Departamento model
+class Departamento(Base):
+    __tablename__ = 'Departamento'
+    id = Column(Integer, primary_key=True)
+    nombre = Column(String(100))
+    contratos = relationship('Contrato', back_populates='departamento')
 
 # Vacaciones model
 class Vacaciones(Base):
@@ -168,6 +169,21 @@ class Contrato(Base):
     colaborador = relationship('Colaborador', back_populates='contratos')
     departamento = relationship('Departamento', back_populates='contratos')
 
+class User(Base):
+    __tablename__ = 'User'
+    id = Column(Integer, primary_key=True)
+    username = Column(String(100), unique=True, nullable=False)
+    password_hash = Column(String(255), nullable=False)
+    
+    # Method to set hashed password
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+    
+    # Method to check password
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
 # Create the tables in the database
 Base.metadata.create_all(engine)
 
@@ -177,35 +193,41 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Insert data into Model table
-company_data = [
-    {'ModelID': 1, 'Make': 'Toyota', 'ModelName': 'Camry'},
-    {'ModelID': 2, 'Make': 'Honda', 'ModelName': 'Civic'},
-    {'ModelID': 3, 'Make': 'Ford', 'ModelName': 'Mustang'}
+# Insert data into Empresa table
+empresa_data = [
+    {'id': 1, 'nombre': 'Empresa A', 'direccion': '123 Main St', 'telefono': '555-1234', 'giro': 'Tech'},
+    {'id': 2, 'nombre': 'Empresa B', 'direccion': '456 Market Ave', 'telefono': '555-5678', 'giro': 'Finance'},
+    {'id': 3, 'nombre': 'Empresa C', 'direccion': '789 Broadway Blvd', 'telefono': '555-9101', 'giro': 'Health'},
+    {'id': 4, 'nombre': 'Empresa D', 'direccion': '321 Elm St', 'telefono': '555-1123', 'giro': 'Education'},
+    {'id': 5, 'nombre': 'Empresa E', 'direccion': '654 Pine Rd', 'telefono': '555-1415', 'giro': 'Retail'}
 ]
-for data in company_data:
+
+for data in empresa_data:
     empresa = Empresa(**data)
     session.add(empresa)
     session.commit()
 
-# Insert data into Cars table
-car_data = [
-    {'CarID': 1, 'ModelID': 1, 'Year': 2023, 'Color': 'Silver', 'VIN': '1A2B3C4D5E', 'Mileage': 5000, 'Price': 25000.00},
-    {'CarID': 2, 'ModelID': 2, 'Year': 2022, 'Color': 'Blue', 'VIN': '6F7G8H9J0K', 'Mileage': 10000, 'Price': 20000.00},
-    {'CarID': 3, 'ModelID': 3, 'Year': 2021, 'Color': 'Red', 'VIN': '1L2M3N4O5P', 'Mileage': 15000, 'Price': 30000.00},
-    {'CarID': 4, 'ModelID': 1, 'Year': 2020, 'Color': 'Black', 'VIN': '6Q7R8S9T0U', 'Mileage': 20000, 'Price': 22000.00},
-    {'CarID': 5, 'ModelID': 2, 'Year': 2019, 'Color': 'White', 'VIN': '1V2W3X4Y5Z', 'Mileage': 25000, 'Price': 18000.00},
-    {'CarID': 6, 'ModelID': 3, 'Year': 2018, 'Color': 'Gray', 'VIN': '6A7B8C9D0E', 'Mileage': 30000, 'Price': 28000.00},
-    {'CarID': 7, 'ModelID': 1, 'Year': 2017, 'Color': 'Green', 'VIN': '1F2G3H4J5K', 'Mileage': 35000, 'Price': 15000.00},
-    {'CarID': 8, 'ModelID': 2, 'Year': 2024, 'Color': 'Pearl White', 'VIN': '6L7M8N9O0P', 'Mileage': 1000, 'Price': 23000.00},
-    {'CarID': 9, 'ModelID': 3, 'Year': 2023, 'Color': 'Burgundy', 'VIN': '1Q2R3S4T5U', 'Mileage': 3000, 'Price': 32000.00},
-    {'CarID': 10, 'ModelID': 1, 'Year': 2022, 'Color': 'Sand', 'VIN': '6V7W8X9Y0Z', 'Mileage': 8000, 'Price': 24000.00}
+colaborador_data = [
+    {'id': 1, 'nombre': 'Juan', 'apellido': 'Perez', 'fecha_nacimiento': date(1980, 5, 12), 'fecha_ingreso': date(2020, 1, 15), 'telefono': '555-2345', 'salario': 2000.00, 'nacionalidad': 'Chilena'},
+    {'id': 2, 'nombre': 'Maria', 'apellido': 'Gonzalez', 'fecha_nacimiento': date(1985, 9, 22), 'fecha_ingreso': date(2019, 3, 10), 'telefono': '555-6789', 'salario': 2500.00, 'nacionalidad': 'Chilena'},
+    {'id': 3, 'nombre': 'Carlos', 'apellido': 'Sanchez', 'fecha_nacimiento': date(1990, 7, 18), 'fecha_ingreso': date(2021, 6, 5), 'telefono': '555-9102', 'salario': 1800.00, 'nacionalidad': 'Chilena'},
+    {'id': 4, 'nombre': 'Ana', 'apellido': 'Rodriguez', 'fecha_nacimiento': date(1992, 11, 2), 'fecha_ingreso': date(2018, 9, 25), 'telefono': '555-1124', 'salario': 2300.00, 'nacionalidad': 'Chilena'},
+    {'id': 5, 'nombre': 'Luis', 'apellido': 'Torres', 'fecha_nacimiento': date(1995, 2, 15), 'fecha_ingreso': date(2022, 2, 1), 'telefono': '555-1416', 'salario': 2100.00, 'nacionalidad': 'Chilena'},
+    {'id': 6, 'nombre': 'Laura', 'apellido': 'Ramirez', 'fecha_nacimiento': date(1997, 6, 25), 'fecha_ingreso': date(2020, 8, 14), 'telefono': '555-1718', 'salario': 2400.00, 'nacionalidad': 'Chilena'},
+    {'id': 7, 'nombre': 'Roberto', 'apellido': 'Flores', 'fecha_nacimiento': date(1987, 4, 8), 'fecha_ingreso': date(2017, 10, 12), 'telefono': '555-1920', 'salario': 2200.00, 'nacionalidad': 'Chilena'},
+    {'id': 8, 'nombre': 'Fernanda', 'apellido': 'Morales', 'fecha_nacimiento': date(1988, 1, 3), 'fecha_ingreso': date(2021, 4, 8), 'telefono': '555-2021', 'salario': 2700.00, 'nacionalidad': 'Chilena'},
+    {'id': 9, 'nombre': 'Jorge', 'apellido': 'Vega', 'fecha_nacimiento': date(1986, 12, 20), 'fecha_ingreso': date(2020, 3, 14), 'telefono': '555-2223', 'salario': 2600.00, 'nacionalidad': 'Chilena'},
+    {'id': 10, 'nombre': 'Claudia', 'apellido': 'Pizarro', 'fecha_nacimiento': date(1983, 10, 30), 'fecha_ingreso': date(2016, 7, 3), 'telefono': '555-2324', 'salario': 1900.00, 'nacionalidad': 'Chilena'}
 ]
-for data in car_data:
-    car = Car(**data)
-    session.add(car)
 
-# Commit the changes to the database
+for data in colaborador_data:
+    colaborador = Colaborador(**data)
+    session.add(colaborador)
+    session.commit()
+
+new_user = User(username='LBrownI')
+new_user.set_password('Ingreso_07')
+session.add(new_user)
 session.commit()
 
 # Close the session
