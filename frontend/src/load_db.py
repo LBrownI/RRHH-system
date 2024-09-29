@@ -218,7 +218,7 @@ colaborador_data = [
     {'id': 7, 'rut': '16.645.678-6', 'nombre': 'Roberto', 'apellido': 'Flores', 'fecha_nacimiento': date(1987, 4, 8), 'fecha_ingreso': date(2017, 10, 12), 'telefono': '555-1920', 'salario': 2200.00, 'nacionalidad': 'Chilena'},
     {'id': 8, 'rut': '12.945.678-7', 'nombre': 'Fernanda', 'apellido': 'Morales', 'fecha_nacimiento': date(1988, 1, 3), 'fecha_ingreso': date(2021, 4, 8), 'telefono': '555-2021', 'salario': 2700.00, 'nacionalidad': 'Chilena'},
     {'id': 9, 'rut': '14.745.678-8', 'nombre': 'Jorge', 'apellido': 'Vega', 'fecha_nacimiento': date(1986, 12, 20), 'fecha_ingreso': date(2020, 3, 14), 'telefono': '555-2223', 'salario': 2600.00, 'nacionalidad': 'Chilena'},
-    {'id': 10, 'rut': '10.345.678-K', 'nombre': 'Claudia', 'apellido': 'Pizarro', 'fecha_nacimiento': date(1983, 10, 30), 'fecha_ingreso': date(2016, 7, 3), 'telefono': '555-2324', 'salario': 1900.00, 'nacionalidad': 'Chilena'}
+    {'id': 10, 'rut': '10.345.678-K', 'nombre': 'Claudia', 'apellido': 'Pizarro', 'fecha_nacimiento': date(1983, 10, 30), 'fecha_ingreso': date(2016, 7, 3), 'telefono': '555-2324', 'salario': 1900.00, 'nacionalidad': 'Chilena'},
     {'id': 11, 'rut': '12.987.654-3', 'nombre': 'Jean', 'apellido': 'Baptiste', 'fecha_nacimiento': date(1990, 3, 18), 'fecha_ingreso': date(2021, 7, 12), 'telefono': '555-3456', 'salario': 2100.00, 'nacionalidad': 'Haitiana'}
 ]
 
