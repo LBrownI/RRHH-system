@@ -19,6 +19,7 @@ Base = declarative_base()
 class Empresa(Base):
     __tablename__ = 'Empresa'
     id = Column(Integer, primary_key=True)
+    rut = Column(String(20))
     nombre = Column(String(100))
     direccion = Column(String(255))
     telefono = Column(String(20))
@@ -28,7 +29,7 @@ class Empresa(Base):
 class Colaborador(Base):
     __tablename__ = 'Colaborador'
     id = Column(Integer, primary_key=True)
-    rut = 
+    rut = Column(String(20))
     nombre = Column(String(50))
     apellido = Column(String(50))
     fecha_nacimiento = Column(Date)

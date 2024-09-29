@@ -1,4 +1,4 @@
-from load_db import Session, User  # Import your session and User model
+from load_db import Session, User
 
 # Function for authenticating users
 def authenticate(username, password):
