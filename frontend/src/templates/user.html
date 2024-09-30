@@ -1,31 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>User</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css')}}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/user.css')}}"
+    />
+  </head>
+  <header>
+    <div class="top-bar">
+      <input type="text" id="search-bar" placeholder="Buscar empleados..." />
+      <nav class="menu-options">
+        <a href="/opcion1">Opción 1</a>
+        <a href="/opcion2">Opción 2</a>
+        <a href="/opcion3">Opción 3</a>
+        <!-- Ícono de usuario -->
+        <a href="/user" class="user-icon">
+          <img
+            src="{{ url_for('static', filename='images/user_icon.png') }}"
+            alt="Usuario"
+          />
+        </a>
+      </nav>
+    </div>
+  </header>
+  <body>
     <div class="user-general-info-container">
-        <div class="photo">
-            <img src="{{ url_for('static', filename='images/user.png') }}" alt="user-photo">
-        </div>
-        <div class="general-info">
-            <p>name: Jhon Doe</p>
-            <p>email: jhondoe@empresa.com</p>
-            <p>phone number: 1 1111 1111</p>
-            <p>rut: 1.111.111-1</p>
-        </div>
+      <div class="photo">
+        <img
+          src="{{ url_for('static', filename='images/user.png') }}"
+          alt="user-photo"
+        />
+      </div>
+      <div class="general-info">
+        <p>name: Jhon Doe</p>
+        <p>email: jhondoe@empresa.com</p>
+        <p>phone number: 1 1111 1111</p>
+        <p>rut: 1.111.111-1</p>
+      </div>
     </div>
     <div class="aditional-info-container">
-        <div class="aditional-info">
-            <h2>Aditional info</h2>
-            <p>address: 1234, street name, city</p>
-            <p>company: company name</p>
-            <p>position: position name</p>
-            <p>salary: $1.000.000</p>
-        </div>
+      <div class="aditional-info">
+        <h2>Aditional info</h2>
+        <p>address: 1234, street name, city</p>
+        <p>company: company name</p>
+        <p>position: position name</p>
+        <p>salary: $1.000.000</p>
+      </div>
     </div>
-</body>
+  </body>
 </html>
