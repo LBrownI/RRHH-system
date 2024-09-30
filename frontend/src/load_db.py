@@ -125,6 +125,7 @@ class Remuneracion(Base):
     colaborador = relationship('Colaborador', back_populates='remuneraciones')
     afp = relationship('AFP', back_populates='remuneraciones')
     plan_salud = relationship('PlanDeSalud', back_populates='remuneraciones')
+    bonuses = relationship("Bonus", back_populates="remuneracion")
 
 class PlanDeSalud(Base):
     __tablename__ = 'PlanDeSalud'
@@ -140,22 +141,23 @@ class Fonasa(Base):
     __tablename__ = 'Fonasa'
     id = Column(Integer, primary_key=True)
     plan_salud_id = Column(Integer, ForeignKey('PlanDeSalud.id'))
-    descuento = Column(DECIMAL(5, 2))  # Different from Isapre's discount
+    descuento = Column(DECIMAL(10, 2))  # Different from Isapre's discount
     plan_salud = relationship('PlanDeSalud', back_populates='fonasa')
 
 class Isapre(Base):
     __tablename__ = 'Isapre'
     id = Column(Integer, primary_key=True)
     plan_salud_id = Column(Integer, ForeignKey('PlanDeSalud.id'))
-    descuento = Column(DECIMAL(5, 2))  # Different from Fonasa's discount
+    descuento = Column(DECIMAL(10, 2))  # Different from Fonasa's discount
     plan_salud = relationship('PlanDeSalud', back_populates='isapre')
 
 class Bonus(Base):
     __tablename__ = 'Bonus'
     id = Column(Integer, primary_key=True)
     remuneracion_id = Column(Integer, ForeignKey('Remuneracion.id'))
-    aporte = Column(DECIMAL(5, 2))  # Help for the employee for a discount in money
-    beneficio = relationship('PlanDeSalud', back_populates='isapre') # Help for the employee as a monetary aid
+    aporte = Column(DECIMAL(10, 2))  # Help for the employee for a discount in money
+    beneficio = Column(DECIMAL(10, 2)) # Help for the employee as a monetary aid
+    remuneracion = relationship("Remuneracion", back_populates="bonuses")
 
 class Contrato(Base):
     __tablename__ = 'Contrato'
