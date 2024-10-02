@@ -1,9 +1,9 @@
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
-from load_db import Session, Vacaciones, Colaborador  # Adjust the import according to your project structure
+from load_db import Session, Vacaciones, Colaborador
 
 def add_vacation_logic(colaborador_id, fecha_inicio_str, fecha_termino_str):
-    session = Session()  # Create a session
+    session = Session()
     message = ""
     
     try:
@@ -27,11 +27,11 @@ def add_vacation_logic(colaborador_id, fecha_inicio_str, fecha_termino_str):
 
         # Automatically add vacation days if a year has passed since last addition
         if years_of_service >= 1:
-            if colaborador.colaborador_antiguo:  # If the employee is old
-                colaborador.dias_acumulados += 20  # Add 20 days
+            if colaborador.colaborador_antiguo: 
+                colaborador.dias_acumulados += 20  
             else:
-                colaborador.dias_acumulados += 15  # Add 15 days
-            session.commit()  # Commit the changes to the database
+                colaborador.dias_acumulados += 15  
+            session.commit() 
 
         # Calculate the number of vacation days
         dias_acumulados = colaborador.dias_acumulados  # Assuming this field exists in Colaborador
@@ -53,7 +53,7 @@ def add_vacation_logic(colaborador_id, fecha_inicio_str, fecha_termino_str):
             fecha_termino=fecha_termino,
             dias_tomados=dias_tomados,
             dias_acumulados=updated_dias_acumulados,
-            colaborador_antiguo=colaborador.colaborador_antiguo  # Assuming you want to keep this information
+            colaborador_antiguo=colaborador.colaborador_antiguo
         )
         session.add(new_vacation)
         session.commit()
