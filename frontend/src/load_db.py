@@ -1,3 +1,4 @@
+import os
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DECIMAL, Date, Text, Boolean
 from sqlalchemy import text
 from sqlalchemy.orm import relationship
@@ -6,9 +7,17 @@ from sqlalchemy.orm import sessionmaker
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 
+# Load the MySQL root password from environment variables
+mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
+# You can set it up by doing: export MYSQL_ROOT_PASSWORD=your_secure_password
 
-config = {'host': 'localhost', 'database_name': 'hr', 'user': 'root', 'password': 'rootpass'}
+config = {'host': 'localhost',
+          'database_name': 'hr',
+          'user': 'root',
+          'password': mysql_root_password}
+
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
+# engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
 
 with engine.connect() as conn:
     conn.execute(text(f"CREATE DATABASE IF NOT EXISTS {config['database_name']}"))
@@ -191,7 +200,6 @@ class User(Base):
 Base.metadata.create_all(engine)
 
 
-
 # Create a session to interact with the database
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -210,6 +218,7 @@ for data in empresa_data:
     session.add(empresa)
 session.commit()
 
+# Insert data into Colaborador table
 colaborador_data = [
     {'id': 1, 'rut': '12.345.678-9', 'nombre': 'Juan', 'apellido': 'Perez', 'fecha_nacimiento': date(1980, 5, 12), 'fecha_ingreso': date(2020, 1, 15), 'telefono': '555-2345', 'salario': 2000.00, 'nacionalidad': 'Chilena'},
     {'id': 2, 'rut': '12.345.678-1', 'nombre': 'Maria', 'apellido': 'Gonzalez', 'fecha_nacimiento': date(1985, 9, 22), 'fecha_ingreso': date(2019, 3, 10), 'telefono': '555-6789', 'salario': 2500.00, 'nacionalidad': 'Chilena'},
