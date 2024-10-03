@@ -5,13 +5,9 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 # from vacation_logic import add_vacation_logic
 
 # HI, I MADE LOTS OF CHANGES, IM SURE YOU'LL READ THIS ( ͡° ͜ʖ ͡°)
-# CODE DOES NOT WORK, HELP @DANTE, @ALAN I KNOW THE add-contrato PAGE WORKS,
-# I TESTED IT BEFORE BRINGING THE WHOLE DB AND SESSION HERE I'VE TRIED STUFF BUT NOTHING SEEMS TO WORK,
-# I TRUST TOMORROW WE'LL REVISE IT BETTER
-
-# OK IT WORKS, ITS A MOCKED VERSION O THE CODE, WHICH MEANS IT'S SIMULATED/FALSE/TEMPORARY JUST TO
+# OK SO IT WORKS, ITS A MOCKED VERSION O THE CODE, WHICH MEANS IT'S SIMULATED/FALSE/TEMPORARY CODE JUST TO
 # MIMIC SOME FUNCTIONALITIES WITHOUT FULLY INTEGRATING IT. SO INSTEAD OF CONNECTING TO THE DATABASE
-# IT GENERATES FALSE RESPONSES TO TEST OUT.
+# IT GENERATES FALSE RESPONSES TO TEST OUT. THE DB IMPLEMENTATION IS COMMENTED-OUT WITH '''
 
 app = Flask(__name__)
 app.secret_key = 'magickey'
@@ -20,31 +16,31 @@ app.secret_key = 'magickey'
 # Session = sessionmaker(bind=engine)
 # session = Session()
 
-# Ruta para la página de login
+# Route for login page
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')
         
-        # Aquí puedes agregar la lógica para validar al usuario.
-        # Por ejemplo, comprobar si el usuario y la contraseña son correctos.
+        # Logic to validate user
+        # For example, checking if user and password are correct.
         
         # REVISE: https://webdamn.com/login-and-registration-with-python-flask-mysql/cl
 
-        # Si la validación es correcta, redirige al menú (index.html)
+        # If validation is correct, redirects to homepage (index.html)
         if username == 'user' and password == 'pass':  # Validación simple de ejemplo
             return redirect(url_for('menu'))
         else:
             return render_template('login.html', error="Usuario o contraseña incorrectos")
     return render_template('login.html')
 
-# Ruta para la página del menú
+# Route for menu page (homepage)
 @app.route('/menu')
 def menu():
     return render_template('index.html')
 
-# Ruta para la página del usuario (opcional)
+# Route for the colaborador (optional)
 @app.route('/colaborador')
 def user():
     return render_template('colaborador.html')
