@@ -25,9 +25,9 @@ def menu():
     return render_template('index.html')
 
 # Ruta para la página del usuario (opcional)
-@app.route('/user')
+@app.route('/colaborador')
 def user():
-    return render_template('user.html')
+    return render_template('colaborador.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
