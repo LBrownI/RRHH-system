@@ -1,9 +1,6 @@
 import os
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, DECIMAL, Date, Text, Boolean
-from sqlalchemy import text
-from sqlalchemy.orm import relationship
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey, DECIMAL, Date, Text, Boolean
+from sqlalchemy.orm import relationship, declarative_base, sessionmaker
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -206,11 +203,8 @@ session = Session()
 
 # Insert data into Empresa table
 empresa_data = [
-    {'id': 1, 'rut': '61.234.567-8', 'nombre': 'Empresa A', 'direccion': '123 Main St', 'telefono': '555-1234', 'giro': 'Tech'},
-    {'id': 2, 'rut': '62.234.567-9', 'nombre': 'Empresa B', 'direccion': '456 Market Ave', 'telefono': '555-5678', 'giro': 'Finance'},
-    {'id': 3, 'rut': '63.234.567-0', 'nombre': 'Empresa C', 'direccion': '789 Broadway Blvd', 'telefono': '555-9101', 'giro': 'Health'},
-    {'id': 4, 'rut': '64.234.567-1', 'nombre': 'Empresa D', 'direccion': '321 Elm St', 'telefono': '555-1123', 'giro': 'Education'},
-    {'id': 5, 'rut': '65.234.567-2', 'nombre': 'Empresa E', 'direccion': '654 Pine Rd', 'telefono': '555-1415', 'giro': 'Retail'}
+    {'id': 1, 'rut': '76.123.456-7', 'nombre': 'TechCorp', 'direccion': '123 Main Street', 'telefono': '555-0100', 'giro': 'Technology'},
+    {'id': 2, 'rut': '78.234.567-8', 'nombre': 'HealthSolutions', 'direccion': '456 Oak Avenue', 'telefono': '555-0200', 'giro': 'Healthcare'}
 ]
 
 for data in empresa_data:
@@ -220,18 +214,19 @@ session.commit()
 
 # Insert data into Colaborador table
 colaborador_data = [
-    {'id': 1, 'rut': '12.345.678-9', 'nombre': 'Juan', 'apellido': 'Perez', 'fecha_nacimiento': date(1980, 5, 12), 'fecha_ingreso': date(2020, 1, 15), 'telefono': '555-2345', 'salario': 2000.00, 'nacionalidad': 'Chilena'},
-    {'id': 2, 'rut': '12.345.678-1', 'nombre': 'Maria', 'apellido': 'Gonzalez', 'fecha_nacimiento': date(1985, 9, 22), 'fecha_ingreso': date(2019, 3, 10), 'telefono': '555-6789', 'salario': 2500.00, 'nacionalidad': 'Chilena'},
-    {'id': 3, 'rut': '13.345.678-2', 'nombre': 'Carlos', 'apellido': 'Sanchez', 'fecha_nacimiento': date(1990, 7, 18), 'fecha_ingreso': date(2021, 6, 5), 'telefono': '555-9102', 'salario': 1800.00, 'nacionalidad': 'Chilena'},
-    {'id': 4, 'rut': '14.345.678-3', 'nombre': 'Ana', 'apellido': 'Rodriguez', 'fecha_nacimiento': date(1992, 11, 2), 'fecha_ingreso': date(2018, 9, 25), 'telefono': '555-1124', 'salario': 2300.00, 'nacionalidad': 'Chilena'},
-    {'id': 5, 'rut': '18.145.678-4', 'nombre': 'Luis', 'apellido': 'Torres', 'fecha_nacimiento': date(1995, 2, 15), 'fecha_ingreso': date(2022, 2, 1), 'telefono': '555-1416', 'salario': 2100.00, 'nacionalidad': 'Chilena'},
-    {'id': 6, 'rut': '16.245.678-5', 'nombre': 'Laura', 'apellido': 'Ramirez', 'fecha_nacimiento': date(1997, 6, 25), 'fecha_ingreso': date(2020, 8, 14), 'telefono': '555-1718', 'salario': 2400.00, 'nacionalidad': 'Chilena'},
-    {'id': 7, 'rut': '16.645.678-6', 'nombre': 'Roberto', 'apellido': 'Flores', 'fecha_nacimiento': date(1987, 4, 8), 'fecha_ingreso': date(2017, 10, 12), 'telefono': '555-1920', 'salario': 2200.00, 'nacionalidad': 'Chilena'},
-    {'id': 8, 'rut': '12.945.678-7', 'nombre': 'Fernanda', 'apellido': 'Morales', 'fecha_nacimiento': date(1988, 1, 3), 'fecha_ingreso': date(2021, 4, 8), 'telefono': '555-2021', 'salario': 2700.00, 'nacionalidad': 'Chilena'},
-    {'id': 9, 'rut': '14.745.678-8', 'nombre': 'Jorge', 'apellido': 'Vega', 'fecha_nacimiento': date(1986, 12, 20), 'fecha_ingreso': date(2020, 3, 14), 'telefono': '555-2223', 'salario': 2600.00, 'nacionalidad': 'Chilena'},
-    {'id': 10, 'rut': '10.345.678-K', 'nombre': 'Claudia', 'apellido': 'Pizarro', 'fecha_nacimiento': date(1983, 10, 30), 'fecha_ingreso': date(2016, 7, 3), 'telefono': '555-2324', 'salario': 1900.00, 'nacionalidad': 'Chilena'},
-    {'id': 11, 'rut': '12.987.654-3', 'nombre': 'Jean', 'apellido': 'Baptiste', 'fecha_nacimiento': date(1990, 3, 18), 'fecha_ingreso': date(2021, 7, 12), 'telefono': '555-3456', 'salario': 2100.00, 'nacionalidad': 'Haitiana'}
+    {'id': 1, 'rut': '12.345.678-9', 'nombre': 'John', 'apellido': 'Smith', 'fecha_nacimiento': date(1980, 5, 12), 'fecha_ingreso': date(2020, 1, 15), 'telefono': '555-2345', 'salario': 2000.00, 'nacionalidad': 'Chilean'},
+    {'id': 2, 'rut': '12.345.678-1', 'nombre': 'Mary', 'apellido': 'Johnson', 'fecha_nacimiento': date(1985, 9, 22), 'fecha_ingreso': date(2019, 3, 10), 'telefono': '555-6789', 'salario': 2500.00, 'nacionalidad': 'Chilean'},
+    {'id': 3, 'rut': '13.345.678-2', 'nombre': 'Carlos', 'apellido': 'Williams', 'fecha_nacimiento': date(1990, 7, 18), 'fecha_ingreso': date(2021, 6, 5), 'telefono': '555-9102', 'salario': 1800.00, 'nacionalidad': 'Chilean'},
+    {'id': 4, 'rut': '14.345.678-3', 'nombre': 'Anna', 'apellido': 'Brown', 'fecha_nacimiento': date(1992, 11, 2), 'fecha_ingreso': date(2018, 9, 25), 'telefono': '555-1124', 'salario': 2300.00, 'nacionalidad': 'Chilean'},
+    {'id': 5, 'rut': '18.145.678-4', 'nombre': 'Louis', 'apellido': 'Davis', 'fecha_nacimiento': date(1995, 2, 15), 'fecha_ingreso': date(2022, 2, 1), 'telefono': '555-1416', 'salario': 2100.00, 'nacionalidad': 'Chilean'},
+    {'id': 6, 'rut': '16.245.678-5', 'nombre': 'Laura', 'apellido': 'Miller', 'fecha_nacimiento': date(1997, 6, 25), 'fecha_ingreso': date(2020, 8, 14), 'telefono': '555-1718', 'salario': 2400.00, 'nacionalidad': 'Chilean'},
+    {'id': 7, 'rut': '16.645.678-6', 'nombre': 'Robert', 'apellido': 'Wilson', 'fecha_nacimiento': date(1987, 4, 8), 'fecha_ingreso': date(2017, 10, 12), 'telefono': '555-1920', 'salario': 2200.00, 'nacionalidad': 'Chilean'},
+    {'id': 8, 'rut': '12.945.678-7', 'nombre': 'Fernanda', 'apellido': 'Taylor', 'fecha_nacimiento': date(1988, 1, 3), 'fecha_ingreso': date(2021, 4, 8), 'telefono': '555-2021', 'salario': 2700.00, 'nacionalidad': 'Chilean'},
+    {'id': 9, 'rut': '14.745.678-8', 'nombre': 'George', 'apellido': 'Anderson', 'fecha_nacimiento': date(1986, 12, 20), 'fecha_ingreso': date(2020, 3, 14), 'telefono': '555-2223', 'salario': 2600.00, 'nacionalidad': 'Chilean'},
+    {'id': 10, 'rut': '10.345.678-K', 'nombre': 'Claudia', 'apellido': 'Thomas', 'fecha_nacimiento': date(1983, 10, 30), 'fecha_ingreso': date(2016, 7, 3), 'telefono': '555-2324', 'salario': 1900.00, 'nacionalidad': 'Chilean'},
+    {'id': 11, 'rut': '12.987.654-3', 'nombre': 'Jean', 'apellido': 'Baptiste', 'fecha_nacimiento': date(1990, 3, 18), 'fecha_ingreso': date(2021, 7, 12), 'telefono': '555-3456', 'salario': 2100.00, 'nacionalidad': 'Haitian'}
 ]
+
 
 for data in colaborador_data:
     colaborador = Colaborador(**data)
@@ -253,6 +248,157 @@ for data in afp_data:
     afp = AFP(**data)
     session.add(afp)
 session.commit()
+
+
+# Insert data into Cargo table
+cargo_data = [
+    {'id': 1, 'nombre': 'Software Engineer', 'descripcion': 'Develops and maintains software applications.'},
+    {'id': 2, 'nombre': 'HR Specialist', 'descripcion': 'Handles employee relations and recruitment.'},
+    {'id': 3, 'nombre': 'Project Manager', 'descripcion': 'Leads and manages project execution.'},
+    {'id': 4, 'nombre': 'System Administrator', 'descripcion': 'Manages IT systems and infrastructure.'},
+    {'id': 5, 'nombre': 'Marketing Analyst', 'descripcion': 'Analyzes marketing data and trends.'}
+]
+
+for data in cargo_data:
+    cargo = Cargo(**data)
+    session.add(cargo)
+session.commit()
+
+colaborador_cargo_data = [
+    {'colaborador_id': 1, 'cargo_id': 1},  # John -> Software Engineer
+    {'colaborador_id': 2, 'cargo_id': 2},  # Mary -> HR Specialist
+    {'colaborador_id': 3, 'cargo_id': 1},  # Carlos -> Software Engineer
+    {'colaborador_id': 4, 'cargo_id': 2},  # Anna -> HR Specialist
+    {'colaborador_id': 5, 'cargo_id': 3},  # Louis -> Project Manager
+    {'colaborador_id': 6, 'cargo_id': 4},  # Laura -> System Administrator
+    {'colaborador_id': 7, 'cargo_id': 4},  # Robert -> System Administrator
+    {'colaborador_id': 8, 'cargo_id': 5},  # Fernanda -> Marketing Analyst
+    {'colaborador_id': 9, 'cargo_id': 5},  # George -> Marketing Analyst
+    {'colaborador_id': 10, 'cargo_id': 3},  # Claudia -> Project Manager
+    {'colaborador_id': 11, 'cargo_id': 1}   # Jean -> Software Engineer
+]
+
+for data in colaborador_cargo_data:
+    colcargo = ColaboradorCargo(**data)
+    session.add(colcargo)
+session.commit()
+
+# Insert data into Departamento table
+departamento_data = [
+    {'id': 1, 'nombre': 'IT Department'},
+    {'id': 2, 'nombre': 'HR Department'},
+    {'id': 3, 'nombre': 'Finance Department'},
+    {'id': 4, 'nombre': 'Marketing Department'}
+]
+
+for data in departamento_data:
+    departamento = Departamento(**data)
+    session.add(departamento)
+session.commit()
+
+# Insert data into PlanDeSalud, Fonasa, and Isapre tables
+plan_salud_data = [
+    {'id': 1, 'nombre': 'Fonasa Plan A', 'tipo': 'Fonasa'},
+    {'id': 2, 'nombre': 'Fonasa Plan B', 'tipo': 'Fonasa'},
+    {'id': 3, 'nombre': 'Isapre Plan 1', 'tipo': 'Isapre'},
+    {'id': 4, 'nombre': 'Isapre Plan 2', 'tipo': 'Isapre'}
+]
+
+for data in plan_salud_data:
+    plan_salud = PlanDeSalud(**data)
+    session.add(plan_salud)
+session.commit()
+
+fonasa_data = [
+    {'id': 1, 'plan_salud_id': 1, 'descuento': 7.00},
+    {'id': 2, 'plan_salud_id': 2, 'descuento': 7.00}
+]
+
+for data in fonasa_data:
+    fonasa = Fonasa(**data)
+    session.add(fonasa)
+session.commit()
+
+isapre_data = [
+    {'id': 1, 'plan_salud_id': 3, 'descuento': 10.00},
+    {'id': 2, 'plan_salud_id': 4, 'descuento': 12.00}
+]
+
+for data in isapre_data:
+    isapre = Isapre(**data)
+    session.add(isapre)
+session.commit()
+
+# Insert data into Contrato table
+contrato_data = [
+    {'id': 1, 'colaborador_id': 1, 'tipo_contrato': 'planta', 'fecha_inicio': date(2020, 1, 15), 'fecha_termino': date(2023, 1, 15), 'escalafon': 'profesional', 'departamento_id': 1, 'fecha_registro': date(2020, 1, 15)},
+    {'id': 2, 'colaborador_id': 2, 'tipo_contrato': 'contrata', 'fecha_inicio': date(2019, 3, 10), 'fecha_termino': date(2022, 3, 10), 'escalafon': 'administrativo', 'departamento_id': 2, 'fecha_registro': date(2019, 3, 10)},
+    {'id': 3, 'colaborador_id': 3, 'tipo_contrato': 'reemplazo', 'fecha_inicio': date(2021, 6, 5), 'fecha_termino': date(2022, 6, 5), 'escalafon': 'tecnico', 'departamento_id': 3, 'fecha_registro': date(2021, 6, 5)},
+    {'id': 4, 'colaborador_id': 4, 'tipo_contrato': 'suplencia', 'fecha_inicio': date(2018, 9, 25), 'fecha_termino': date(2021, 9, 25), 'escalafon': 'auxiliar', 'departamento_id': 4, 'fecha_registro': date(2018, 9, 25)},
+    {'id': 5, 'colaborador_id': 5, 'tipo_contrato': 'planta', 'fecha_inicio': date(2022, 2, 1), 'fecha_termino': date(2025, 2, 1), 'escalafon': 'directivo', 'departamento_id': 5, 'fecha_registro': date(2022, 2, 1)}
+]
+
+for data in contrato_data:
+    contrato = Contrato(**data)
+    session.add(contrato)
+session.commit()
+
+# Insert data into Vacaciones table
+vacaciones_data = [
+    {'id': 1, 'colaborador_id': 1, 'fecha_inicio': date(2023, 1, 5), 'fecha_termino': date(2023, 1, 20), 'dias_tomados': 15, 'dias_acumulados': 10, 'colaborador_antiguo': False},
+    {'id': 2, 'colaborador_id': 2, 'fecha_inicio': date(2023, 6, 1), 'fecha_termino': date(2023, 6, 10), 'dias_tomados': 9, 'dias_acumulados': 5, 'colaborador_antiguo': False},
+    {'id': 3, 'colaborador_id': 3, 'fecha_inicio': date(2022, 12, 15), 'fecha_termino': date(2022, 12, 30), 'dias_tomados': 15, 'dias_acumulados': 3, 'colaborador_antiguo': False},
+    {'id': 4, 'colaborador_id': 4, 'fecha_inicio': date(2022, 8, 1), 'fecha_termino': date(2022, 8, 15), 'dias_tomados': 14, 'dias_acumulados': 6, 'colaborador_antiguo': True},
+    {'id': 5, 'colaborador_id': 5, 'fecha_inicio': date(2023, 2, 10), 'fecha_termino': date(2023, 2, 25), 'dias_tomados': 15, 'dias_acumulados': 8, 'colaborador_antiguo': False}
+]
+
+for data in vacaciones_data:
+    vacaciones = Vacaciones(**data)
+    session.add(vacaciones)
+session.commit()
+
+# Insert data into Evaluacion table
+evaluacion_data = [
+    {'id': 1, 'colaborador_id': 1, 'fecha_evaluacion': date(2023, 5, 15), 'evaluador': 'Supervisor A', 'factor_evaluacion': 4.5, 'calificacion': 'Good', 'comentarios': 'Excellent performance.'},
+    {'id': 2, 'colaborador_id': 2, 'fecha_evaluacion': date(2023, 7, 10), 'evaluador': 'Supervisor B', 'factor_evaluacion': 3.8, 'calificacion': 'Fair', 'comentarios': 'Needs to improve teamwork.'},
+    {'id': 3, 'colaborador_id': 3, 'fecha_evaluacion': date(2023, 3, 25), 'evaluador': 'Supervisor C', 'factor_evaluacion': 4.0, 'calificacion': 'Good', 'comentarios': 'Generally good performance.'},
+    {'id': 4, 'colaborador_id': 4, 'fecha_evaluacion': date(2022, 12, 5), 'evaluador': 'Supervisor A', 'factor_evaluacion': 4.7, 'calificacion': 'Good', 'comentarios': 'Highly recommended for promotions.'},
+    {'id': 5, 'colaborador_id': 5, 'fecha_evaluacion': date(2023, 1, 20), 'evaluador': 'Supervisor B', 'factor_evaluacion': 3.5, 'calificacion': 'Fair', 'comentarios': 'Could improve punctuality.'}
+]
+
+for data in evaluacion_data:
+    evaluacion = Evaluacion(**data)
+    session.add(evaluacion)
+session.commit()
+
+# Insert data into Capacitacion table
+capacitacion_data = [
+    {'id': 1, 'colaborador_id': 1, 'fecha_capacitacion': date(2023, 3, 5), 'curso': 'Advanced Python', 'calificacion': 4.5, 'institucion': 'Tech Academy', 'comentarios': 'Excellent participation.'},
+    {'id': 2, 'colaborador_id': 2, 'fecha_capacitacion': date(2023, 4, 15), 'curso': 'Project Management', 'calificacion': 4.0, 'institucion': 'University A', 'comentarios': 'Good grasp of the subject.'},
+    {'id': 3, 'colaborador_id': 3, 'fecha_capacitacion': date(2022, 11, 22), 'curso': 'Cybersecurity', 'calificacion': 3.8, 'institucion': 'Tech Institute', 'comentarios': 'Acceptable performance.'},
+    {'id': 4, 'colaborador_id': 4, 'fecha_capacitacion': date(2022, 6, 18), 'curso': 'Digital Marketing', 'calificacion': 4.2, 'institucion': 'Online Academy', 'comentarios': 'Good tool mastery.'},
+    {'id': 5, 'colaborador_id': 5, 'fecha_capacitacion': date(2023, 1, 10), 'curso': 'Scrum Master', 'calificacion': 3.5, 'institucion': 'Scrum Training', 'comentarios': 'Needs to improve leadership.'}
+]
+
+for data in capacitacion_data:
+    capacitacion = Capacitacion(**data)
+    session.add(capacitacion)
+session.commit()
+
+# Insert data into Remuneracion table
+remuneracion_data = [
+    {'id': 1, 'colaborador_id': 1, 'afp_id': 1, 'plan_salud_id': 1, 'monto_bruto': 2500.00, 'impuesto': 10.0, 'deducciones': 150.00, 'bonus': 200.00, 'aporte_bienestar': 50.00, 'monto_liquido': 2200.00},
+    {'id': 2, 'colaborador_id': 2, 'afp_id': 2, 'plan_salud_id': 2, 'monto_bruto': 3000.00, 'impuesto': 12.0, 'deducciones': 200.00, 'bonus': 250.00, 'aporte_bienestar': 60.00, 'monto_liquido': 2650.00},
+    {'id': 3, 'colaborador_id': 3, 'afp_id': 3, 'plan_salud_id': 3, 'monto_bruto': 2300.00, 'impuesto': 9.0, 'deducciones': 130.00, 'bonus': 150.00, 'aporte_bienestar': 40.00, 'monto_liquido': 2070.00},
+    {'id': 4, 'colaborador_id': 4, 'afp_id': 4, 'plan_salud_id': 1, 'monto_bruto': 2800.00, 'impuesto': 11.0, 'deducciones': 180.00, 'bonus': 300.00, 'aporte_bienestar': 55.00, 'monto_liquido': 2455.00},
+    {'id': 5, 'colaborador_id': 5, 'afp_id': 5, 'plan_salud_id': 2, 'monto_bruto': 2700.00, 'impuesto': 10.5, 'deducciones': 170.00, 'bonus': 280.00, 'aporte_bienestar': 50.00, 'monto_liquido': 2390.00}
+]
+
+for data in remuneracion_data:
+    remuneracion = Remuneracion(**data)
+    session.add(remuneracion)
+session.commit()
+
 
 # Insert user and password into User table
 new_user = User(username='LBrownI')
