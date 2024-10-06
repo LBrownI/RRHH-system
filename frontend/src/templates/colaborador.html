@@ -10,21 +10,7 @@
     />
   </head>
   <header>
-    <div class="top-bar">
-      <input type="text" id="search-bar" placeholder="Buscar empleados..." />
-      <nav class="menu-options">
-        <a href="/opcion1">Opción 1</a>
-        <a href="/opcion2">Opción 2</a>
-        <a href="/opcion3">Opción 3</a>
-        <!-- Ícono de usuario -->
-        <a href="/user" class="user-icon">
-          <img
-            src="{{ url_for('static', filename='images/user_icon.png') }}"
-            alt="Usuario"
-          />
-        </a>
-      </nav>
-    </div>
+    {% include 'topbar.html' %}
   </header>
   <body>
     <div class="user-general-info-container">
