@@ -10,25 +10,7 @@
   <body>
     <!-- Barra superior con búsqueda, opciones y usuario -->
     <header>
-      <div class="top-bar">
-        <div class="dropdown">
-          <button onclick="myFunction()" class="dropbtn"><i class="fa fa-bars"></i> Menu</button>
-            <div id="myDropdown" class="dropdown-content">
-              <a href="/opcion1">Opción 1</a>
-              <a href="/opcion2">Opción 2</a>
-              <a href="/opcion3">Opción 3</a>
-            </div>
-        </div>
-        <script src="{{ url_for('static', filename='javascript/dropdown_menu.js') }}"></script>
-        <input type="text" id="search-bar" placeholder="Buscar empleados...">
-        <nav class="menu-options">
-          <a href="/opcion1">Opción 1</a>
-          <a href="/opcion2">Opción 2</a>
-          <a href="/opcion3">Opción 3</a>
-          <!-- Ícono de usuario -->
-          <a href="/user"><i class="fa fa-user"></i> Usuario</a>
-        </nav>
-      </div>
+      {% include 'topbar.html' %}
     </header>
 
     <!-- Contenido principal: lista de empleados y filtros -->
@@ -40,6 +22,7 @@
           <ul id="employees">
             <li>1.111.111-1 - Juanito Pérez - Supervisor - Finanzas</li>
             <li>9.876.543-2 - Alberto Jiménez - Practicante - eCommerce</li>
+            {% include 'test.html' %}
             <!-- Aquí irán más empleados que se cargarán desde la base de datos -->
           </ul>
         </section>
