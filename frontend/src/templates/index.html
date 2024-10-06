@@ -5,28 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menú - Lista de Empleados</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
     <!-- Barra superior con búsqueda, opciones y usuario -->
     <header>
       <div class="top-bar">
         <div class="dropdown">
-          <button class="dropbtn">Menu</button>
-            <div class="dropdown-content">
+          <button onclick="myFunction()" class="dropbtn"><i class="fa fa-bars"></i> Menu</button>
+            <div id="myDropdown" class="dropdown-content">
               <a href="/opcion1">Opción 1</a>
               <a href="/opcion2">Opción 2</a>
               <a href="/opcion3">Opción 3</a>
             </div>
         </div>
+        <script src="{{ url_for('static', filename='javascript/dropdown_menu.js') }}"></script>
         <input type="text" id="search-bar" placeholder="Buscar empleados...">
         <nav class="menu-options">
           <a href="/opcion1">Opción 1</a>
           <a href="/opcion2">Opción 2</a>
           <a href="/opcion3">Opción 3</a>
           <!-- Ícono de usuario -->
-          <a href="/user" class="user-icon">
-            <img src="{{ url_for('static', filename='images/user_icon.png') }}" alt="Usuario">
-          </a>
+          <a href="/user"><i class="fa fa-user"></i> Usuario</a>
         </nav>
       </div>
     </header>
@@ -38,8 +38,8 @@
         <section class="employee-list">
           <h2>Lista de Empleados</h2>
           <ul id="employees">
-            <li>Juanito Pérez - Supervisor - Finanzas</li>
-            <li>Alberto Jiménez - Practicante - eCommerce</li>
+            <li>1.111.111-1 - Juanito Pérez - Supervisor - Finanzas</li>
+            <li>9.876.543-2 - Alberto Jiménez - Practicante - eCommerce</li>
             <!-- Aquí irán más empleados que se cargarán desde la base de datos -->
           </ul>
         </section>
