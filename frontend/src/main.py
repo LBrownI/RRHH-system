@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
+from queries import general_info
 # from sqlalchemy.orm import Session, sessionmaker
 # from load_db import engine, Colaborador
 # from db_operations import add_contrato
@@ -44,7 +45,8 @@ def menu():
 @app.route('/colaborador')
 def user():
     name = request.args.get('name', 'Colaborator Name')
-    return render_template('colaborador.html', name=name)
+    gi = general_info()
+    return render_template('colaborador.html', name=gi)
 
 # Route for the option of adding a new "Contrato" (mocked functionality)
 @app.route('/add-contrato', methods=['GET', 'POST'])
