@@ -22,7 +22,7 @@ with engine.connect() as conn:
 Base = declarative_base()
 
 def general_info():
-    """Select the first and last name of customers who have not purchased a car."""
+    """Select the first and last name of the Colaborator tablle"""
     print('\n--- Running query_2 ---')
     try:
         with engine.connect() as conn:
@@ -34,3 +34,15 @@ def general_info():
         print(f'Error in query_2: {e}')
 
 # general_info()
+
+def all_colaborators():
+    """Select all the data from the Colaborator table"""
+    print('\n--- Running query_1 ---')
+    try:
+        with engine.connect() as conn:
+            res = conn.execute(text(f"SELECT * FROM Colaborador"))
+            print(res.fetchall())
+            return res.fetchall()
+        pass
+    except Exception as e:
+        print(f'Error in query_1: {e}')

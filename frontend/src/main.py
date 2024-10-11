@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from queries import general_info
+from queries import *
 # from sqlalchemy.orm import Session, sessionmaker
 # from load_db import engine, Colaborador
 # from db_operations import add_contrato

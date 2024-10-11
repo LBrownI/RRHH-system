@@ -22,9 +22,13 @@
           <ul id="employees">
             <li>1.111.111-1 - Juanito Pérez - Supervisor - Finanzas</li>
             <li>9.876.543-2 - Alberto Jiménez - Practicante - eCommerce</li>
+            {% for employee in employees %}
+                <li> <a href="{{employee.href}}">{{employee.rut}} - {{employee.name}} - {{employee.position}} -{{employee.department}} </a></li>
+                <li> 123456789-1 - junaito perez - practicante - ecommerce</li>
             <!-- Aquí irán más empleados que se cargarán desde la base de datos -->
           </ul>
         </section>
+
 
         <!-- Filtros -->
         <aside class="filters">
