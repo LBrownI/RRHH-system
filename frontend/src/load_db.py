@@ -3,6 +3,7 @@ from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey,
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
+from tables import Company, Employee, JobPosition, EmployeePosition, AFP, Department, Vacation, Evaluation, Training, Remuneration, HealthPlan, Fonasa, Isapre, Bonus, Contract, User
 
 # Load the MySQL root password from environment variables
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
@@ -19,229 +20,51 @@ engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{
 with engine.connect() as conn:
     conn.execute(text(f"CREATE DATABASE IF NOT EXISTS {config['database_name']}"))
 
-Base = declarative_base()
-
-# Empresa model
-class Empresa(Base):
-    __tablename__ = 'Empresa'
-    id = Column(Integer, primary_key=True)
-    rut = Column(String(20))
-    nombre = Column(String(100))
-    direccion = Column(String(255))
-    telefono = Column(String(20))
-    giro = Column(String(100))
-
-# Colaborador model
-class Colaborador(Base):
-    __tablename__ = 'Colaborador'
-    id = Column(Integer, primary_key=True)
-    rut = Column(String(20))
-    nombre = Column(String(50))
-    apellido = Column(String(50))
-    fecha_nacimiento = Column(Date)
-    fecha_ingreso = Column(Date)
-    telefono = Column(String(20))
-    salario = Column(DECIMAL(10, 2))
-    nacionalidad = Column(String(50))
-    contratos = relationship('Contrato', back_populates='colaborador')
-    vacaciones = relationship('Vacaciones', back_populates='colaborador')
-    evaluaciones = relationship('Evaluacion', back_populates='colaborador')
-    capacitaciones = relationship('Capacitacion', back_populates='colaborador')
-    remuneraciones = relationship('Remuneracion', back_populates='colaborador')
-    cargos = relationship('Cargo', secondary='ColaboradorCargo', back_populates='colaboradores')
-
-# Cargo model
-class Cargo(Base):
-    __tablename__ = 'Cargo'
-    id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    descripcion = Column(Text)
-    colaboradores = relationship('Colaborador', secondary='ColaboradorCargo', back_populates='cargos')
-
-# ColaboradorCargo association table (Many-to-Many relationship between Colaborador and Cargo)
-class ColaboradorCargo(Base):
-    __tablename__ = 'ColaboradorCargo'
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'), primary_key=True)
-    cargo_id = Column(Integer, ForeignKey('Cargo.id'), primary_key=True)
-    
-# AFP model
-class AFP(Base):
-    __tablename__ = 'AFP'
-    id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    comision_porcentaje = Column(DECIMAL(5, 2))
-    remuneraciones = relationship('Remuneracion', back_populates='afp')
-
-# Departamento model
-class Departamento(Base):
-    __tablename__ = 'Departamento'
-    id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    contratos = relationship('Contrato', back_populates='departamento')
-
-# Vacaciones model
-class Vacaciones(Base):
-    __tablename__ = 'Vacaciones'
-    id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    fecha_inicio = Column(Date)
-    fecha_termino = Column(Date)
-    dias_tomados = Column(Integer) # Days taken in the period above 
-    dias_acumulados = Column(Integer) # Acumulated after the vacation period above
-    colaborador_antiguo = Column(Boolean) #If 1 then it's an employee that has worked for 15 years (20 days assigned instead of 15)
-    colaborador = relationship('Colaborador', back_populates='vacaciones')
-
-# Evaluacion model
-class Evaluacion(Base):
-    __tablename__ = 'Evaluacion'
-    id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    fecha_evaluacion = Column(Date)
-    evaluador = Column(String(100))
-    factor_evaluacion = Column(DECIMAL(5, 2))
-    calificacion = Column(String(50))  # Bueno, regular, malo/deficiente
-    comentarios = Column(Text)
-    colaborador = relationship('Colaborador', back_populates='evaluaciones')
-
-# Capacitacion model
-class Capacitacion(Base):
-    __tablename__ = 'Capacitacion'
-    id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    fecha_capacitacion = Column(Date)
-    curso = Column(String(100))
-    calificacion = Column(DECIMAL(5, 2))
-    institucion = Column(String(100))
-    comentarios = Column(Text)
-    colaborador = relationship('Colaborador', back_populates='capacitaciones')
-
-# Remuneracion (extended) model
-class Remuneracion(Base):
-    __tablename__ = 'Remuneracion'
-    id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    afp_id = Column(Integer, ForeignKey('AFP.id'))
-    plan_salud_id = Column(Integer, ForeignKey('PlanDeSalud.id'))
-    monto_bruto = Column(DECIMAL(10, 2))
-    impuesto = Column(DECIMAL(5, 2))
-    deducciones = Column(DECIMAL(10, 2))
-    bonus = Column(DECIMAL(10, 2))
-    aporte_bienestar = Column(DECIMAL(10, 2))
-    monto_liquido = Column(DECIMAL(10, 2))
-    colaborador = relationship('Colaborador', back_populates='remuneraciones')
-    afp = relationship('AFP', back_populates='remuneraciones')
-    plan_salud = relationship('PlanDeSalud', back_populates='remuneraciones')
-    bonuses = relationship("Bonus", back_populates="remuneracion")
-
-class PlanDeSalud(Base):
-    __tablename__ = 'PlanDeSalud'
-    id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    tipo = Column(String(50))
-    fonasa = relationship('Fonasa', back_populates='plan_salud')
-    isapre = relationship('Isapre', back_populates='plan_salud')
-    remuneraciones = relationship('Remuneracion', back_populates='plan_salud')
-
-# PlanDeSalud extension for Fonasa and Isapre
-class Fonasa(Base):
-    __tablename__ = 'Fonasa'
-    id = Column(Integer, primary_key=True)
-    plan_salud_id = Column(Integer, ForeignKey('PlanDeSalud.id'))
-    descuento = Column(DECIMAL(10, 2))  # Different from Isapre's discount
-    plan_salud = relationship('PlanDeSalud', back_populates='fonasa')
-
-class Isapre(Base):
-    __tablename__ = 'Isapre'
-    id = Column(Integer, primary_key=True)
-    plan_salud_id = Column(Integer, ForeignKey('PlanDeSalud.id'))
-    descuento = Column(DECIMAL(10, 2))  # Different from Fonasa's discount
-    plan_salud = relationship('PlanDeSalud', back_populates='isapre')
-
-class Bonus(Base):
-    __tablename__ = 'Bonus'
-    id = Column(Integer, primary_key=True)
-    remuneracion_id = Column(Integer, ForeignKey('Remuneracion.id'))
-    aporte = Column(DECIMAL(10, 2))  # Help for the employee for a discount in money
-    beneficio = Column(DECIMAL(10, 2)) # Help for the employee as a monetary aid
-    remuneracion = relationship("Remuneracion", back_populates="bonuses")
-
-class Contrato(Base):
-    __tablename__ = 'Contrato'
-    id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    tipo_contrato = Column(String(50))  # contrata, suplencia, reemplazo, planta
-    fecha_inicio = Column(Date)
-    fecha_termino = Column(Date)
-    escalafon = Column(String(50))  # auxiliar, administrativo, tecnico, profesional, directivo
-    departamento_id = Column(Integer, ForeignKey('Departamento.id'))  # Dpto/unidad asignado
-    fecha_registro = Column(Date)
-    colaborador = relationship('Colaborador', back_populates='contratos')
-    departamento = relationship('Departamento', back_populates='contratos')
-
-class User(Base):
-    __tablename__ = 'User'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(100), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
-    
-    # Method to set hashed password
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    
-    # Method to check password
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-
-# Create the tables in the database
-Base.metadata.create_all(engine)
-
-
 # Create a session to interact with the database
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Insert data into Empresa table
-empresa_data = [
-    {'id': 1, 'rut': '76.123.456-7', 'nombre': 'TechCorp', 'direccion': '123 Main Street', 'telefono': '555-0100', 'giro': 'Technology'},
-    {'id': 2, 'rut': '78.234.567-8', 'nombre': 'HealthSolutions', 'direccion': '456 Oak Avenue', 'telefono': '555-0200', 'giro': 'Healthcare'}
+# Insert data into Company table
+company_data = [
+    {'id': 1, 'rut': '76.123.456-7', 'name': 'TechCorp', 'address': '123 Main Street', 'phone': '555-0100', 'industry': 'Technology'},
+    {'id': 2, 'rut': '78.234.567-8', 'name': 'HealthSolutions', 'address': '456 Oak Avenue', 'phone': '555-0200', 'industry': 'Healthcare'}
 ]
 
-for data in empresa_data:
-    empresa = Empresa(**data)
-    session.add(empresa)
+for data in company_data:
+    company = Company(**data)
+    session.add(company)
 session.commit()
 
-# Insert data into Colaborador table
-colaborador_data = [
-    {'id': 1, 'rut': '12.345.678-9', 'nombre': 'John', 'apellido': 'Smith', 'fecha_nacimiento': date(1980, 5, 12), 'fecha_ingreso': date(2020, 1, 15), 'telefono': '555-2345', 'salario': 2000.00, 'nacionalidad': 'Chilean'},
-    {'id': 2, 'rut': '12.345.678-1', 'nombre': 'Mary', 'apellido': 'Johnson', 'fecha_nacimiento': date(1985, 9, 22), 'fecha_ingreso': date(2019, 3, 10), 'telefono': '555-6789', 'salario': 2500.00, 'nacionalidad': 'Chilean'},
-    {'id': 3, 'rut': '13.345.678-2', 'nombre': 'Carlos', 'apellido': 'Williams', 'fecha_nacimiento': date(1990, 7, 18), 'fecha_ingreso': date(2021, 6, 5), 'telefono': '555-9102', 'salario': 1800.00, 'nacionalidad': 'Chilean'},
-    {'id': 4, 'rut': '14.345.678-3', 'nombre': 'Anna', 'apellido': 'Brown', 'fecha_nacimiento': date(1992, 11, 2), 'fecha_ingreso': date(2018, 9, 25), 'telefono': '555-1124', 'salario': 2300.00, 'nacionalidad': 'Chilean'},
-    {'id': 5, 'rut': '18.145.678-4', 'nombre': 'Louis', 'apellido': 'Davis', 'fecha_nacimiento': date(1995, 2, 15), 'fecha_ingreso': date(2022, 2, 1), 'telefono': '555-1416', 'salario': 2100.00, 'nacionalidad': 'Chilean'},
-    {'id': 6, 'rut': '16.245.678-5', 'nombre': 'Laura', 'apellido': 'Miller', 'fecha_nacimiento': date(1997, 6, 25), 'fecha_ingreso': date(2020, 8, 14), 'telefono': '555-1718', 'salario': 2400.00, 'nacionalidad': 'Chilean'},
-    {'id': 7, 'rut': '16.645.678-6', 'nombre': 'Robert', 'apellido': 'Wilson', 'fecha_nacimiento': date(1987, 4, 8), 'fecha_ingreso': date(2017, 10, 12), 'telefono': '555-1920', 'salario': 2200.00, 'nacionalidad': 'Chilean'},
-    {'id': 8, 'rut': '12.945.678-7', 'nombre': 'Fernanda', 'apellido': 'Taylor', 'fecha_nacimiento': date(1988, 1, 3), 'fecha_ingreso': date(2021, 4, 8), 'telefono': '555-2021', 'salario': 2700.00, 'nacionalidad': 'Chilean'},
-    {'id': 9, 'rut': '14.745.678-8', 'nombre': 'George', 'apellido': 'Anderson', 'fecha_nacimiento': date(1986, 12, 20), 'fecha_ingreso': date(2020, 3, 14), 'telefono': '555-2223', 'salario': 2600.00, 'nacionalidad': 'Chilean'},
-    {'id': 10, 'rut': '10.345.678-K', 'nombre': 'Claudia', 'apellido': 'Thomas', 'fecha_nacimiento': date(1983, 10, 30), 'fecha_ingreso': date(2016, 7, 3), 'telefono': '555-2324', 'salario': 1900.00, 'nacionalidad': 'Chilean'},
-    {'id': 11, 'rut': '12.987.654-3', 'nombre': 'Jean', 'apellido': 'Baptiste', 'fecha_nacimiento': date(1990, 3, 18), 'fecha_ingreso': date(2021, 7, 12), 'telefono': '555-3456', 'salario': 2100.00, 'nacionalidad': 'Haitian'}
+# Insert data into Employee table
+employee_data = [
+    {'id': 1, 'rut': '12.345.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birthdate': date(1980, 5, 12), 'start_date': date(2020, 1, 15), 'phone': '555-2345', 'salary': 2000.00, 'nationality': 'Chilean'},
+    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birthdate': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'salary': 2500.00, 'nationality': 'Chilean'},
+    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birthdate': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'salary': 1800.00, 'nationality': 'Chilean'},
+    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birthdate': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'salary': 2300.00, 'nationality': 'Chilean'},
+    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birthdate': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'salary': 2100.00, 'nationality': 'Chilean'},
+    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birthdate': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'salary': 2400.00, 'nationality': 'Chilean'},
+    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birthdate': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'salary': 2200.00, 'nationality': 'Chilean'},
+    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birthdate': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'salary': 2700.00, 'nationality': 'Chilean'},
+    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birthdate': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'salary': 2600.00, 'nationality': 'Chilean'},
+    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birthdate': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'salary': 1900.00, 'nationality': 'Chilean'},
+    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birthdate': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'salary': 2100.00, 'nationality': 'Haitian'}
 ]
 
 
-for data in colaborador_data:
-    colaborador = Colaborador(**data)
-    session.add(colaborador)
+for data in employee_data:
+    employee = Employee(**data)
+    session.add(employee)
 session.commit()
 
 # Insert data into AFP table
 afp_data = [
-    {'id': 1, 'nombre': 'AFP Capital', 'comision_porcentaje': 1.44},
-    {'id': 2, 'nombre': 'AFP Cuprum', 'comision_porcentaje': 1.44},
-    {'id': 3, 'nombre': 'AFP Habitat', 'comision_porcentaje': 1.27},
-    {'id': 4, 'nombre': 'AFP Modelo', 'comision_porcentaje': 0.58},
-    {'id': 5, 'nombre': 'AFP Planvital', 'comision_porcentaje': 1.16},
-    {'id': 6, 'nombre': 'AFP Provida', 'comision_porcentaje': 1.45},
-    {'id': 7, 'nombre': 'AFP Uno', 'comision_porcentaje': 0.49}
+    {'id': 1, 'name': 'AFP Capital', 'commission_percentage': 1.44},
+    {'id': 2, 'name': 'AFP Cuprum', 'commission_percentage': 1.44},
+    {'id': 3, 'name': 'AFP Habitat', 'commission_percentage': 1.27},
+    {'id': 4, 'name': 'AFP Modelo', 'commission_percentage': 0.58},
+    {'id': 5, 'name': 'AFP Planvital', 'commission_percentage': 1.16},
+    {'id': 6, 'name': 'AFP Provida', 'commission_percentage': 1.45},
+    {'id': 7, 'name': 'AFP Uno', 'commission_percentage': 0.49}
 ]
 
 for data in afp_data:
@@ -249,69 +72,73 @@ for data in afp_data:
     session.add(afp)
 session.commit()
 
-
-# Insert data into Cargo table
-cargo_data = [
-    {'id': 1, 'nombre': 'Software Engineer', 'descripcion': 'Develops and maintains software applications.'},
-    {'id': 2, 'nombre': 'HR Specialist', 'descripcion': 'Handles employee relations and recruitment.'},
-    {'id': 3, 'nombre': 'Project Manager', 'descripcion': 'Leads and manages project execution.'},
-    {'id': 4, 'nombre': 'System Administrator', 'descripcion': 'Manages IT systems and infrastructure.'},
-    {'id': 5, 'nombre': 'Marketing Analyst', 'descripcion': 'Analyzes marketing data and trends.'}
+# Insert data into JobPosition table
+job_position_data = [
+    {'id': 1, 'name': 'Software Engineer', 'description': 'Develops and maintains software applications.'},
+    {'id': 2, 'name': 'HR Specialist', 'description': 'Handles employee relations and recruitment.'},
+    {'id': 3, 'name': 'Project Manager', 'description': 'Leads and manages project execution.'},
+    {'id': 4, 'name': 'System Administrator', 'description': 'Manages IT systems and infrastructure.'},
+    {'id': 5, 'name': 'Marketing Analyst', 'description': 'Analyzes marketing data and trends.'}
 ]
 
-for data in cargo_data:
-    cargo = Cargo(**data)
-    session.add(cargo)
+for data in job_position_data:
+    job_position = JobPosition(**data)
+    session.add(job_position)
 session.commit()
 
-colaborador_cargo_data = [
-    {'colaborador_id': 1, 'cargo_id': 1},  # John -> Software Engineer
-    {'colaborador_id': 2, 'cargo_id': 2},  # Mary -> HR Specialist
-    {'colaborador_id': 3, 'cargo_id': 1},  # Carlos -> Software Engineer
-    {'colaborador_id': 4, 'cargo_id': 2},  # Anna -> HR Specialist
-    {'colaborador_id': 5, 'cargo_id': 3},  # Louis -> Project Manager
-    {'colaborador_id': 6, 'cargo_id': 4},  # Laura -> System Administrator
-    {'colaborador_id': 7, 'cargo_id': 4},  # Robert -> System Administrator
-    {'colaborador_id': 8, 'cargo_id': 5},  # Fernanda -> Marketing Analyst
-    {'colaborador_id': 9, 'cargo_id': 5},  # George -> Marketing Analyst
-    {'colaborador_id': 10, 'cargo_id': 3},  # Claudia -> Project Manager
-    {'colaborador_id': 11, 'cargo_id': 1}   # Jean -> Software Engineer
+employee_position_data = [
+    {'employee_id': 1, 'job_position_id': 1},  # John -> Software Engineer
+    {'employee_id': 2, 'job_position_id': 2},  # Mary -> HR Specialist
+    {'employee_id': 3, 'job_position_id': 1},  # Carlos -> Software Engineer
+    {'employee_id': 4, 'job_position_id': 2},  # Anna -> HR Specialist
+    {'employee_id': 5, 'job_position_id': 3},  # Louis -> Project Manager
+    {'employee_id': 6, 'job_position_id': 4},  # Laura -> System Administrator
+    {'employee_id': 7, 'job_position_id': 4},  # Robert -> System Administrator
+    {'employee_id': 8, 'job_position_id': 5},  # Fernanda -> Marketing Analyst
+    {'employee_id': 9, 'job_position_id': 5},  # George -> Marketing Analyst
+    {'employee_id': 10, 'job_position_id': 3},  # Claudia -> Project Manager
+    {'employee_id': 11, 'job_position_id': 1}   # Jean -> Software Engineer
 ]
 
-for data in colaborador_cargo_data:
-    colcargo = ColaboradorCargo(**data)
-    session.add(colcargo)
+for data in employee_position_data:
+    emp_pos = EmployeePosition(**data)
+    session.add(emp_pos)
 session.commit()
 
-# Insert data into Departamento table
-departamento_data = [
-    {'id': 1, 'nombre': 'IT Department'},
-    {'id': 2, 'nombre': 'HR Department'},
-    {'id': 3, 'nombre': 'Finance Department'},
-    {'id': 4, 'nombre': 'Marketing Department'}
+# Insert data into Department table
+department_data = [
+    {'id': 1, 'name': 'IT Department'},
+    {'id': 2, 'name': 'HR Department'},
+    {'id': 3, 'name': 'Finance Department'},
+    {'id': 4, 'name': 'Marketing Department'}
 ]
 
-for data in departamento_data:
-    departamento = Departamento(**data)
-    session.add(departamento)
+for data in department_data:
+    department = Department(**data)
+    session.add(department)
 session.commit()
 
-# Insert data into PlanDeSalud, Fonasa, and Isapre tables
-plan_salud_data = [
-    {'id': 1, 'nombre': 'Fonasa Plan A', 'tipo': 'Fonasa'},
-    {'id': 2, 'nombre': 'Fonasa Plan B', 'tipo': 'Fonasa'},
-    {'id': 3, 'nombre': 'Isapre Plan 1', 'tipo': 'Isapre'},
-    {'id': 4, 'nombre': 'Isapre Plan 2', 'tipo': 'Isapre'}
+# Insert data into HealthPlan, Fonasa, and Isapre tables
+health_plan_data = [
+    {'id': 1, 'name': 'Fonasa Plan A', 'type': 'Fonasa'},
+    {'id': 2, 'name': 'Fonasa Plan B', 'type': 'Fonasa'},
+    {'id': 3, 'name': 'Fonasa Plan C', 'type': 'Fonasa'},
+    {'id': 4, 'name': 'Fonasa Plan D', 'type': 'Fonasa'},
+    {'id': 5, 'name': 'Isapre Plan 1', 'type': 'Isapre'},
+    {'id': 6, 'name': 'Isapre Plan 2', 'type': 'Isapre'}
 ]
 
-for data in plan_salud_data:
-    plan_salud = PlanDeSalud(**data)
-    session.add(plan_salud)
+for data in health_plan_data:
+    health_plan = HealthPlan(**data)
+    session.add(health_plan)
 session.commit()
 
+# Insert data into Fonasa table
 fonasa_data = [
-    {'id': 1, 'plan_salud_id': 1, 'descuento': 7.00},
-    {'id': 2, 'plan_salud_id': 2, 'descuento': 7.00}
+    {'id': 1, 'health_plan_id': 1, 'discount': 4.00},
+    {'id': 2, 'health_plan_id': 2, 'discount': 6.00},
+    {'id': 3, 'health_plan_id': 3, 'discount': 7.00},
+    {'id': 4, 'health_plan_id': 4, 'discount': 7.00},
 ]
 
 for data in fonasa_data:
@@ -319,9 +146,10 @@ for data in fonasa_data:
     session.add(fonasa)
 session.commit()
 
+# Insert data into Isapre table
 isapre_data = [
-    {'id': 1, 'plan_salud_id': 3, 'descuento': 10.00},
-    {'id': 2, 'plan_salud_id': 4, 'descuento': 12.00}
+    {'id': 1, 'health_plan_id': 5, 'discount': 10.00},
+    {'id': 2, 'health_plan_id': 6, 'discount': 12.00}
 ]
 
 for data in isapre_data:
@@ -329,76 +157,90 @@ for data in isapre_data:
     session.add(isapre)
 session.commit()
 
-# Insert data into Contrato table
-contrato_data = [
-    {'id': 1, 'colaborador_id': 1, 'tipo_contrato': 'planta', 'fecha_inicio': date(2020, 1, 15), 'fecha_termino': date(2023, 1, 15), 'escalafon': 'profesional', 'departamento_id': 1, 'fecha_registro': date(2020, 1, 15)},
-    {'id': 2, 'colaborador_id': 2, 'tipo_contrato': 'contrata', 'fecha_inicio': date(2019, 3, 10), 'fecha_termino': date(2022, 3, 10), 'escalafon': 'administrativo', 'departamento_id': 2, 'fecha_registro': date(2019, 3, 10)},
-    {'id': 3, 'colaborador_id': 3, 'tipo_contrato': 'reemplazo', 'fecha_inicio': date(2021, 6, 5), 'fecha_termino': date(2022, 6, 5), 'escalafon': 'tecnico', 'departamento_id': 3, 'fecha_registro': date(2021, 6, 5)},
-    {'id': 4, 'colaborador_id': 4, 'tipo_contrato': 'suplencia', 'fecha_inicio': date(2018, 9, 25), 'fecha_termino': date(2021, 9, 25), 'escalafon': 'auxiliar', 'departamento_id': 4, 'fecha_registro': date(2018, 9, 25)},
-    {'id': 5, 'colaborador_id': 5, 'tipo_contrato': 'planta', 'fecha_inicio': date(2022, 2, 1), 'fecha_termino': date(2025, 2, 1), 'escalafon': 'directivo', 'departamento_id': 5, 'fecha_registro': date(2022, 2, 1)}
+# Insert data into Contract table
+contract_data = [
+    {'id': 1, 'employee_id': 1, 'contract_type': 'permanent', 'start_date': date(2020, 1, 15), 'end_date': date(2023, 1, 15), 'position_level': 'professional', 'department_id': 1, 'registration_date': date(2020, 1, 15)},
+    {'id': 2, 'employee_id': 2, 'contract_type': 'fixed-term', 'start_date': date(2019, 3, 10), 'end_date': date(2022, 3, 10), 'position_level': 'administrative', 'department_id': 2, 'registration_date': date(2019, 3, 10)},
+    {'id': 3, 'employee_id': 3, 'contract_type': 'temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'position_level': 'technical', 'department_id': 3, 'registration_date': date(2021, 6, 5)},
+    {'id': 4, 'employee_id': 4, 'contract_type': 'substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'position_level': 'auxiliary', 'department_id': 4, 'registration_date': date(2018, 9, 25)},
+    {'id': 5, 'employee_id': 5, 'contract_type': 'permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2025, 2, 1), 'position_level': 'executive', 'department_id': 1, 'registration_date': date(2022, 2, 1)}
 ]
 
-for data in contrato_data:
-    contrato = Contrato(**data)
-    session.add(contrato)
+for data in contract_data:
+    contract = Contract(**data)
+    session.add(contract)
 session.commit()
+
 
 # Insert data into Vacaciones table
-vacaciones_data = [
-    {'id': 1, 'colaborador_id': 1, 'fecha_inicio': date(2023, 1, 5), 'fecha_termino': date(2023, 1, 20), 'dias_tomados': 15, 'dias_acumulados': 10, 'colaborador_antiguo': False},
-    {'id': 2, 'colaborador_id': 2, 'fecha_inicio': date(2023, 6, 1), 'fecha_termino': date(2023, 6, 10), 'dias_tomados': 9, 'dias_acumulados': 5, 'colaborador_antiguo': False},
-    {'id': 3, 'colaborador_id': 3, 'fecha_inicio': date(2022, 12, 15), 'fecha_termino': date(2022, 12, 30), 'dias_tomados': 15, 'dias_acumulados': 3, 'colaborador_antiguo': False},
-    {'id': 4, 'colaborador_id': 4, 'fecha_inicio': date(2022, 8, 1), 'fecha_termino': date(2022, 8, 15), 'dias_tomados': 14, 'dias_acumulados': 6, 'colaborador_antiguo': True},
-    {'id': 5, 'colaborador_id': 5, 'fecha_inicio': date(2023, 2, 10), 'fecha_termino': date(2023, 2, 25), 'dias_tomados': 15, 'dias_acumulados': 8, 'colaborador_antiguo': False}
+vacation_data = [
+    {'id': 1, 'employee_id': 1, 'start_date': date(2023, 1, 5), 'end_date': date(2023, 1, 20), 'days_taken': 15, 'accumulated_days': 10, 'is_senior_employee': False},
+    {'id': 2, 'employee_id': 2, 'start_date': date(2023, 6, 1), 'end_date': date(2023, 6, 10), 'days_taken': 9, 'accumulated_days': 5, 'is_senior_employee': False},
+    {'id': 3, 'employee_id': 3, 'start_date': date(2022, 12, 15), 'end_date': date(2022, 12, 30), 'days_taken': 15, 'accumulated_days': 3, 'is_senior_employee': False},
+    {'id': 4, 'employee_id': 4, 'start_date': date(2022, 8, 1), 'end_date': date(2022, 8, 15), 'days_taken': 14, 'accumulated_days': 6, 'is_senior_employee': True},
+    {'id': 5, 'employee_id': 5, 'start_date': date(2023, 2, 10), 'end_date': date(2023, 2, 25), 'days_taken': 15, 'accumulated_days': 8, 'is_senior_employee': False}
 ]
 
-for data in vacaciones_data:
-    vacaciones = Vacaciones(**data)
-    session.add(vacaciones)
+for data in vacation_data:
+    vacation = Vacation(**data)
+    session.add(vacation)
 session.commit()
 
-# Insert data into Evaluacion table
-evaluacion_data = [
-    {'id': 1, 'colaborador_id': 1, 'fecha_evaluacion': date(2023, 5, 15), 'evaluador': 'Supervisor A', 'factor_evaluacion': 4.5, 'calificacion': 'Good', 'comentarios': 'Excellent performance.'},
-    {'id': 2, 'colaborador_id': 2, 'fecha_evaluacion': date(2023, 7, 10), 'evaluador': 'Supervisor B', 'factor_evaluacion': 3.8, 'calificacion': 'Fair', 'comentarios': 'Needs to improve teamwork.'},
-    {'id': 3, 'colaborador_id': 3, 'fecha_evaluacion': date(2023, 3, 25), 'evaluador': 'Supervisor C', 'factor_evaluacion': 4.0, 'calificacion': 'Good', 'comentarios': 'Generally good performance.'},
-    {'id': 4, 'colaborador_id': 4, 'fecha_evaluacion': date(2022, 12, 5), 'evaluador': 'Supervisor A', 'factor_evaluacion': 4.7, 'calificacion': 'Good', 'comentarios': 'Highly recommended for promotions.'},
-    {'id': 5, 'colaborador_id': 5, 'fecha_evaluacion': date(2023, 1, 20), 'evaluador': 'Supervisor B', 'factor_evaluacion': 3.5, 'calificacion': 'Fair', 'comentarios': 'Could improve punctuality.'}
+# Insert data into Evaluation table
+evaluation_data = [
+    {'id': 1, 'employee_id': 1, 'evaluation_date': date(2023, 5, 15), 'evaluator': 'Supervisor A', 'evaluation_factor': 4.5, 'rating': 'Good', 'comments': 'Excellent performance.'},
+    {'id': 2, 'employee_id': 2, 'evaluation_date': date(2023, 7, 10), 'evaluator': 'Supervisor B', 'evaluation_factor': 3.8, 'rating': 'Fair', 'comments': 'Needs to improve teamwork.'},
+    {'id': 3, 'employee_id': 3, 'evaluation_date': date(2023, 3, 25), 'evaluator': 'Supervisor C', 'evaluation_factor': 4.0, 'rating': 'Good', 'comments': 'Generally good performance.'},
+    {'id': 4, 'employee_id': 4, 'evaluation_date': date(2022, 12, 5), 'evaluator': 'Supervisor A', 'evaluation_factor': 4.7, 'rating': 'Good', 'comments': 'Highly recommended for promotions.'},
+    {'id': 5, 'employee_id': 5, 'evaluation_date': date(2023, 1, 20), 'evaluator': 'Supervisor B', 'evaluation_factor': 3.5, 'rating': 'Fair', 'comments': 'Could improve punctuality.'}
 ]
 
-for data in evaluacion_data:
-    evaluacion = Evaluacion(**data)
-    session.add(evaluacion)
+for data in evaluation_data:
+    evaluation = Evaluation(**data)
+    session.add(evaluation)
 session.commit()
 
-# Insert data into Capacitacion table
-capacitacion_data = [
-    {'id': 1, 'colaborador_id': 1, 'fecha_capacitacion': date(2023, 3, 5), 'curso': 'Advanced Python', 'calificacion': 4.5, 'institucion': 'Tech Academy', 'comentarios': 'Excellent participation.'},
-    {'id': 2, 'colaborador_id': 2, 'fecha_capacitacion': date(2023, 4, 15), 'curso': 'Project Management', 'calificacion': 4.0, 'institucion': 'University A', 'comentarios': 'Good grasp of the subject.'},
-    {'id': 3, 'colaborador_id': 3, 'fecha_capacitacion': date(2022, 11, 22), 'curso': 'Cybersecurity', 'calificacion': 3.8, 'institucion': 'Tech Institute', 'comentarios': 'Acceptable performance.'},
-    {'id': 4, 'colaborador_id': 4, 'fecha_capacitacion': date(2022, 6, 18), 'curso': 'Digital Marketing', 'calificacion': 4.2, 'institucion': 'Online Academy', 'comentarios': 'Good tool mastery.'},
-    {'id': 5, 'colaborador_id': 5, 'fecha_capacitacion': date(2023, 1, 10), 'curso': 'Scrum Master', 'calificacion': 3.5, 'institucion': 'Scrum Training', 'comentarios': 'Needs to improve leadership.'}
+# Insert data into Training table
+training_data = [
+    {'id': 1, 'employee_id': 1, 'training_date': date(2023, 3, 5), 'course': 'Advanced Python', 'grade': 4.5, 'institution': 'Tech Academy', 'comments': 'Excellent participation.'},
+    {'id': 2, 'employee_id': 2, 'training_date': date(2023, 4, 15), 'course': 'Project Management', 'grade': 4.0, 'institution': 'University A', 'comments': 'Good grasp of the subject.'},
+    {'id': 3, 'employee_id': 3, 'training_date': date(2022, 11, 22), 'course': 'Cybersecurity', 'grade': 3.8, 'institution': 'Tech Institute', 'comments': 'Acceptable performance.'},
+    {'id': 4, 'employee_id': 4, 'training_date': date(2022, 6, 18), 'course': 'Digital Marketing', 'grade': 4.2, 'institution': 'Online Academy', 'comments': 'Good tool mastery.'},
+    {'id': 5, 'employee_id': 5, 'training_date': date(2023, 1, 10), 'course': 'Scrum Master', 'grade': 3.5, 'institution': 'Scrum Training', 'comments': 'Needs to improve leadership.'}
 ]
 
-for data in capacitacion_data:
-    capacitacion = Capacitacion(**data)
-    session.add(capacitacion)
+for data in training_data:
+    training = Training(**data)
+    session.add(training)
 session.commit()
 
-# Insert data into Remuneracion table
-remuneracion_data = [
-    {'id': 1, 'colaborador_id': 1, 'afp_id': 1, 'plan_salud_id': 1, 'monto_bruto': 2500.00, 'impuesto': 10.0, 'deducciones': 150.00, 'bonus': 200.00, 'aporte_bienestar': 50.00, 'monto_liquido': 2200.00},
-    {'id': 2, 'colaborador_id': 2, 'afp_id': 2, 'plan_salud_id': 2, 'monto_bruto': 3000.00, 'impuesto': 12.0, 'deducciones': 200.00, 'bonus': 250.00, 'aporte_bienestar': 60.00, 'monto_liquido': 2650.00},
-    {'id': 3, 'colaborador_id': 3, 'afp_id': 3, 'plan_salud_id': 3, 'monto_bruto': 2300.00, 'impuesto': 9.0, 'deducciones': 130.00, 'bonus': 150.00, 'aporte_bienestar': 40.00, 'monto_liquido': 2070.00},
-    {'id': 4, 'colaborador_id': 4, 'afp_id': 4, 'plan_salud_id': 1, 'monto_bruto': 2800.00, 'impuesto': 11.0, 'deducciones': 180.00, 'bonus': 300.00, 'aporte_bienestar': 55.00, 'monto_liquido': 2455.00},
-    {'id': 5, 'colaborador_id': 5, 'afp_id': 5, 'plan_salud_id': 2, 'monto_bruto': 2700.00, 'impuesto': 10.5, 'deducciones': 170.00, 'bonus': 280.00, 'aporte_bienestar': 50.00, 'monto_liquido': 2390.00}
+# Insert data into Remuneration table
+remuneration_data = [
+    {'id': 1, 'employee_id': 1, 'afp_id': 1, 'health_plan_id': 1, 'gross_amount': 2500.00, 'tax': 10.0, 'deductions': 150.00, 'bonus': 200.00, 'welfare_contribution': 50.00, 'net_amount': 2200.00},
+    {'id': 2, 'employee_id': 2, 'afp_id': 2, 'health_plan_id': 2, 'gross_amount': 3000.00, 'tax': 12.0, 'deductions': 200.00, 'bonus': 250.00, 'welfare_contribution': 60.00, 'net_amount': 2650.00},
+    {'id': 3, 'employee_id': 3, 'afp_id': 3, 'health_plan_id': 3, 'gross_amount': 2300.00, 'tax': 9.0, 'deductions': 130.00, 'bonus': 150.00, 'welfare_contribution': 40.00, 'net_amount': 2070.00},
+    {'id': 4, 'employee_id': 4, 'afp_id': 4, 'health_plan_id': 1, 'gross_amount': 2800.00, 'tax': 11.0, 'deductions': 180.00, 'bonus': 300.00, 'welfare_contribution': 55.00, 'net_amount': 2455.00},
+    {'id': 5, 'employee_id': 5, 'afp_id': 5, 'health_plan_id': 2, 'gross_amount': 2700.00, 'tax': 10.5, 'deductions': 170.00, 'bonus': 280.00, 'welfare_contribution': 50.00, 'net_amount': 2390.00}
 ]
 
-for data in remuneracion_data:
-    remuneracion = Remuneracion(**data)
-    session.add(remuneracion)
+for data in remuneration_data:
+    remuneration = Remuneration(**data)
+    session.add(remuneration)
 session.commit()
 
+# Insert data into Bonus table
+bonus_data = [
+    {'id': 1, 'remuneration_id': 1, 'benefit': 500.00},
+    {'id': 2, 'remuneration_id': 2, 'benefit': 300.00},
+    {'id': 3, 'remuneration_id': 3, 'benefit': 400.00},
+    {'id': 4, 'remuneration_id': 4, 'benefit': 200.00},
+    {'id': 5, 'remuneration_id': 5, 'benefit': 350.00}
+]
+
+for data in bonus_data:
+    bonus = Bonus(**data)
+    session.add(bonus)
+session.commit()
 
 # Insert user and password into User table
 new_user = User(username='LBrownI')

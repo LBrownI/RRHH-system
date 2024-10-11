@@ -21,162 +21,165 @@ with engine.connect() as conn:
 
 Base = declarative_base()
 
-# Empresa model
-class Empresa(Base):
-    __tablename__ = 'Empresa'
+# Company model
+class Company(Base):
+    __tablename__ = 'Company'
     id = Column(Integer, primary_key=True)
-    rut = Column(String(20))
-    nombre = Column(String(100))
-    direccion = Column(String(255))
-    telefono = Column(String(20))
-    giro = Column(String(100))
+    rut = Column(String(20))  # Equivalent to 'rut'
+    name = Column(String(100))
+    address = Column(String(255))
+    phone = Column(String(20))
+    business_activity = Column(String(100))  # Equivalent to 'giro'
 
-# Colaborador model
-class Colaborador(Base):
-    __tablename__ = 'Colaborador'
+# Employee model
+class Employee(Base):
+    __tablename__ = 'Employee'
     id = Column(Integer, primary_key=True)
-    rut = Column(String(20))
-    nombre = Column(String(50))
-    apellido = Column(String(50))
-    fecha_nacimiento = Column(Date)
-    fecha_ingreso = Column(Date)
-    telefono = Column(String(20))
-    salario = Column(DECIMAL(10, 2))
-    nacionalidad = Column(String(50))
-    contratos = relationship('Contrato', back_populates='colaborador')
-    vacaciones = relationship('Vacaciones', back_populates='colaborador')
-    evaluaciones = relationship('Evaluacion', back_populates='colaborador')
-    capacitaciones = relationship('Capacitacion', back_populates='colaborador')
-    remuneraciones = relationship('Remuneracion', back_populates='colaborador')
-    cargos = relationship('Cargo', secondary='ColaboradorCargo', back_populates='colaboradores')
+    rut = Column(String(20))  # Equivalent to 'rut'
+    first_name = Column(String(50))
+    last_name = Column(String(50))
+    birth_date = Column(Date)
+    hire_date = Column(Date)
+    phone = Column(String(20))
+    salary = Column(DECIMAL(10, 2))
+    nationality = Column(String(50))
+    contracts = relationship('Contract', back_populates='employee')
+    vacations = relationship('Vacation', back_populates='employee')
+    evaluations = relationship('Evaluation', back_populates='employee')
+    trainings = relationship('Training', back_populates='employee')
+    remunerations = relationship('Remuneration', back_populates='employee')
+    positions = relationship('Position', secondary='EmployeePosition', back_populates='employees')
 
-# Cargo model
-class Cargo(Base):
-    __tablename__ = 'Cargo'
+# Position model
+class JobPosition(Base):
+    __tablename__ = 'JobPosition'
     id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    descripcion = Column(Text)
-    colaboradores = relationship('Colaborador', secondary='ColaboradorCargo', back_populates='cargos')
+    name = Column(String(100))
+    description = Column(Text)
+    employees = relationship('Employee', secondary='EmployeePosition', back_populates='positions')
 
-# ColaboradorCargo association table (Many-to-Many relationship between Colaborador and Cargo)
-class ColaboradorCargo(Base):
-    __tablename__ = 'ColaboradorCargo'
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'), primary_key=True)
-    cargo_id = Column(Integer, ForeignKey('Cargo.id'), primary_key=True)
-    
-# AFP model
+# EmployeePosition association table (Many-to-Many relationship between Employee and JobPosition)
+class EmployeePosition(Base):
+    __tablename__ = 'EmployeePosition'
+    employee_id = Column(Integer, ForeignKey('Employee.id'), primary_key=True)
+    position_id = Column(Integer, ForeignKey('Position.id'), primary_key=True)
+
+# Pension Fund model (AFP)
 class AFP(Base):
     __tablename__ = 'AFP'
     id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    comision_porcentaje = Column(DECIMAL(5, 2))
-    remuneraciones = relationship('Remuneracion', back_populates='afp')
+    name = Column(String(100))
+    commission_percentage = Column(DECIMAL(5, 2))
+    remunerations = relationship('Remuneration', back_populates='pension_fund')
 
-# Departamento model
-class Departamento(Base):
-    __tablename__ = 'Departamento'
+# Department model
+class Department(Base):
+    __tablename__ = 'Department'
     id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    contratos = relationship('Contrato', back_populates='departamento')
+    name = Column(String(100))
+    contracts = relationship('Contract', back_populates='department')
 
-# Vacaciones model
-class Vacaciones(Base):
-    __tablename__ = 'Vacaciones'
+# Vacation model
+class Vacation(Base):
+    __tablename__ = 'Vacation'
     id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    fecha_inicio = Column(Date)
-    fecha_termino = Column(Date)
-    dias_tomados = Column(Integer) # Days taken in the period above 
-    dias_acumulados = Column(Integer) # Acumulated after the vacation period above
-    colaborador_antiguo = Column(Boolean) #If 1 then it's an employee that has worked for 15 years (20 days assigned instead of 15)
-    colaborador = relationship('Colaborador', back_populates='vacaciones')
+    employee_id = Column(Integer, ForeignKey('Employee.id'))
+    start_date = Column(Date)
+    end_date = Column(Date)
+    days_taken = Column(Integer)
+    accumulated_days = Column(Integer)
+    long_service_employee = Column(Boolean)  # Equivalent to 'colaborador_antiguo'
+    employee = relationship('Employee', back_populates='vacations')
 
-# Evaluacion model
-class Evaluacion(Base):
-    __tablename__ = 'Evaluacion'
+# Evaluation model
+class Evaluation(Base):
+    __tablename__ = 'Evaluation'
     id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    fecha_evaluacion = Column(Date)
-    evaluador = Column(String(100))
-    factor_evaluacion = Column(DECIMAL(5, 2))
-    calificacion = Column(String(50))  # Bueno, regular, malo/deficiente
-    comentarios = Column(Text)
-    colaborador = relationship('Colaborador', back_populates='evaluaciones')
+    employee_id = Column(Integer, ForeignKey('Employee.id'))
+    evaluation_date = Column(Date)
+    evaluator = Column(String(100))
+    evaluation_factor = Column(DECIMAL(5, 2))
+    rating = Column(String(50))  # Good, average, bad/deficient
+    comments = Column(Text)
+    employee = relationship('Employee', back_populates='evaluations')
 
-# Capacitacion model
-class Capacitacion(Base):
-    __tablename__ = 'Capacitacion'
+# Training model
+class Training(Base):
+    __tablename__ = 'Training'
     id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    fecha_capacitacion = Column(Date)
-    curso = Column(String(100))
-    calificacion = Column(DECIMAL(5, 2))
-    institucion = Column(String(100))
-    comentarios = Column(Text)
-    colaborador = relationship('Colaborador', back_populates='capacitaciones')
+    employee_id = Column(Integer, ForeignKey('Employee.id'))
+    training_date = Column(Date)
+    course = Column(String(100))
+    score = Column(DECIMAL(5, 2))
+    institution = Column(String(100))
+    comments = Column(Text)
+    employee = relationship('Employee', back_populates='trainings')
 
-# Remuneracion (extended) model
-class Remuneracion(Base):
-    __tablename__ = 'Remuneracion'
+# Remuneration model
+class Remuneration(Base):
+    __tablename__ = 'Remuneration'
     id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    afp_id = Column(Integer, ForeignKey('AFP.id'))
-    plan_salud_id = Column(Integer, ForeignKey('PlanDeSalud.id'))
-    monto_bruto = Column(DECIMAL(10, 2))
-    impuesto = Column(DECIMAL(5, 2))
-    deducciones = Column(DECIMAL(10, 2))
+    employee_id = Column(Integer, ForeignKey('Employee.id'))
+    pension_fund_id = Column(Integer, ForeignKey('PensionFund.id'))
+    health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
+    gross_amount = Column(DECIMAL(10, 2))
+    tax = Column(DECIMAL(5, 2))
+    deductions = Column(DECIMAL(10, 2))
     bonus = Column(DECIMAL(10, 2))
-    aporte_bienestar = Column(DECIMAL(10, 2))
-    monto_liquido = Column(DECIMAL(10, 2))
-    colaborador = relationship('Colaborador', back_populates='remuneraciones')
-    afp = relationship('AFP', back_populates='remuneraciones')
-    plan_salud = relationship('PlanDeSalud', back_populates='remuneraciones')
-    bonuses = relationship("Bonus", back_populates="remuneracion")
+    welfare_contribution = Column(DECIMAL(10, 2))
+    net_amount = Column(DECIMAL(10, 2))
+    employee = relationship('Employee', back_populates='remunerations')
+    pension_fund = relationship('PensionFund', back_populates='remunerations')
+    health_plan = relationship('HealthPlan', back_populates='remunerations')
+    bonuses = relationship("Bonus", back_populates="remuneration")
 
-class PlanDeSalud(Base):
-    __tablename__ = 'PlanDeSalud'
+# HealthPlan model
+class HealthPlan(Base):
+    __tablename__ = 'HealthPlan'
     id = Column(Integer, primary_key=True)
-    nombre = Column(String(100))
-    tipo = Column(String(50))
-    fonasa = relationship('Fonasa', back_populates='plan_salud')
-    isapre = relationship('Isapre', back_populates='plan_salud')
-    remuneraciones = relationship('Remuneracion', back_populates='plan_salud')
+    name = Column(String(100))
+    type = Column(String(50))
+    public_health = relationship('Fonasa', back_populates='health_plan')
+    private_health = relationship('Isapre', back_populates='health_plan')
+    remunerations = relationship('Remuneration', back_populates='health_plan')
 
-# PlanDeSalud extension for Fonasa and Isapre
+# Public Health model (Fonasa)
 class Fonasa(Base):
     __tablename__ = 'Fonasa'
     id = Column(Integer, primary_key=True)
-    plan_salud_id = Column(Integer, ForeignKey('PlanDeSalud.id'))
-    descuento = Column(DECIMAL(10, 2))  # Different from Isapre's discount
-    plan_salud = relationship('PlanDeSalud', back_populates='fonasa')
+    health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
+    discount = Column(DECIMAL(10, 2))  # Equivalent to 'descuento'
+    health_plan = relationship('HealthPlan', back_populates='fonasa')
 
+# PrivateHealth model (Isapre)
 class Isapre(Base):
     __tablename__ = 'Isapre'
     id = Column(Integer, primary_key=True)
-    plan_salud_id = Column(Integer, ForeignKey('PlanDeSalud.id'))
-    descuento = Column(DECIMAL(10, 2))  # Different from Fonasa's discount
-    plan_salud = relationship('PlanDeSalud', back_populates='isapre')
+    health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
+    discount = Column(DECIMAL(10, 2)) 
+    health_plan = relationship('HealthPlan', back_populates='isapre')
 
+# Bonus model
 class Bonus(Base):
     __tablename__ = 'Bonus'
     id = Column(Integer, primary_key=True)
-    remuneracion_id = Column(Integer, ForeignKey('Remuneracion.id'))
-    aporte = Column(DECIMAL(10, 2))  # Help for the employee for a discount in money
-    beneficio = Column(DECIMAL(10, 2)) # Help for the employee as a monetary aid
-    remuneracion = relationship("Remuneracion", back_populates="bonuses")
+    remuneration_id = Column(Integer, ForeignKey('Remuneration.id')) 
+    benefit = Column(DECIMAL(10, 2))  
+    remuneration = relationship("Remuneration", back_populates="bonuses")
 
-class Contrato(Base):
-    __tablename__ = 'Contrato'
+# Contract model
+class Contract(Base):
+    __tablename__ = 'Contract'
     id = Column(Integer, primary_key=True)
-    colaborador_id = Column(Integer, ForeignKey('Colaborador.id'))
-    tipo_contrato = Column(String(50))  # contrata, suplencia, reemplazo, planta
-    fecha_inicio = Column(Date)
-    fecha_termino = Column(Date)
-    escalafon = Column(String(50))  # auxiliar, administrativo, tecnico, profesional, directivo
-    departamento_id = Column(Integer, ForeignKey('Departamento.id'))  # Dpto/unidad asignado
-    fecha_registro = Column(Date)
-    colaborador = relationship('Colaborador', back_populates='contratos')
-    departamento = relationship('Departamento', back_populates='contratos')
+    employee_id = Column(Integer, ForeignKey('Employee.id'))
+    contract_type = Column(String(50))  # Fixed, temporary, replacement, permanent (contrata, suplencia, reemplazo, planta)
+    start_date = Column(Date)
+    end_date = Column(Date)
+    classification = Column(String(50))  # Auxiliary, administrative, technical, professional, executive (escalafon)
+    department_id = Column(Integer, ForeignKey('Department.id'))
+    registration_date = Column(Date)
+    employee = relationship('Employee', back_populates='contracts')
+    department = relationship('Department', back_populates='contracts')
 
 class User(Base):
     __tablename__ = 'User'
