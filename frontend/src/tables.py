@@ -48,7 +48,7 @@ class Employee(Base):
     evaluations = relationship('Evaluation', back_populates='employee')
     trainings = relationship('Training', back_populates='employee')
     remunerations = relationship('Remuneration', back_populates='employee')
-    positions = relationship('Position', secondary='EmployeePosition', back_populates='employees')
+    positions = relationship('JobPosition', secondary='EmployeePosition', back_populates='employees')
 
 # Position model
 class JobPosition(Base):
@@ -64,7 +64,7 @@ class JobPosition(Base):
 class EmployeePosition(Base):
     __tablename__ = 'EmployeePosition'
     employee_id = Column(Integer, ForeignKey('Employee.id'), primary_key=True)
-    position_id = Column(Integer, ForeignKey('Position.id'), primary_key=True)
+    position_id = Column(Integer, ForeignKey('JobPosition.id'), primary_key=True)
 
 # Pension Fund model (AFP)
 class AFP(Base):
@@ -123,7 +123,7 @@ class Remuneration(Base):
     __tablename__ = 'Remuneration'
     id = Column(Integer, primary_key=True)
     employee_id = Column(Integer, ForeignKey('Employee.id'))
-    pension_fund_id = Column(Integer, ForeignKey('PensionFund.id'))
+    afp_id = Column(Integer, ForeignKey('AFP.id'))
     health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
     gross_amount = Column(DECIMAL(10, 2))
     tax = Column(DECIMAL(5, 2))
@@ -132,7 +132,7 @@ class Remuneration(Base):
     welfare_contribution = Column(DECIMAL(10, 2))
     net_amount = Column(DECIMAL(10, 2))
     employee = relationship('Employee', back_populates='remunerations')
-    pension_fund = relationship('PensionFund', back_populates='remunerations')
+    pension_fund = relationship('AFP', back_populates='remunerations')
     health_plan = relationship('HealthPlan', back_populates='remunerations')
     bonuses = relationship("Bonus", back_populates="remuneration")
 
