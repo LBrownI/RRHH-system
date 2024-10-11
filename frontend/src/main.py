@@ -5,11 +5,6 @@ from queries import general_info
 # from db_operations import add_contrato
 # from vacation_logic import add_vacation_logic
 
-# HI, I MADE LOTS OF CHANGES, IM SURE YOU'LL READ THIS ( ͡° ͜ʖ ͡°)
-# OK SO IT WORKS, ITS A MOCKED VERSION O THE CODE, WHICH MEANS IT'S SIMULATED/FALSE/TEMPORARY CODE JUST TO
-# MIMIC SOME FUNCTIONALITIES WITHOUT FULLY INTEGRATING IT. SO INSTEAD OF CONNECTING TO THE DATABASE
-# IT GENERATES FALSE RESPONSES TO TEST OUT. THE DB IMPLEMENTATION IS COMMENTED-OUT WITH '''
-
 app = Flask(__name__)
 app.secret_key = 'magickey'
 
