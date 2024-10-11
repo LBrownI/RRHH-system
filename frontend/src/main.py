@@ -43,7 +43,8 @@ def menu():
 # Route for the colaborador (optional)
 @app.route('/colaborador')
 def user():
-    return render_template('colaborador.html')
+    name = request.args.get('name', 'Colaborator Name')
+    return render_template('colaborador.html', name=name)
 
 # Route for the option of adding a new "Contrato" (mocked functionality)
 @app.route('/add-contrato', methods=['GET', 'POST'])
