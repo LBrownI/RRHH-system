@@ -37,39 +37,23 @@ session.commit()
 
 # Insert data into Employee table
 employee_data = [
-    {'id': 1, 'rut': '12.345.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birthdate': date(1980, 5, 12), 'start_date': date(2020, 1, 15), 'phone': '555-2345', 'salary': 2000.00, 'nationality': 'Chilean'},
-    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birthdate': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'salary': 2500.00, 'nationality': 'Chilean'},
-    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birthdate': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'salary': 1800.00, 'nationality': 'Chilean'},
-    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birthdate': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'salary': 2300.00, 'nationality': 'Chilean'},
-    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birthdate': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'salary': 2100.00, 'nationality': 'Chilean'},
-    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birthdate': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'salary': 2400.00, 'nationality': 'Chilean'},
-    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birthdate': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'salary': 2200.00, 'nationality': 'Chilean'},
-    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birthdate': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'salary': 2700.00, 'nationality': 'Chilean'},
-    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birthdate': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'salary': 2600.00, 'nationality': 'Chilean'},
-    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birthdate': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'salary': 1900.00, 'nationality': 'Chilean'},
-    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birthdate': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'salary': 2100.00, 'nationality': 'Haitian'}
+    {'id': 1, 'rut': '12.345.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(1980, 5, 12), 'start_date': date(2020, 1, 15), 'phone': '555-2345', 'salary': 2000.00, 'nationality': 'Chilean'},
+    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'salary': 2500.00, 'nationality': 'Chilean'},
+    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'salary': 1800.00, 'nationality': 'Chilean'},
+    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'salary': 2300.00, 'nationality': 'Chilean'},
+    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birth_date': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'salary': 2100.00, 'nationality': 'Chilean'},
+    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birth_date': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'salary': 2400.00, 'nationality': 'Chilean'},
+    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birth_date': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'salary': 2200.00, 'nationality': 'Chilean'},
+    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birth_date': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'salary': 2700.00, 'nationality': 'Chilean'},
+    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birth_date': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'salary': 2600.00, 'nationality': 'Chilean'},
+    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birth_date': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'salary': 1900.00, 'nationality': 'Chilean'},
+    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birth_date': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'salary': 2100.00, 'nationality': 'Haitian'}
 ]
 
 
 for data in employee_data:
     employee = Employee(**data)
     session.add(employee)
-session.commit()
-
-# Insert data into AFP table
-afp_data = [
-    {'id': 1, 'name': 'AFP Capital', 'commission_percentage': 1.44},
-    {'id': 2, 'name': 'AFP Cuprum', 'commission_percentage': 1.44},
-    {'id': 3, 'name': 'AFP Habitat', 'commission_percentage': 1.27},
-    {'id': 4, 'name': 'AFP Modelo', 'commission_percentage': 0.58},
-    {'id': 5, 'name': 'AFP Planvital', 'commission_percentage': 1.16},
-    {'id': 6, 'name': 'AFP Provida', 'commission_percentage': 1.45},
-    {'id': 7, 'name': 'AFP Uno', 'commission_percentage': 0.49}
-]
-
-for data in afp_data:
-    afp = AFP(**data)
-    session.add(afp)
 session.commit()
 
 # Insert data into JobPosition table
@@ -103,6 +87,22 @@ employee_position_data = [
 for data in employee_position_data:
     emp_pos = EmployeePosition(**data)
     session.add(emp_pos)
+session.commit()
+
+# Insert data into AFP table
+afp_data = [
+    {'id': 1, 'name': 'AFP Capital', 'commission_percentage': 1.44},
+    {'id': 2, 'name': 'AFP Cuprum', 'commission_percentage': 1.44},
+    {'id': 3, 'name': 'AFP Habitat', 'commission_percentage': 1.27},
+    {'id': 4, 'name': 'AFP Modelo', 'commission_percentage': 0.58},
+    {'id': 5, 'name': 'AFP Planvital', 'commission_percentage': 1.16},
+    {'id': 6, 'name': 'AFP Provida', 'commission_percentage': 1.45},
+    {'id': 7, 'name': 'AFP Uno', 'commission_percentage': 0.49}
+]
+
+for data in afp_data:
+    afp = AFP(**data)
+    session.add(afp)
 session.commit()
 
 # Insert data into Department table

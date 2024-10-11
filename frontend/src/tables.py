@@ -29,7 +29,7 @@ class Company(Base):
     name = Column(String(100))
     address = Column(String(255))
     phone = Column(String(20))
-    business_activity = Column(String(100))  # Equivalent to 'giro'
+    industry = Column(String(100))  # Equivalent to 'giro'
 
 # Employee model
 class Employee(Base):
@@ -39,7 +39,7 @@ class Employee(Base):
     first_name = Column(String(50))
     last_name = Column(String(50))
     birth_date = Column(Date)
-    hire_date = Column(Date)
+    start_date = Column(Date)
     phone = Column(String(20))
     salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
@@ -56,7 +56,9 @@ class JobPosition(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     description = Column(Text)
-    employees = relationship('Employee', secondary='EmployeePosition', back_populates='positions')
+    department_id = Column(Integer, ForeignKey('Department.id'))  # Foreign key to Department
+    department = relationship('Department', back_populates='job_positions')  # Relationship to Department
+    employees = relationship('Employee', secondary='EmployeePosition', back_populates='positions')  # Relationship to Employee
 
 # EmployeePosition association table (Many-to-Many relationship between Employee and JobPosition)
 class EmployeePosition(Base):
@@ -78,6 +80,7 @@ class Department(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     contracts = relationship('Contract', back_populates='department')
+    job_positions = relationship('JobPosition', back_populates='department')  # Relationship to JobPosition
 
 # Vacation model
 class Vacation(Base):
