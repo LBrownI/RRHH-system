@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from queries import *
 # from sqlalchemy.orm import Session, sessionmaker
-# from load_db import engine, Colaborador
+# from tables import engine, Colaborador
 # from db_operations import add_contrato
 # from vacation_logic import add_vacation_logic
 
@@ -37,40 +37,40 @@ def menu():
     employees = all_employees()
     return render_template('index.html', employees = employees)
 
-# Route for the colaborador (optional)
-@app.route('/colaborador')
+# Route for the employee (optional)
+@app.route('/employee')
 def user():
     """
     gets the employee_id from the URL and returns the info of the employee
     # example:
-        http://127.0.0.1:5000/colaborador?employee_id=1
+        http://127.0.0.1:5000/employee?employee_id=1
         try changing the id number to see the different employees!
     """
-    employee_id = request.args.get('employee_id', 'Colaborator Id')
+    employee_id = request.args.get('employee_id', 'Employee Id')
     gi = general_info(employee_id)
-    return render_template('colaborador.html', first_name=gi[0], last_name=gi[1])
+    return render_template('employee.html', first_name=gi[0], last_name=gi[1])
 
 # Route for the option of adding a new "Contrato" (mocked functionality)
 @app.route('/add-contrato', methods=['GET', 'POST'])
 def add_contrato_page():
     if request.method == 'POST':
         # Gather form data
-        contrato_data = {
-            'colaborador_id': request.form['colaborador_id'],
-            'tipo_contrato': request.form['tipo_contrato'],
-            'fecha_inicio': request.form['fecha_inicio'],
-            'fecha_fin': request.form['fecha_fin'],
-            'escalafon': request.form['escalafon']
+        contract_data = {
+            'employee_id': request.form['employee_id'],
+            'contract_type': request.form['contract_type'],
+            'start_date': request.form['start_date'],
+            'end_date': request.form['end_date'],
+            'classification': request.form['classification']
         }
         
         # Mock message for adding contrato
-        message = "Mock: Contrato added successfully!"
+        message = "Mock: Contract added successfully!"
         flash(message)
 
         # Original setup
         """
          Call function from db_operations.py
-         message = add_contrato(session, contrato_data)
+         message = add_contract(session, contract_data)
          flash(message)
         """
         return redirect(url_for('add_contrato_page'))
@@ -85,9 +85,9 @@ def register_vacation():
 # Route for adding vacation (no database interaction)
 @app.route('/add_vacation', methods=['POST'])
 def add_vacation():
-    colaborador_id = request.form.get('colaborador_id')
-    fecha_inicio = request.form.get('fecha_inicio')
-    fecha_termino = request.form.get('fecha_termino')
+    employee_id = request.form.get('employee_id')
+    start_date = request.form.get('start_date')
+    end_date = request.form.get('end_date')
     
     # Mock success and message (bypassing actual vacation logic)
     success = True
@@ -96,7 +96,7 @@ def add_vacation():
     # Original setup
     """  
     Call vacation logic from vacation_logic.py
-    success, message = add_vacation_logic(int(colaborador_id), fecha_inicio, fecha_termino)
+    success, message = add_vacation_logic(int(employee_id), start_date, end_date)
     """ 
     if success:
         flash('Vacation registered successfully!', 'success')
@@ -106,18 +106,18 @@ def add_vacation():
     return redirect('/register_vacation')
 
 # Part of the /add-contrato and /register_vacation page for showing colaborador name to the side of the id (mocked functionality)
-@app.route('/get_colaborador_name/<int:colaborador_id>', methods=['GET'])
-def get_colaborador_name(colaborador_id):
+@app.route('/get_employee_name/<int:employee_id>', methods=['GET'])
+def get_employee_name(employee_id):
 
-    # Mocked collaborator lookup
-    colaborador = {'nombre': 'Mock Collaborator'} if colaborador_id == 1 else None
+    # Mocked employee lookup
+    employee = {'name': 'Mock Employee'} if employee_id == 1 else None
 
     # Original setup
     """
-    colaborador = session.query(Colaborador).get(colaborador_id)  # Use SQLAlchemy to fetch the collaborator
+    employee = session.query(Employee).get(employee_id)  # Use SQLAlchemy to fetch the employee
     """
-    if colaborador:
-        return colaborador['nombre']
+    if employee:
+        return employee['name']
     else:
         return "Does not exist", 404
 

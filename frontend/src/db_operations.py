@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from load_db import Contract, Employee
+from tables import Contract, Employee
 from datetime import date
 
 # THIS db_opertions.py IS INTENDED FOR RETRIEVING DATA FROM THE DATABASE TO SHOW THE USER,
@@ -25,5 +25,5 @@ def add_contract(session: Session, contract_data: dict):
     session.add(contract)
     session.commit()
     
-    return f"Contrato added successfully."
+    return f"Contract added successfully."
 
