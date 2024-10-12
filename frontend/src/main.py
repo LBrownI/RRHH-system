@@ -40,9 +40,15 @@ def menu():
 # Route for the colaborador (optional)
 @app.route('/colaborador')
 def user():
-    name = request.args.get('name', 'Colaborator Name')
-    gi = general_info()
-    return render_template('colaborador.html', name=gi)
+    """
+    gets the employee_id from the URL and returns the info of the employee
+    # example:
+        http://127.0.0.1:5000/colaborador?employee_id=1
+        try changing the id number to see the different employees!
+    """
+    employee_id = request.args.get('employee_id', 'Colaborator Id')
+    gi = general_info(employee_id)
+    return render_template('colaborador.html', first_name=gi[0], last_name=gi[1])
 
 # Route for the option of adding a new "Contrato" (mocked functionality)
 @app.route('/add-contrato', methods=['GET', 'POST'])
