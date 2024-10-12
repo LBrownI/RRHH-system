@@ -48,7 +48,7 @@ def user():
     """
     employee_id = request.args.get('employee_id', 'Colaborator Id')
     gi = general_info(employee_id)
-    return render_template('colaborador.html', first_name=gi[0], last_name=gi[1])
+    return render_template('colaborador.html', first_name=gi[0], last_name=gi[1], phone=gi[2], rut=gi[3], position=gi[4])
 
 # Route for the option of adding a new "Contrato" (mocked functionality)
 @app.route('/add-contrato', methods=['GET', 'POST'])

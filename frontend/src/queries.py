@@ -3,7 +3,7 @@ from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey,
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
-from tables import Employee
+from tables import Employee, EmployeePosition, JobPosition
 # Load the MySQL root password from environment variables
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
 # You can set it up by doing: export MYSQL_ROOT_PASSWORD=your_secure_password
@@ -28,7 +28,7 @@ def general_info(employee_id: int):
     """Select the first and last name of the Colaborator tablle"""
     print('\n--- Running query_1 ---')
     try:
-        info = session.query(Employee.first_name, Employee.last_name).filter(Employee.id == employee_id).all()
+        info = session.query(Employee.first_name, Employee.last_name, Employee.phone, Employee.rut, JobPosition.name).join(EmployeePosition, Employee.id == EmployeePosition.employee_id).join(JobPosition, EmployeePosition.position_id == JobPosition.id).filter(Employee.id == employee_id).all()
         Employee_info = []
         for i in info:
             for j in i:
@@ -37,7 +37,7 @@ def general_info(employee_id: int):
     except Exception as e:
         print(f'Error in query_2: {e}')
 
-# test = general_info()
+# test = general_info(1)
 # print(test)
 def all_employees():
     """Select all the data from the Colaborator table"""
