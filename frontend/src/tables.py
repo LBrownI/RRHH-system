@@ -43,12 +43,12 @@ class Employee(Base):
     phone = Column(String(20))
     salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
-    contracts = relationship('Contract', back_populates='employee')
-    vacations = relationship('Vacation', back_populates='employee')
-    evaluations = relationship('Evaluation', back_populates='employee')
-    trainings = relationship('Training', back_populates='employee')
-    remunerations = relationship('Remuneration', back_populates='employee')
-    positions = relationship('JobPosition', secondary='EmployeePosition', back_populates='employees')  # Many-to-Many with JobPosition
+    contracts = relationship('Contract', back_populates='employees')
+    vacations = relationship('Vacation', back_populates='employees')
+    evaluations = relationship('Evaluation', back_populates='employees')
+    trainings = relationship('Training', back_populates='employees')
+    remunerations = relationship('Remuneration', back_populates='employees')
+    job_positions = relationship('JobPosition', secondary='EmployeePosition', back_populates='employees')  # Many-to-Many with JobPosition
 
 # Position model
 class JobPosition(Base):
@@ -57,7 +57,7 @@ class JobPosition(Base):
     name = Column(String(100))
     description = Column(Text)
     department_id = Column(Integer, ForeignKey('Department.id'))  # Foreign key to Department
-    department = relationship('Department', back_populates='job_positions')  # Relationship to Department
+    departments = relationship('Department', back_populates='job_positions')  # Relationship to Department
     employees = relationship('Employee', secondary='EmployeePosition', back_populates='job_positions')  # Relationship to Employee
 
 # EmployeePosition association table (Many-to-Many relationship between Employee and JobPosition)
@@ -72,15 +72,15 @@ class AFP(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     commission_percentage = Column(DECIMAL(5, 2))
-    remunerations = relationship('Remuneration', back_populates='afp')
+    remunerations = relationship('Remuneration', back_populates='afps')
 
 # Department model
 class Department(Base):
     __tablename__ = 'Department'
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
-    contracts = relationship('Contract', back_populates='department')  # Relationship to Contract
-    job_positions = relationship('JobPosition', back_populates='department')  # Relationship to JobPosition
+    contracts = relationship('Contract', back_populates='departments')  # Relationship to Contract
+    job_positions = relationship('JobPosition', back_populates='departments')  # Relationship to JobPosition
 
 # Vacation model
 class Vacation(Base):
@@ -92,7 +92,7 @@ class Vacation(Base):
     days_taken = Column(Integer)
     accumulated_days = Column(Integer)
     long_service_employee = Column(Boolean)  # Equivalent to 'colaborador_antiguo'
-    employee = relationship('Employee', back_populates='vacations')
+    employees = relationship('Employee', back_populates='vacations')
 
 # Evaluation model
 class Evaluation(Base):
@@ -104,7 +104,7 @@ class Evaluation(Base):
     evaluation_factor = Column(DECIMAL(5, 2))
     rating = Column(String(50))  # Good, average, bad/deficient
     comments = Column(Text)
-    employee = relationship('Employee', back_populates='evaluations')
+    employees = relationship('Employee', back_populates='evaluations')
 
 # Training model
 class Training(Base):
@@ -116,7 +116,7 @@ class Training(Base):
     score = Column(DECIMAL(5, 2))
     institution = Column(String(100))
     comments = Column(Text)
-    employee = relationship('Employee', back_populates='trainings')
+    employees = relationship('Employee', back_populates='trainings')
 
 # Remuneration model
 class Remuneration(Base):
@@ -131,9 +131,9 @@ class Remuneration(Base):
     bonus = Column(DECIMAL(10, 2))
     welfare_contribution = Column(DECIMAL(10, 2))
     net_amount = Column(DECIMAL(10, 2))
-    employee = relationship('Employee', back_populates='remunerations')
-    pension_fund = relationship('AFP', back_populates='remunerations')
-    health_plan = relationship('HealthPlan', back_populates='remunerations')
+    employees = relationship('Employee', back_populates='remunerations')
+    afps = relationship('AFP', back_populates='remunerations')
+    health_plans = relationship('HealthPlan', back_populates='remunerations')
     bonuses = relationship("Bonus", back_populates="remunerations")
 
 # HealthPlan model
@@ -142,9 +142,9 @@ class HealthPlan(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     type = Column(String(50))
-    public_health = relationship('Fonasa', back_populates='health_plan')
-    private_health = relationship('Isapre', back_populates='health_plan')
-    remunerations = relationship('Remuneration', back_populates='health_plan')
+    fonasa = relationship('Fonasa', back_populates='health_plans')
+    isapre = relationship('Isapre', back_populates='health_plans')
+    remunerations = relationship('Remuneration', back_populates='health_plans')
 
 # Public Health model (Fonasa)
 class Fonasa(Base):
@@ -152,7 +152,7 @@ class Fonasa(Base):
     id = Column(Integer, primary_key=True)
     health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
     discount = Column(DECIMAL(10, 2))  # Equivalent to 'descuento'
-    health_plan = relationship('HealthPlan', back_populates='fonasa')
+    health_plans = relationship('HealthPlan', back_populates='fonasa')
 
 # PrivateHealth model (Isapre)
 class Isapre(Base):
@@ -160,7 +160,7 @@ class Isapre(Base):
     id = Column(Integer, primary_key=True)
     health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
     discount = Column(DECIMAL(10, 2)) 
-    health_plan = relationship('HealthPlan', back_populates='isapre')
+    health_plans = relationship('HealthPlan', back_populates='isapre')
 
 # Bonus model
 class Bonus(Base):
@@ -168,7 +168,7 @@ class Bonus(Base):
     id = Column(Integer, primary_key=True)
     remuneration_id = Column(Integer, ForeignKey('Remuneration.id')) 
     benefit = Column(DECIMAL(10, 2))  
-    remuneration = relationship("Remuneration", back_populates="bonuses")
+    remunerations = relationship("Remuneration", back_populates="bonuses")
 
 # Contract model
 class Contract(Base):
@@ -181,8 +181,8 @@ class Contract(Base):
     classification = Column(String(50))  # Auxiliary, administrative, technical, professional, executive (escalafon)
     department_id = Column(Integer, ForeignKey('Department.id'))
     registration_date = Column(Date)
-    employee = relationship('Employee', back_populates='contracts')  # Relationship to Employee
-    department = relationship('Department', back_populates='contracts')  # Relationship to Department
+    employees = relationship('Employee', back_populates='contracts')  # Relationship to Employee
+    departments = relationship('Department', back_populates='contracts')  # Relationship to Department
 
 class User(Base):
     __tablename__ = 'User'
