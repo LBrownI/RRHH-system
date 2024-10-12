@@ -1,9 +1,10 @@
 import os
+from decimal import Decimal
 from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey, DECIMAL, Date, Text, Boolean
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
-from tables import Employee, EmployeePosition, JobPosition
+from tables import Employee, EmployeePosition, JobPosition, Remuneration, HealthPlan
 # Load the MySQL root password from environment variables
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
 # You can set it up by doing: export MYSQL_ROOT_PASSWORD=your_secure_password
@@ -25,8 +26,8 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def general_info(employee_id: int):
-    """Select the first and last name of the Employee table"""
-    print('\n--- Running query_1 ---')
+    """Get first name, last name, phone, rut and position of an employee"""
+    print('\n--- Running query general_info ---')
     try:
         info = session.query(Employee.first_name, Employee.last_name, Employee.phone, Employee.rut, JobPosition.name).join(EmployeePosition, Employee.id == EmployeePosition.employee_id).join(JobPosition, EmployeePosition.position_id == JobPosition.id).filter(Employee.id == employee_id).all()
         Employee_info = []
@@ -35,9 +36,25 @@ def general_info(employee_id: int):
                 Employee_info.append(j)
         return Employee_info
     except Exception as e:
-        print(f'Error in query_2: {e}')
+        print(f'Error in query general_info: {e}')
 
-# test = general_info(1)
+def aditional_info(employee_id_to_find: int):
+    """Get net amount and health plan of an employee"""
+    print('\n--- Running query aditional_info ---')
+    try:
+        info = session.query(Remuneration.net_amount, HealthPlan.name).select_from(Employee).join(Remuneration, Employee.id == Remuneration.employee_id).join(HealthPlan, Remuneration.health_plan_id == HealthPlan.id).filter(Employee.id == employee_id_to_find).all()
+        Employee_info = []
+        for i in info:
+            for j in i:
+                if isinstance(j, Decimal):
+                    Employee_info.append(int(j))
+                else:
+                    Employee_info.append(j)
+        return Employee_info
+    except Exception as e:
+        print(f'Error in query aditional_info: {e}')
+
+# test = aditional_info(1)
 # print(test)
 def all_employees():
     """Select all the data from the Employee table"""

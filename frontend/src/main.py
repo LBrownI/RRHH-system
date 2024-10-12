@@ -45,10 +45,15 @@ def user():
     # example:
         http://127.0.0.1:5000/employee?employee_id=1
         try changing the id number to see the different employees!
+    # NOTE:
+        the page employee without the employee_id of the employee will not work
+    # TODO:
+        fix list index out of range when there is no employee with the given id (redirect to a page with a message or similar)
     """
     employee_id = request.args.get('employee_id', 'Employee Id')
     gi = general_info(employee_id)
-    return render_template('employee.html', first_name=gi[0], last_name=gi[1], phone=gi[2], rut=gi[3], position=gi[4])
+    ad = aditional_info(employee_id)
+    return render_template('employee.html', first_name=gi[0], last_name=gi[1], phone=gi[2], rut=gi[3], position=gi[4], net_amount=ad[0], health_plan=ad[1])
 
 # Route for the option of adding a new "Contrato" (mocked functionality)
 @app.route('/add-contrato', methods=['GET', 'POST'])
