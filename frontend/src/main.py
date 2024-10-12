@@ -46,9 +46,11 @@ def user():
         http://127.0.0.1:5000/employee?employee_id=1
         try changing the id number to see the different employees!
     # NOTE:
-        the page employee without the employee_id of the employee will not work
+        the page employee without the employee_id of someone will not work.
+        if there is no employee with the given id, or with enough info, the page will fail (e.g. if you put id 10 it will fail, despite 
+        existing an employee with the id 10. This is because that employee doesn't have a record indicating his health_plan or simiar).
     # TODO:
-        fix list index out of range when there is no employee with the given id (redirect to a page with a message or similar)
+        fix list index out of range (redirect to a page with a message or similar)
     """
     employee_id = request.args.get('employee_id', 'Employee Id')
     gi = general_info(employee_id)
