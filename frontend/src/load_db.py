@@ -12,7 +12,6 @@ mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # F
 config = {'host': 'localhost',
           'database_name': 'hr',
           'user': 'root',
-          'password': mysql_root_password}
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
 # engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
@@ -71,17 +70,17 @@ for data in job_position_data:
 session.commit()
 
 employee_position_data = [
-    {'employee_id': 1, 'job_position_id': 1},  # John -> Software Engineer
-    {'employee_id': 2, 'job_position_id': 2},  # Mary -> HR Specialist
-    {'employee_id': 3, 'job_position_id': 1},  # Carlos -> Software Engineer
-    {'employee_id': 4, 'job_position_id': 2},  # Anna -> HR Specialist
-    {'employee_id': 5, 'job_position_id': 3},  # Louis -> Project Manager
-    {'employee_id': 6, 'job_position_id': 4},  # Laura -> System Administrator
-    {'employee_id': 7, 'job_position_id': 4},  # Robert -> System Administrator
-    {'employee_id': 8, 'job_position_id': 5},  # Fernanda -> Marketing Analyst
-    {'employee_id': 9, 'job_position_id': 5},  # George -> Marketing Analyst
-    {'employee_id': 10, 'job_position_id': 3},  # Claudia -> Project Manager
-    {'employee_id': 11, 'job_position_id': 1}   # Jean -> Software Engineer
+    {'employee_id': 1, 'position_id': 1},  # John -> Software Engineer
+    {'employee_id': 2, 'position_id': 2},  # Mary -> HR Specialist
+    {'employee_id': 3, 'position_id': 1},  # Carlos -> Software Engineer
+    {'employee_id': 4, 'position_id': 2},  # Anna -> HR Specialist
+    {'employee_id': 5, 'position_id': 3},  # Louis -> Project Manager
+    {'employee_id': 6, 'position_id': 4},  # Laura -> System Administrator
+    {'employee_id': 7, 'position_id': 4},  # Robert -> System Administrator
+    {'employee_id': 8, 'position_id': 5},  # Fernanda -> Marketing Analyst
+    {'employee_id': 9, 'position_id': 5},  # George -> Marketing Analyst
+    {'employee_id': 10, 'position_id': 3},  # Claudia -> Project Manager
+    {'employee_id': 11, 'position_id': 1}   # Jean -> Software Engineer
 ]
 
 for data in employee_position_data:
@@ -159,11 +158,11 @@ session.commit()
 
 # Insert data into Contract table
 contract_data = [
-    {'id': 1, 'employee_id': 1, 'contract_type': 'permanent', 'start_date': date(2020, 1, 15), 'end_date': date(2023, 1, 15), 'position_level': 'professional', 'department_id': 1, 'registration_date': date(2020, 1, 15)},
-    {'id': 2, 'employee_id': 2, 'contract_type': 'fixed-term', 'start_date': date(2019, 3, 10), 'end_date': date(2022, 3, 10), 'position_level': 'administrative', 'department_id': 2, 'registration_date': date(2019, 3, 10)},
-    {'id': 3, 'employee_id': 3, 'contract_type': 'temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'position_level': 'technical', 'department_id': 3, 'registration_date': date(2021, 6, 5)},
-    {'id': 4, 'employee_id': 4, 'contract_type': 'substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'position_level': 'auxiliary', 'department_id': 4, 'registration_date': date(2018, 9, 25)},
-    {'id': 5, 'employee_id': 5, 'contract_type': 'permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2025, 2, 1), 'position_level': 'executive', 'department_id': 1, 'registration_date': date(2022, 2, 1)}
+    {'id': 1, 'employee_id': 1, 'contract_type': 'permanent', 'start_date': date(2020, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'professional', 'department_id': 1, 'registration_date': date(2020, 1, 15)},
+    {'id': 2, 'employee_id': 2, 'contract_type': 'fixed-term', 'start_date': date(2019, 3, 10), 'end_date': date(2022, 3, 10), 'classification': 'administrative', 'department_id': 2, 'registration_date': date(2019, 3, 10)},
+    {'id': 3, 'employee_id': 3, 'contract_type': 'temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'technical', 'department_id': 3, 'registration_date': date(2021, 6, 5)},
+    {'id': 4, 'employee_id': 4, 'contract_type': 'substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'auxiliary', 'department_id': 4, 'registration_date': date(2018, 9, 25)},
+    {'id': 5, 'employee_id': 5, 'contract_type': 'permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2025, 2, 1), 'classification': 'executive', 'department_id': 1, 'registration_date': date(2022, 2, 1)}
 ]
 
 for data in contract_data:
@@ -172,13 +171,13 @@ for data in contract_data:
 session.commit()
 
 
-# Insert data into Vacaciones table
+# Insert data into Vacation table
 vacation_data = [
-    {'id': 1, 'employee_id': 1, 'start_date': date(2023, 1, 5), 'end_date': date(2023, 1, 20), 'days_taken': 15, 'accumulated_days': 10, 'is_senior_employee': False},
-    {'id': 2, 'employee_id': 2, 'start_date': date(2023, 6, 1), 'end_date': date(2023, 6, 10), 'days_taken': 9, 'accumulated_days': 5, 'is_senior_employee': False},
-    {'id': 3, 'employee_id': 3, 'start_date': date(2022, 12, 15), 'end_date': date(2022, 12, 30), 'days_taken': 15, 'accumulated_days': 3, 'is_senior_employee': False},
-    {'id': 4, 'employee_id': 4, 'start_date': date(2022, 8, 1), 'end_date': date(2022, 8, 15), 'days_taken': 14, 'accumulated_days': 6, 'is_senior_employee': True},
-    {'id': 5, 'employee_id': 5, 'start_date': date(2023, 2, 10), 'end_date': date(2023, 2, 25), 'days_taken': 15, 'accumulated_days': 8, 'is_senior_employee': False}
+    {'id': 1, 'employee_id': 1, 'start_date': date(2023, 1, 5), 'end_date': date(2023, 1, 20), 'days_taken': 15, 'accumulated_days': 10, 'long_service_employee': False},
+    {'id': 2, 'employee_id': 2, 'start_date': date(2023, 6, 1), 'end_date': date(2023, 6, 10), 'days_taken': 9, 'accumulated_days': 5, 'long_service_employee': False},
+    {'id': 3, 'employee_id': 3, 'start_date': date(2022, 12, 15), 'end_date': date(2022, 12, 30), 'days_taken': 15, 'accumulated_days': 3, 'long_service_employee': False},
+    {'id': 4, 'employee_id': 4, 'start_date': date(2022, 8, 1), 'end_date': date(2022, 8, 15), 'days_taken': 14, 'accumulated_days': 6, 'long_service_employee': True},
+    {'id': 5, 'employee_id': 5, 'start_date': date(2023, 2, 10), 'end_date': date(2023, 2, 25), 'days_taken': 15, 'accumulated_days': 8, 'long_service_employee': False}
 ]
 
 for data in vacation_data:
@@ -202,11 +201,11 @@ session.commit()
 
 # Insert data into Training table
 training_data = [
-    {'id': 1, 'employee_id': 1, 'training_date': date(2023, 3, 5), 'course': 'Advanced Python', 'grade': 4.5, 'institution': 'Tech Academy', 'comments': 'Excellent participation.'},
-    {'id': 2, 'employee_id': 2, 'training_date': date(2023, 4, 15), 'course': 'Project Management', 'grade': 4.0, 'institution': 'University A', 'comments': 'Good grasp of the subject.'},
-    {'id': 3, 'employee_id': 3, 'training_date': date(2022, 11, 22), 'course': 'Cybersecurity', 'grade': 3.8, 'institution': 'Tech Institute', 'comments': 'Acceptable performance.'},
-    {'id': 4, 'employee_id': 4, 'training_date': date(2022, 6, 18), 'course': 'Digital Marketing', 'grade': 4.2, 'institution': 'Online Academy', 'comments': 'Good tool mastery.'},
-    {'id': 5, 'employee_id': 5, 'training_date': date(2023, 1, 10), 'course': 'Scrum Master', 'grade': 3.5, 'institution': 'Scrum Training', 'comments': 'Needs to improve leadership.'}
+    {'id': 1, 'employee_id': 1, 'training_date': date(2023, 3, 5), 'course': 'Advanced Python', 'score': 4.5, 'institution': 'Tech Academy', 'comments': 'Excellent participation.'},
+    {'id': 2, 'employee_id': 2, 'training_date': date(2023, 4, 15), 'course': 'Project Management', 'score': 4.0, 'institution': 'University A', 'comments': 'Good grasp of the subject.'},
+    {'id': 3, 'employee_id': 3, 'training_date': date(2022, 11, 22), 'course': 'Cybersecurity', 'score': 3.8, 'institution': 'Tech Institute', 'comments': 'Acceptable performance.'},
+    {'id': 4, 'employee_id': 4, 'training_date': date(2022, 6, 18), 'course': 'Digital Marketing', 'score': 4.2, 'institution': 'Online Academy', 'comments': 'Good tool mastery.'},
+    {'id': 5, 'employee_id': 5, 'training_date': date(2023, 1, 10), 'course': 'Scrum Master', 'score': 3.5, 'institution': 'Scrum Training', 'comments': 'Needs to improve leadership.'}
 ]
 
 for data in training_data:
