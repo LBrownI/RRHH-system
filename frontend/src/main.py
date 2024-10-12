@@ -34,7 +34,8 @@ def index():
 # Route for menu page (homepage)
 @app.route('/menu')
 def menu():
-    return render_template('index.html')
+    employees = all_employees()
+    return render_template('index.html', employees = employees)
 
 # Route for the colaborador (optional)
 @app.route('/colaborador')

@@ -11,7 +11,7 @@ mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # F
 config = {'host': 'localhost',
           'database_name': 'hr',
           'user': 'root',
-          'password': mysql_root_password}
+          'password': 'rootpass'}
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
 # engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
@@ -35,14 +35,20 @@ def general_info():
 
 # general_info()
 
-def all_colaborators():
+def all_employees():
     """Select all the data from the Colaborator table"""
     print('\n--- Running query_1 ---')
     try:
         with engine.connect() as conn:
-            res = conn.execute(text(f"SELECT * FROM Colaborador"))
-            print(res.fetchall())
-            return res.fetchall()
-        pass
+            res = conn.execute(text(f"SELECT rut, first_name, last_name"))
+            employees = []
+            for row in res:
+                employees.append({
+                    'rut': row['rut'],
+                    'first_name': row['name'],
+                    'last_name': row['last_name']
+                })
+            print(employees)  # Para verificar los datos
+            return employees
     except Exception as e:
         print(f'Error in query_1: {e}')
