@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registrar Vacaciones</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">  <!-- Link to your CSS file if needed -->
+    <title>Register Vacations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}"> 
 </head>
 <body>
-    <h1>Registrar Vacaciones</h1>
+    <h1>Register Vacations</h1>
 
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -20,22 +20,22 @@
     {% endwith %}
 
     <form action="/add_vacation" method="POST" id="vacationForm">
-        <label for="colaborador_id">Colaborador ID:</label>
-        <input type="number" id="colaborador_id" name="colaborador_id" required min="1" oninput="fetchColaboradorName()"><br>
+        <label for="employee_id">Employee ID:</label>
+        <input type="number" id="employee_id" name="employee_id" required min="1" oninput="fetchEmployeeName()"><br>
         
-        <span id="colaborador_name" style="font-weight: bold;">Nombre del Colaborador: </span><br>
+        <span id="employee_name" style="font-weight: bold;">Employee Name: </span><br>
 
-        <label for="fecha_inicio">Fecha de Inicio:</label>
-        <input type="date" id="fecha_inicio" name="fecha_inicio" required><br>
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required><br>
 
-        <label for="fecha_termino">Fecha de Término:</label>
-        <input type="date" id="fecha_termino" name="fecha_termino" required><br>
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" required><br>
 
-        <button type="submit">Registrar Vacaciones</button>
+        <button type="submit">Submit</button>
     </form>
 
-    <!-- JavaScript for fetching the colaborador's name -->
-    <script src="{{ url_for('static', filename='javascript/colaborador.js') }}"></script> 
+    <!-- JavaScript for fetching the employee's name -->
+    <script src="{{ url_for('static', filename='javascript/employee.js') }}"></script> 
 
 </body>
 </html>
