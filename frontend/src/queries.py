@@ -25,7 +25,7 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def general_info(employee_id: int):
-    """Select the first and last name of the Colaborator tablle"""
+    """Select the first and last name of the Employee table"""
     print('\n--- Running query_1 ---')
     try:
         info = session.query(Employee.first_name, Employee.last_name, Employee.phone, Employee.rut, JobPosition.name).join(EmployeePosition, Employee.id == EmployeePosition.employee_id).join(JobPosition, EmployeePosition.position_id == JobPosition.id).filter(Employee.id == employee_id).all()
@@ -40,7 +40,7 @@ def general_info(employee_id: int):
 # test = general_info(1)
 # print(test)
 def all_employees():
-    """Select all the data from the Colaborator table"""
+    """Select all the data from the Employee table"""
     print('\n--- Running query_1 ---')
     try:
         with engine.connect() as conn:
