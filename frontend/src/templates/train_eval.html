@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trainings and Evaluations</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='train_eval.css') }}">
+</head>
+<body>
+
+    <div class="container">
+        <div class="left-block">
+            <h2>Evaluations</h2>
+            <ul>
+                {% for evaluation in evaluations %}
+                    <li>
+                        <p><strong>Evaluator:</strong> {{ evaluation.evaluator }}</p>
+                        <p><strong>Date:</strong> {{ evaluation.evaluation_date }}</p>
+                        <p><strong>Factor:</strong> {{ evaluation.evaluation_factor }}</p>
+                        <p><strong>Rating:</strong> {{ evaluation.rating }}</p>
+                        <p><strong>Comments:</strong> {{ evaluation.comments }}</p>
+                    </li>
+                {% else %}
+                    <p>No evaluations found.</p>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="right-block">
+            <h2>Trainings</h2>
+            <ul>
+                {% for training in trainings %}
+                    <li>
+                        <p><strong>Course:</strong> {{ training.course }}</p>
+                        <p><strong>Date:</strong> {{ training.training_date }}</p>
+                        <p><strong>Score:</strong> {{ training.score }}</p>
+                        <p><strong>Institution:</strong> {{ training.institution }}</p>
+                        <p><strong>Comments:</strong> {{ training.comments }}</p>
+                    </li>
+                {% else %}
+                    <p>No trainings found.</p>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+</body>
+</html>
+

@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey,
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
-from tables import Employee, EmployeePosition, JobPosition, Remuneration, HealthPlan, Company, Contract
+from tables import Employee, EmployeePosition, JobPosition, Remuneration, HealthPlan, Company, Contract, Training, Evaluation
 # Load the MySQL root password from environment variables
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
 # You can set it up by doing: export MYSQL_ROOT_PASSWORD=your_secure_password
@@ -112,6 +112,12 @@ def get_employee_name_by_id(employee_id):
             return None
     finally:
         session.close()
+
+def get_all_evaluations(session):
+    return session.query(Evaluation).all()
+
+def get_all_trainings(session):
+    return session.query(Training).all()
 
 def all_companies():
     """Select all the data from the Company table"""

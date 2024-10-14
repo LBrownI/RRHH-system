@@ -78,6 +78,20 @@ def add_contract_page():
 
     return render_template('add_contract.html')
 
+@app.route('/train-eval')
+def train_eval():
+    # Start a session
+    session = Session()
+
+    # Query for evaluations and trainings
+    evaluations = get_all_evaluations(session)
+    trainings = get_all_trainings(session)
+    
+    # Close the session
+    session.close()
+
+    return render_template('train_eval.html', evaluations=evaluations, trainings=trainings)
+
 # Route for register vacation page
 @app.route('/register_vacation')
 def register_vacation():
