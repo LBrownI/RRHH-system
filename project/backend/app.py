@@ -42,7 +42,7 @@ def user():
     Gets the employee_id from the URL and returns the info of the employee.
     If certain data is missing, it will show a message on the page instead of redirecting.
     """
-    employee_id = request.args.get('employee_id')
+    employee_id = request.args.get('id')
 
     if not employee_id:
         # Show a message if no employee_id is provided
