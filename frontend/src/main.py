@@ -57,7 +57,7 @@ def show_companies():
 
 # Route for the option of adding a new "Contract"
 # WORKING BUT redirects to /add_contract instead of staying on the colaborator page.
-@app.route('/add_contract', methods=['GET', 'POST'])
+@app.route('/add-contract', methods=['GET', 'POST'])
 def add_contract_page():
     if request.method == 'POST':
         # Gather form data
@@ -79,18 +79,47 @@ def add_contract_page():
     return render_template('add_contract.html')
 
 @app.route('/train-eval')
-def train_eval():
-    # Start a session
-    session = Session()
-
-    # Query for evaluations and trainings
-    evaluations = get_all_evaluations(session)
-    trainings = get_all_trainings(session)
-    
-    # Close the session
-    session.close()
-
+def eval_train():
+    with Session() as session:
+        evaluations = get_all_evaluations(session)
+        trainings = get_all_trainings(session)
     return render_template('train_eval.html', evaluations=evaluations, trainings=trainings)
+
+@app.route('/add-evaluation', methods=['GET', 'POST'])
+def handle_add_evaluation():
+    if request.method == 'POST':
+        evaluation_data = {
+            'employee_id': request.form['employee_id'],
+            'evaluation_date': request.form['evaluation_date'],
+            'evaluator': request.form['evaluator'],
+            'evaluation_factor': request.form['evaluation_factor'],
+            'rating': request.form['rating'],
+            'comments': request.form['comments']
+        }
+        session = Session()
+        result = add_evaluation(session, evaluation_data)
+        flash(result)
+
+        return redirect(url_for('train_eval'))
+    
+    return render_template('add_eval.html')
+
+@app.route('/add-training', methods=['GET', 'POST'])
+def handle_add_training():
+    if request.method == 'POST':
+        session = Session()
+        training_data = {
+            'employee_id': request.form['employee_id'],
+            'training_date': request.form['training_date'],
+            'course': request.form['course'],
+            'score': request.form['score'],
+            'institution': request.form['institution'],
+            'comments': request.form['comments']
+        }
+        result = add_training(session, training_data)
+        flash(result)
+        return redirect(url_for('train_eval'))
+    return render_template('add_train.html')  
 
 # Route for register vacation page
 @app.route('/register_vacation')

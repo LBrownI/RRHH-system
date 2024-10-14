@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Training</title>
+    <script src="{{ url_for('static', filename='javascript/dynamic_fetch.js') }}"></script>
+</head>
+<body>
+    <h1>Add New Training</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <form action="/add-training" method="POST" id="trainingForm">
+        <label for="employee_id">Employee ID:</label>
+        <input type="number" id="employee_id" name="employee_id" required min="1" oninput="fetchEmployeeName()"><br>
+
+        <span id="employee_name" style="font-weight: bold;">
+            Employee name: Enter ID to fetch name
+        </span><br>
+
+        <!-- Training Date -->
+        <label for="training_date">Training Date:</label>
+        <input type="date" id="training_date" name="training_date" required><br>
+
+        <!-- Course -->
+        <label for="course">Course:</label>
+        <input type="text" id="course" name="course" required><br>
+
+        <!-- Institution -->
+        <label for="institution">Institution:</label>
+        <input type="text" id="institution" name="institution"><br>
+
+        <!-- Score -->
+        <label for="score">Score:</label>
+        <input type="text" id="score" name="score" required><br>
+
+        <!-- Comments -->
+        <label for="comments">Comments:</label>
+        <textarea id="comments" name="comments"></textarea><br>
+
+        <button type="submit">Add Training</button>
+    </form>
+</body>
+</html>

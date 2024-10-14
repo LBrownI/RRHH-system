@@ -189,11 +189,11 @@ session.commit()
 
 # Insert data into Evaluation table
 evaluation_data = [
-    {'id': 1, 'employee_id': 1, 'evaluation_date': date(2023, 5, 15), 'evaluator': 'Supervisor A', 'evaluation_factor': 4.5, 'rating': 'Good', 'comments': 'Excellent performance.'},
-    {'id': 2, 'employee_id': 2, 'evaluation_date': date(2023, 7, 10), 'evaluator': 'Supervisor B', 'evaluation_factor': 3.8, 'rating': 'Fair', 'comments': 'Needs to improve teamwork.'},
-    {'id': 3, 'employee_id': 3, 'evaluation_date': date(2023, 3, 25), 'evaluator': 'Supervisor C', 'evaluation_factor': 4.0, 'rating': 'Good', 'comments': 'Generally good performance.'},
-    {'id': 4, 'employee_id': 4, 'evaluation_date': date(2022, 12, 5), 'evaluator': 'Supervisor A', 'evaluation_factor': 4.7, 'rating': 'Good', 'comments': 'Highly recommended for promotions.'},
-    {'id': 5, 'employee_id': 5, 'evaluation_date': date(2023, 1, 20), 'evaluator': 'Supervisor B', 'evaluation_factor': 3.5, 'rating': 'Fair', 'comments': 'Could improve punctuality.'}
+    {'id': 1, 'employee_id': 1, 'evaluation_date': date(2023, 5, 15), 'evaluator': 'Supervisor A', 'evaluation_factor': 6.3, 'rating': 'Good', 'comments': 'Excellent performance.'},
+    {'id': 2, 'employee_id': 2, 'evaluation_date': date(2023, 7, 10), 'evaluator': 'Supervisor B', 'evaluation_factor': 5.3, 'rating': 'Satisfactory', 'comments': 'Needs to improve teamwork.'},
+    {'id': 3, 'employee_id': 3, 'evaluation_date': date(2023, 3, 25), 'evaluator': 'Supervisor C', 'evaluation_factor': 5.6, 'rating': 'Satisfactory', 'comments': 'Generally good performance.'},
+    {'id': 4, 'employee_id': 4, 'evaluation_date': date(2022, 12, 5), 'evaluator': 'Supervisor A', 'evaluation_factor': 6.6, 'rating': 'Very Good', 'comments': 'Highly recommended for promotions.'},
+    {'id': 5, 'employee_id': 5, 'evaluation_date': date(2023, 1, 20), 'evaluator': 'Supervisor B', 'evaluation_factor': 4.9, 'rating': 'Fair', 'comments': 'Could improve punctuality.'}
 ]
 
 for data in evaluation_data:
@@ -203,11 +203,11 @@ session.commit()
 
 # Insert data into Training table
 training_data = [
-    {'id': 1, 'employee_id': 1, 'training_date': date(2023, 3, 5), 'course': 'Advanced Python', 'score': 4.5, 'institution': 'Tech Academy', 'comments': 'Excellent participation.'},
-    {'id': 2, 'employee_id': 2, 'training_date': date(2023, 4, 15), 'course': 'Project Management', 'score': 4.0, 'institution': 'University A', 'comments': 'Good grasp of the subject.'},
-    {'id': 3, 'employee_id': 3, 'training_date': date(2022, 11, 22), 'course': 'Cybersecurity', 'score': 3.8, 'institution': 'Tech Institute', 'comments': 'Acceptable performance.'},
-    {'id': 4, 'employee_id': 4, 'training_date': date(2022, 6, 18), 'course': 'Digital Marketing', 'score': 4.2, 'institution': 'Online Academy', 'comments': 'Good tool mastery.'},
-    {'id': 5, 'employee_id': 5, 'training_date': date(2023, 1, 10), 'course': 'Scrum Master', 'score': 3.5, 'institution': 'Scrum Training', 'comments': 'Needs to improve leadership.'}
+    {'id': 1, 'employee_id': 1, 'training_date': date(2023, 3, 5), 'course': 'Advanced Python', 'score': 6.3, 'institution': 'Tech Academy', 'comments': 'Excellent participation.'},
+    {'id': 2, 'employee_id': 2, 'training_date': date(2023, 4, 15), 'course': 'Project Management', 'score': 5.6, 'institution': 'University A', 'comments': 'Good grasp of the subject.'},
+    {'id': 3, 'employee_id': 3, 'training_date': date(2022, 11, 22), 'course': 'Cybersecurity', 'score': 5.3, 'institution': 'Tech Institute', 'comments': 'Acceptable performance.'},
+    {'id': 4, 'employee_id': 4, 'training_date': date(2022, 6, 18), 'course': 'Digital Marketing', 'score': 5.9, 'institution': 'Online Academy', 'comments': 'Good tool mastery.'},
+    {'id': 5, 'employee_id': 5, 'training_date': date(2023, 1, 10), 'course': 'Scrum Master', 'score': 4.9, 'institution': 'Scrum Training', 'comments': 'Needs to improve leadership.'}
 ]
 
 for data in training_data:

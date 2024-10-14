@@ -2,6 +2,7 @@ import os
 from decimal import Decimal
 from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey, DECIMAL, Date, Text, Boolean
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
+from sqlalchemy.exc import SQLAlchemyError
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
 from tables import Employee, EmployeePosition, JobPosition, Remuneration, HealthPlan, Company, Contract, Training, Evaluation
@@ -76,7 +77,7 @@ def all_employees():
 
 
 def add_contract(session, contract_data):
-    # Fetch the Employee to get the department_id
+    # Fetch the Employee to get the position_id
     employee = session.query(Employee).get(contract_data['employee_id'])
     
     if not employee:
@@ -112,6 +113,30 @@ def get_employee_name_by_id(employee_id):
             return None
     finally:
         session.close()
+
+def add_training(session, training_data):
+    try:
+        training = Training(**training_data)
+        session.add(training)
+        session.commit()
+        return "Training added successfully."
+    except SQLAlchemyError as e:
+        session.rollback()  # Rollback the transaction on error
+        return f"An error occurred while adding training: {str(e)}"
+    finally:
+        session.close()  # Ensure session is closed
+
+def add_evaluation(session, evaluation_data):
+    try:
+        evaluation = Evaluation(**evaluation_data)
+        session.add(evaluation)
+        session.commit()
+        return "Evaluation added successfully."
+    except SQLAlchemyError as e:
+        session.rollback()  # Rollback the transaction on error
+        return f"An error occurred while adding evaluation: {str(e)}"
+    finally:
+        session.close()  # Ensure session is closed
 
 def get_all_evaluations(session):
     return session.query(Evaluation).all()
