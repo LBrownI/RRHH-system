@@ -34,21 +34,44 @@ def menu():
 @app.route('/employee')
 def user():
     """
-    gets the employee_id from the URL and returns the info of the employee
-    # example:
-        http://127.0.0.1:5000/employee?employee_id=1
-        try changing the id number to see the different employees!
-    # NOTE:
-        the page employee without the employee_id of someone will not work.
-        if there is no employee with the given id, or with enough info, the page will fail (e.g. if you put id 10 it will fail, despite 
-        existing an employee with the id 10. This is because that employee doesn't have a record indicating his health_plan or simiar).
-    # TODO:
-        fix list index out of range (redirect to a page with a message or similar)
+    Gets the employee_id from the URL and returns the info of the employee.
+    If certain data is missing, it will show a message on the page instead of redirecting.
     """
-    employee_id = request.args.get('employee_id', 'Employee Id')
+    employee_id = request.args.get('employee_id')
+
+    if not employee_id:
+        # Show a message if no employee_id is provided
+        return render_template('employee.html', error_message="No employee ID provided")
+
+    # Retrieve general and additional information
     gi = general_info(employee_id)
-    ad = aditional_info(employee_id)
-    return render_template('employee.html', first_name=gi[0], last_name=gi[1], phone=gi[2], rut=gi[3], position=gi[4], net_amount=ad[0], health_plan=ad[1])
+    ad_net_amount, ad_health_plan = aditional_info(employee_id)
+
+    # Check if general info is missing
+    if not gi:
+        return render_template('employee.html', error_message="Employee not found")
+
+    first_name, last_name, phone, rut, position = gi
+
+    # Display missing info
+    missing_info = []
+    if not ad_net_amount:
+        missing_info.append("No net amount registered")
+    if ad_health_plan == "No health plan registered":
+        missing_info.append("No health plan registered")
+
+    # Pass the data to the template, including missing information
+    return render_template(
+        'employee.html',
+        first_name=first_name,
+        last_name=last_name,
+        phone=phone,
+        rut=rut,
+        position=position,
+        net_amount=ad_net_amount if ad_net_amount else "Not registered",
+        health_plan=ad_health_plan,
+        missing_info=missing_info
+    )
 
 @app.route('/companies')
 def show_companies():

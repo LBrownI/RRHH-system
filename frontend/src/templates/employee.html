@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -17,25 +16,31 @@
       <img src="{{ url_for('static', filename='images/user.png') }}" alt="user-photo" />
     </div>
     <div class="general-info">
-      <p>name: {{ first_name }} {{ last_name }}</p>
-      <p>email: email</p>
-      <p>phone number: {{ phone }}</p>
-      <p>rut: {{ rut }}</p>
-      <p>position: {{ position }}</p>
+      <p>Name: {{ first_name }} {{ last_name }}</p>
+      <p>Email: email</p>
+      <p>Phone number: {{ phone }}</p>
+      <p>Rut: {{ rut }}</p>
+      <p>Position: {{ position }}</p>
     </div>
   </div>
+  
   <div class="aditional-info-container">
     <div class="aditional-info">
       <h2>Aditional info</h2>
-      <p>net amount: ${{ net_amount }}</p>
-      <p>health plan: {{ health_plan }}</p>
-      <p>(the next info is hardcoded)</p>
-      <p>address: 1234, street name, city</p>
-      <p>company: company name</p>
-      <p>position: position name</p>
-      <p>salary: $1.000.000</p>
+      <p>Net Amount: ${{ net_amount if net_amount else "Not registered" }}</p>
+      <p>Health Plan: {{ health_plan if health_plan else "Not registered" }}</p>
+      
+      {% if missing_info %}
+        <h3>Missing Information:</h3>
+        <ul>
+          {% for message in missing_info %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
     </div>
   </div>
+
   <button class="open-button" onclick="openForm()">Add contract</button>
 
   <div class="form-popup" id="myForm">
@@ -46,5 +51,4 @@
     <script src="{{ url_for('static', filename='javascript/add_button.js') }}"></script>
   </div>
 </body>
-
 </html>
