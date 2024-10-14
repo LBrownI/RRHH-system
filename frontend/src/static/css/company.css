@@ -1,0 +1,36 @@
+.container {
+    margin: 20px;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+}
+
+.table-container {
+    max-height: 400px; /* Set the max height of the table container */
+    overflow-y: auto;  /* Enable vertical scroll */
+    border: 1px solid #ccc;
+}
+
+.company-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.company-table th, .company-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.company-table th {
+    background-color: #333;
+    color: white;
+}
+
+.company-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.company-table tr:hover {
+    background-color: #ddd;
+}
