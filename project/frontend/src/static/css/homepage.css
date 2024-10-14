@@ -27,6 +27,11 @@ body {
   border-bottom: 1px solid #ccc;
 }
 
+.employee-list a {
+  text-decoration: none;
+  color: #333;
+}
+
 /* Filtros */
 .filters {
   flex: 1;
