@@ -37,22 +37,22 @@ session.commit()
 
 # Insert data into Employee table
 employee_data = [
-    {'id': 1, 'rut': '12.345.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(1980, 5, 12), 'start_date': date(2020, 1, 15), 'phone': '555-2345', 'email': 'john.doe@example.com', 'salary': 2000.00, 'nationality': 'Chilean'},
-    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'email': 'mary.johnson@example.com', 'salary': 2500.00, 'nationality': 'American'},
-    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'email': 'carlos.williams@example.com', 'salary': 1800.00, 'nationality': 'Mexican'},
-    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'email': 'anna.brown@example.com', 'salary': 2300.00, 'nationality': 'British'},
-    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birth_date': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'email': 'louis.davis@example.com', 'salary': 2100.00, 'nationality': 'Canadian'},
-    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birth_date': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'email': 'laura.miller@example.com', 'salary': 2400.00, 'nationality': 'German'},
-    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birth_date': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'email': 'robert.wilson@example.com', 'salary': 2200.00, 'nationality': 'Australian'},
-    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birth_date': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'email': 'fernanda.taylor@example.com', 'salary': 2700.00, 'nationality': 'Brazilian'},
-    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birth_date': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'email': 'george.anderson@example.com', 'salary': 2600.00, 'nationality': 'American'},
-    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birth_date': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'email': 'claudia.thomas@example.com', 'salary': 1900.00, 'nationality': 'Spanish'},
-    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birth_date': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'email': 'jean.baptiste@example.com', 'salary': 2100.00, 'nationality': 'Haitian'},
-    {'id': 12, 'rut': '19.877.654-4', 'first_name': 'Lucas', 'last_name': 'Rodriguez', 'birth_date': date(1994, 4, 2), 'start_date': date(2022, 1, 20), 'phone': '555-9999', 'email': 'lucas.rodriguez@example.com', 'salary': 2400.00, 'nationality': 'Argentine'},
-    {'id': 13, 'rut': '11.777.111-5', 'first_name': 'Sofia', 'last_name': 'Martinez', 'birth_date': date(1998, 12, 16), 'start_date': date(2023, 7, 5), 'phone': '555-1111', 'email': 'sofia.martinez@example.com', 'salary': 2100.00, 'nationality': 'Chilean'},
-    {'id': 14, 'rut': '20.555.666-7', 'first_name': 'Ariane', 'last_name': 'Dupont', 'birth_date': date(1989, 5, 9), 'start_date': date(2020, 5, 10), 'phone': '555-5555', 'email': 'ariane.dupont@example.com', 'salary': 2800.00, 'nationality': 'French'},
-    {'id': 15, 'rut': '17.876.543-8', 'first_name': 'Hiroshi', 'last_name': 'Tanaka', 'birth_date': date(1992, 10, 21), 'start_date': date(2019, 2, 13), 'phone': '555-8888', 'email': 'hiroshi.tanaka@example.com', 'salary': 2500.00, 'nationality': 'Japanese'},
-    {'id': 16, 'rut': '13.111.222-3', 'first_name': 'Maya', 'last_name': 'Singh', 'birth_date': date(1986, 8, 14), 'start_date': date(2017, 12, 5), 'phone': '555-7777', 'email': 'maya.singh@example.com', 'salary': 2600.00, 'nationality': 'Indian'}
+    {'id': 1, 'rut': '20.890.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(2000, 9, 18), 'start_date': date(2020, 1, 15), 'phone': '555-2345', 'email': 'john.doe@psyonix.com', 'salary': 1200.00, 'nationality': 'Chilean'},
+    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'email': 'mary.johnson@psyonix.com', 'salary': 2500.00, 'nationality': 'American'},
+    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'email': 'carlos.williams@psyonix.com', 'salary': 1800.00, 'nationality': 'Mexican'},
+    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'email': 'anna.brown@psyonix.com', 'salary': 2300.00, 'nationality': 'British'},
+    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birth_date': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'email': 'louis.davis@psyonix.com', 'salary': 2100.00, 'nationality': 'Canadian'},
+    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birth_date': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'email': 'laura.miller@psyonix.com', 'salary': 2400.00, 'nationality': 'German'},
+    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birth_date': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'email': 'robert.wilson@psyonix.com', 'salary': 2200.00, 'nationality': 'Australian'},
+    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birth_date': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'email': 'fernanda.taylor@psyonix.com', 'salary': 2700.00, 'nationality': 'Brazilian'},
+    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birth_date': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'email': 'george.anderson@psyonix.com', 'salary': 2600.00, 'nationality': 'American'},
+    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birth_date': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'email': 'claudia.thomas@psyonix.com', 'salary': 1900.00, 'nationality': 'Spanish'},
+    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birth_date': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'email': 'jean.baptiste@psyonix.com', 'salary': 2100.00, 'nationality': 'Haitian'},
+    {'id': 12, 'rut': '19.877.654-4', 'first_name': 'Lucas', 'last_name': 'Rodriguez', 'birth_date': date(1994, 4, 2), 'start_date': date(2022, 1, 20), 'phone': '555-9999', 'email': 'lucas.rodriguez@psyonix.com', 'salary': 2400.00, 'nationality': 'Argentine'},
+    {'id': 13, 'rut': '11.777.111-5', 'first_name': 'Sofia', 'last_name': 'Martinez', 'birth_date': date(1998, 12, 16), 'start_date': date(2023, 7, 5), 'phone': '555-1111', 'email': 'sofia.martinez@psyonix.com', 'salary': 2100.00, 'nationality': 'Chilean'},
+    {'id': 14, 'rut': '20.555.666-7', 'first_name': 'Ariane', 'last_name': 'Dupont', 'birth_date': date(1989, 5, 9), 'start_date': date(2020, 5, 10), 'phone': '555-5555', 'email': 'ariane.dupont@psyonix.com', 'salary': 2800.00, 'nationality': 'French'},
+    {'id': 15, 'rut': '17.876.543-8', 'first_name': 'Hiroshi', 'last_name': 'Tanaka', 'birth_date': date(1992, 10, 21), 'start_date': date(2019, 2, 13), 'phone': '555-8888', 'email': 'hiroshi.tanaka@psyonix.com', 'salary': 2500.00, 'nationality': 'Japanese'},
+    {'id': 16, 'rut': '13.111.222-3', 'first_name': 'Maya', 'last_name': 'Singh', 'birth_date': date(1986, 8, 14), 'start_date': date(2017, 12, 5), 'phone': '555-7777', 'email': 'maya.singh@psyonix.com', 'salary': 2600.00, 'nationality': 'Indian'}
 ]
 
 
@@ -206,21 +206,21 @@ session.commit()
 
 # Insert data into Contract table
 contract_data = [
-    {'id': 1, 'employee_id': 1, 'contract_type': 'Permanent', 'start_date': date(2020, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'Professional', 'position_id': 1, 'registration_date': date(2020, 1, 15)},
+    {'id': 1, 'employee_id': 1, 'contract_type': 'Permanent', 'start_date': date(2023, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'Professional', 'position_id': 1, 'registration_date': date(2020, 1, 15)},
     {'id': 2, 'employee_id': 2, 'contract_type': 'Fixed', 'start_date': date(2019, 3, 10), 'end_date': date(2022, 3, 10), 'classification': 'Administrative', 'position_id': 2, 'registration_date': date(2019, 3, 10)},
     {'id': 3, 'employee_id': 3, 'contract_type': 'Temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'Technical', 'position_id': 3, 'registration_date': date(2021, 6, 5)},
     {'id': 4, 'employee_id': 4, 'contract_type': 'Substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'Auxiliary', 'position_id': 4, 'registration_date': date(2018, 9, 25)},
-    {'id': 5, 'employee_id': 5, 'contract_type': 'Permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2025, 2, 1), 'classification': 'Executive', 'position_id': 1, 'registration_date': date(2022, 2, 1)},
+    {'id': 5, 'employee_id': 5, 'contract_type': 'Permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2022, 2, 1), 'classification': 'Executive', 'position_id': 1, 'registration_date': date(2022, 2, 1)},
     {'id': 6, 'employee_id': 6, 'contract_type': 'Fixed', 'start_date': date(2020, 8, 14), 'end_date': date(2023, 8, 14), 'classification': 'Professional', 'position_id': 4, 'registration_date': date(2020, 8, 14)},
     {'id': 7, 'employee_id': 7, 'contract_type': 'Temporary', 'start_date': date(2017, 10, 12), 'end_date': date(2020, 10, 12), 'classification': 'Technical', 'position_id': 3, 'registration_date': date(2017, 10, 12)},
-    {'id': 8, 'employee_id': 8, 'contract_type': 'Permanent', 'start_date': date(2021, 4, 8), 'end_date': date(2024, 4, 8), 'classification': 'Administrative', 'position_id': 5, 'registration_date': date(2021, 4, 8)},
+    {'id': 8, 'employee_id': 8, 'contract_type': 'Permanent', 'start_date': date(2021, 4, 8), 'end_date': date(2021, 4, 8), 'classification': 'Administrative', 'position_id': 5, 'registration_date': date(2021, 4, 8)},
     {'id': 9, 'employee_id': 9, 'contract_type': 'Substitute', 'start_date': date(2020, 3, 14), 'end_date': date(2022, 3, 14), 'classification': 'Executive', 'position_id': 5, 'registration_date': date(2020, 3, 14)},
     {'id': 10, 'employee_id': 10, 'contract_type': 'Fixed', 'start_date': date(2016, 7, 3), 'end_date': date(2019, 7, 3), 'classification': 'Professional', 'position_id': 3, 'registration_date': date(2016, 7, 3)},
-    {'id': 11, 'employee_id': 11, 'contract_type': 'Permanent', 'start_date': date(2021, 7, 12), 'end_date': date(2024, 7, 12), 'classification': 'Auxiliary', 'position_id': 1, 'registration_date': date(2021, 7, 12)},
+    {'id': 11, 'employee_id': 11, 'contract_type': 'Permanent', 'start_date': date(2021, 7, 12), 'end_date': date(2021, 7, 12), 'classification': 'Auxiliary', 'position_id': 1, 'registration_date': date(2021, 7, 12)},
     {'id': 12, 'employee_id': 12, 'contract_type': 'Fixed', 'start_date': date(2021, 1, 20), 'end_date': date(2024, 1, 20), 'classification': 'Technical', 'position_id': 2, 'registration_date': date(2021, 1, 20)},
     {'id': 13, 'employee_id': 13, 'contract_type': 'Temporary', 'start_date': date(2021, 11, 15), 'end_date': date(2022, 11, 15), 'classification': 'Administrative', 'position_id': 4, 'registration_date': date(2021, 11, 15)},
     {'id': 14, 'employee_id': 14, 'contract_type': 'Substitute', 'start_date': date(2022, 5, 1), 'end_date': date(2024, 5, 1), 'classification': 'Executive', 'position_id': 5, 'registration_date': date(2022, 5, 1)},
-    {'id': 15, 'employee_id': 15, 'contract_type': 'Permanent', 'start_date': date(2022, 6, 25), 'end_date': date(2025, 6, 25), 'classification': 'Professional', 'position_id': 3, 'registration_date': date(2022, 6, 25)},
+    {'id': 15, 'employee_id': 15, 'contract_type': 'Permanent', 'start_date': date(2022, 6, 25), 'end_date': date(2022, 6, 25), 'classification': 'Professional', 'position_id': 3, 'registration_date': date(2022, 6, 25)},
     {'id': 16, 'employee_id': 16, 'contract_type': 'Fixed', 'start_date': date(2023, 3, 5), 'end_date': date(2026, 3, 5), 'classification': 'Technical', 'position_id': 2, 'registration_date': date(2023, 3, 5)}
 ]
 
@@ -274,22 +274,22 @@ session.commit()
 
 # Insert data into Remuneration table
 remuneration_data = [
-    {'id': 1, 'employee_id': 1, 'afp_id': 1, 'health_plan_id': 1, 'gross_amount': 2500.00, 'tax': 10.0, 'deductions': 150.00, 'bonus': 200.00, 'welfare_contribution': 50.00, 'net_amount': 2200.00},
+    {'id': 1, 'employee_id': 1, 'afp_id': 7, 'health_plan_id': 1, 'gross_amount': 1800.00, 'tax': 10.0, 'deductions': 150.00, 'bonus': 200.00, 'welfare_contribution': 50.00, 'net_amount': 1400.00},
     {'id': 2, 'employee_id': 2, 'afp_id': 2, 'health_plan_id': 2, 'gross_amount': 3000.00, 'tax': 12.0, 'deductions': 200.00, 'bonus': 250.00, 'welfare_contribution': 60.00, 'net_amount': 2650.00},
     {'id': 3, 'employee_id': 3, 'afp_id': 3, 'health_plan_id': 3, 'gross_amount': 2300.00, 'tax': 9.0, 'deductions': 130.00, 'bonus': 150.00, 'welfare_contribution': 40.00, 'net_amount': 2070.00},
     {'id': 4, 'employee_id': 4, 'afp_id': 4, 'health_plan_id': 1, 'gross_amount': 2800.00, 'tax': 11.0, 'deductions': 180.00, 'bonus': 300.00, 'welfare_contribution': 55.00, 'net_amount': 2455.00},
     {'id': 5, 'employee_id': 5, 'afp_id': 5, 'health_plan_id': 2, 'gross_amount': 2700.00, 'tax': 10.5, 'deductions': 170.00, 'bonus': 280.00, 'welfare_contribution': 50.00, 'net_amount': 2390.00},
     {'id': 6, 'employee_id': 6, 'afp_id': 6, 'health_plan_id': 3, 'gross_amount': 2400.00, 'tax': 9.5, 'deductions': 160.00, 'bonus': 220.00, 'welfare_contribution': 45.00, 'net_amount': 2110.00},
     {'id': 7, 'employee_id': 7, 'afp_id': 7, 'health_plan_id': 4, 'gross_amount': 3100.00, 'tax': 11.5, 'deductions': 250.00, 'bonus': 200.00, 'welfare_contribution': 65.00, 'net_amount': 2735.00},
-    {'id': 8, 'employee_id': 8, 'afp_id': 8, 'health_plan_id': 5, 'gross_amount': 2600.00, 'tax': 10.0, 'deductions': 140.00, 'bonus': 230.00, 'welfare_contribution': 50.00, 'net_amount': 2380.00},
-    {'id': 9, 'employee_id': 9, 'afp_id': 9, 'health_plan_id': 6, 'gross_amount': 2900.00, 'tax': 12.0, 'deductions': 210.00, 'bonus': 270.00, 'welfare_contribution': 55.00, 'net_amount': 2415.00},
-    {'id': 10, 'employee_id': 10, 'afp_id': 10, 'health_plan_id': 7, 'gross_amount': 2200.00, 'tax': 9.0, 'deductions': 120.00, 'bonus': 180.00, 'welfare_contribution': 40.00, 'net_amount': 1940.00},
-    {'id': 11, 'employee_id': 11, 'afp_id': 11, 'health_plan_id': 8, 'gross_amount': 2500.00, 'tax': 10.5, 'deductions': 150.00, 'bonus': 210.00, 'welfare_contribution': 50.00, 'net_amount': 2200.00},
-    {'id': 12, 'employee_id': 12, 'afp_id': 12, 'health_plan_id': 9, 'gross_amount': 3000.00, 'tax': 11.0, 'deductions': 190.00, 'bonus': 250.00, 'welfare_contribution': 60.00, 'net_amount': 2700.00},
-    {'id': 13, 'employee_id': 13, 'afp_id': 13, 'health_plan_id': 10, 'gross_amount': 2800.00, 'tax': 10.5, 'deductions': 180.00, 'bonus': 240.00, 'welfare_contribution': 55.00, 'net_amount': 2505.00},
-    {'id': 14, 'employee_id': 14, 'afp_id': 14, 'health_plan_id': 11, 'gross_amount': 3200.00, 'tax': 12.0, 'deductions': 210.00, 'bonus': 290.00, 'welfare_contribution': 70.00, 'net_amount': 2890.00},
-    {'id': 15, 'employee_id': 15, 'afp_id': 15, 'health_plan_id': 12, 'gross_amount': 3000.00, 'tax': 10.0, 'deductions': 200.00, 'bonus': 300.00, 'welfare_contribution': 60.00, 'net_amount': 2740.00},
-    {'id': 16, 'employee_id': 16, 'afp_id': 16, 'health_plan_id': 13, 'gross_amount': 3400.00, 'tax': 13.0, 'deductions': 220.00, 'bonus': 310.00, 'welfare_contribution': 75.00, 'net_amount': 3180.00}
+    {'id': 8, 'employee_id': 8, 'afp_id': 1, 'health_plan_id': 5, 'gross_amount': 2600.00, 'tax': 10.0, 'deductions': 140.00, 'bonus': 230.00, 'welfare_contribution': 50.00, 'net_amount': 2380.00},
+    {'id': 9, 'employee_id': 9, 'afp_id': 2, 'health_plan_id': 6, 'gross_amount': 2900.00, 'tax': 12.0, 'deductions': 210.00, 'bonus': 270.00, 'welfare_contribution': 55.00, 'net_amount': 2415.00},
+    {'id': 10, 'employee_id': 10, 'afp_id': 3, 'health_plan_id': 7, 'gross_amount': 2200.00, 'tax': 9.0, 'deductions': 120.00, 'bonus': 180.00, 'welfare_contribution': 40.00, 'net_amount': 1940.00},
+    {'id': 11, 'employee_id': 11, 'afp_id': 4, 'health_plan_id': 8, 'gross_amount': 2500.00, 'tax': 10.5, 'deductions': 150.00, 'bonus': 210.00, 'welfare_contribution': 50.00, 'net_amount': 2200.00},
+    {'id': 12, 'employee_id': 12, 'afp_id': 5, 'health_plan_id': 9, 'gross_amount': 3000.00, 'tax': 11.0, 'deductions': 190.00, 'bonus': 250.00, 'welfare_contribution': 60.00, 'net_amount': 2700.00},
+    {'id': 13, 'employee_id': 13, 'afp_id': 1, 'health_plan_id': 10, 'gross_amount': 2800.00, 'tax': 10.5, 'deductions': 180.00, 'bonus': 240.00, 'welfare_contribution': 55.00, 'net_amount': 2505.00},
+    {'id': 14, 'employee_id': 14, 'afp_id': 2, 'health_plan_id': 11, 'gross_amount': 3200.00, 'tax': 12.0, 'deductions': 210.00, 'bonus': 290.00, 'welfare_contribution': 70.00, 'net_amount': 2890.00},
+    {'id': 15, 'employee_id': 15, 'afp_id': 3, 'health_plan_id': 12, 'gross_amount': 3000.00, 'tax': 10.0, 'deductions': 200.00, 'bonus': 300.00, 'welfare_contribution': 60.00, 'net_amount': 2740.00},
+    {'id': 16, 'employee_id': 16, 'afp_id': 4, 'health_plan_id': 13, 'gross_amount': 3400.00, 'tax': 13.0, 'deductions': 220.00, 'bonus': 310.00, 'welfare_contribution': 75.00, 'net_amount': 3180.00}
 ]
 
 for data in remuneration_data:
