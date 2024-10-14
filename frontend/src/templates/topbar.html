@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
 <div class="top-bar">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar.css') }}">
     <div class="dropdown">
@@ -9,6 +9,12 @@
             <a href="/opcion3">Option 3</a>
         </div>
     </div>
+    
+    <!-- Clickable image link to /homepage -->
+    <a href="/homepage" class="homepage-image">
+        <img src="{{ url_for('static', filename='images/hr-icon.png') }}" alt="Homepage Image" style="height: 40px; margin: 0 15px;">
+    </a>
+
     <script src="{{ url_for('static', filename='javascript/dropdown_menu.js') }}"></script>
     <input type="text" id="search-bar" placeholder="Search employees...">
     <nav class="menu-options">

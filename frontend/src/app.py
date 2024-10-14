@@ -19,14 +19,14 @@ def index():
 
         # If validation is correct, redirects to homepage (index.html)
         if username == 'user' and password == 'pass':  # Validación simple de ejemplo
-            return redirect(url_for('menu'))
+            return redirect(url_for('homepage'))
         else:
             return render_template('login.html', error="Usuario o contraseña incorrectos")
     return render_template('login.html')
 
 # Route for menu page (homepage)
-@app.route('/menu')
-def menu():
+@app.route('/homepage')
+def homepage():
     employees = all_employees(session)
     return render_template('index.html', employees = employees)
 
@@ -45,19 +45,21 @@ def user():
 
     # Retrieve general and additional information
     gi = general_info(employee_id)
-    ad_net_amount, ad_health_plan = aditional_info(employee_id)
+    ad_info = aditional_info(employee_id)
 
     # Check if general info is missing
     if not gi:
         return render_template('employee.html', error_message="Employee not found")
 
-    first_name, last_name, phone, rut, position = gi
+    first_name, last_name, email, phone, rut, position = gi
 
     # Display missing info
     missing_info = []
-    if not ad_net_amount:
+    if not ad_info:
+        missing_info.append("No additional info available")
+    if not ad_info.get('net_amount'):
         missing_info.append("No net amount registered")
-    if ad_health_plan == "No health plan registered":
+    if ad_info.get('health_plan') == "No health plan registered":
         missing_info.append("No health plan registered")
 
     # Pass the data to the template, including missing information
@@ -65,11 +67,19 @@ def user():
         'employee.html',
         first_name=first_name,
         last_name=last_name,
+        email=email,
         phone=phone,
         rut=rut,
         position=position,
-        net_amount=ad_net_amount if ad_net_amount else "Not registered",
-        health_plan=ad_health_plan,
+        nationality=ad_info.get('nationality', "Not registered"),
+        birth_date=ad_info.get('birth_date', "Not registered"),
+        age=ad_info.get('age', "Not available"),
+        start_date=ad_info.get('start_date', "Not registered"),
+        days_since_start=ad_info.get('days_since_start', "Not available"),
+        salary=ad_info.get('salary', "Not registered"),
+        net_amount=ad_info.get('net_amount', "Not registered"),
+        health_plan=ad_info.get('health_plan', "Not registered"),
+        afp_name=ad_info.get('afp_name', "Not registered"),
         missing_info=missing_info
     )
 
