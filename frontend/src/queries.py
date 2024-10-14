@@ -128,10 +128,36 @@ def add_training(session, training_data):
 
 def add_evaluation(session, evaluation_data):
     try:
+        # Get the evaluation factor (numeric grade)
+        evaluation_factor = float(evaluation_data.get('evaluation_factor', 0))
+        
+        # Initialize the rating variable
+        rating = ""
+        
+        # Determine rating based on the evaluation factor ranges
+        if evaluation_factor == 7:
+            rating = "Excellent"
+        elif 6.5 <= evaluation_factor < 7:
+            rating = "Very Good"
+        elif 6 <= evaluation_factor < 6.4:
+            rating = "Good"
+        elif 5 <= evaluation_factor < 6:
+            rating = "Satisfactory"
+        elif 4 >= evaluation_factor > 5:
+            rating = "Fair"
+        else:
+            rating = "Deficient"  # If it's below 4.0
+
+        # Add the rating to the evaluation data
+        evaluation_data['rating'] = rating
+
+        # Create the evaluation record and add to the database
         evaluation = Evaluation(**evaluation_data)
         session.add(evaluation)
         session.commit()
+
         return "Evaluation added successfully."
+
     except SQLAlchemyError as e:
         session.rollback()  # Rollback the transaction on error
         return f"An error occurred while adding evaluation: {str(e)}"
@@ -139,10 +165,42 @@ def add_evaluation(session, evaluation_data):
         session.close()  # Ensure session is closed
 
 def get_all_evaluations(session):
-    return session.query(Evaluation).all()
+    # Perform a join with the Employee table to get the first name and last name
+    evaluations = session.query(Evaluation, Employee).join(Employee, Evaluation.employee_id == Employee.id).all()
+
+    # Prepare a list of evaluations with employee details
+    evals_with_employee = []
+    for evaluation, employee in evaluations:
+        eval_with_name = {
+            'evaluation_date': evaluation.evaluation_date,
+            'evaluator': evaluation.evaluator,
+            'evaluation_factor': evaluation.evaluation_factor,
+            'rating': evaluation.rating,
+            'comments': evaluation.comments,
+            'employee_name': f"{employee.first_name} {employee.last_name}"  # Add employee's full name
+        }
+        evals_with_employee.append(eval_with_name)
+
+    return evals_with_employee
 
 def get_all_trainings(session):
-    return session.query(Training).all()
+    # Perform a join with the Employee table to get the first name and last name
+    trainings = session.query(Training, Employee).join(Employee, Training.employee_id == Employee.id).all()
+
+    # Prepare a list of trainings with employee details
+    trainings_with_employee = []
+    for training, employee in trainings:
+        training_with_name = {
+            'training_date': training.training_date,
+            'course': training.course,
+            'score': training.score,
+            'institution': training.institution,
+            'comments': training.comments,
+            'employee_name': f"{employee.first_name} {employee.last_name}"  # Add employee's full name
+        }
+        trainings_with_employee.append(training_with_name)
+
+    return trainings_with_employee
 
 def all_companies():
     """Select all the data from the Company table"""

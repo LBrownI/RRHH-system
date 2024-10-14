@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Evaluation</title>
     <script src="{{ url_for('static', filename='javascript/dynamic_fetch.js') }}"></script>
+
 </head>
 <body>
     <h1>Add New Evaluation</h1>
@@ -20,9 +21,11 @@
     {% endwith %}
 
     <form action="/add-evaluation" method="POST" id="evaluationForm">
+        <!-- Employee ID -->
         <label for="employee_id">Employee ID:</label>
         <input type="number" id="employee_id" name="employee_id" required min="1" oninput="fetchEmployeeName()"><br>
 
+        <!-- Employee Name Display -->
         <span id="employee_name" style="font-weight: bold;">
             Employee name: Enter ID to fetch name
         </span><br>
@@ -35,13 +38,13 @@
         <label for="evaluator">Evaluator:</label>
         <input type="text" id="evaluator" name="evaluator" required><br>
 
-        <!-- Evaluation Factor -->
-        <label for="evaluation_factor">Evaluation Factor:</label>
-        <input type="text" id="evaluation_factor" name="evaluation_factor" required><br>
+        <!-- Evaluation Factor (Grade) -->
+        <label for="evaluation_factor">Evaluation Factor (Grade):</label>
+        <input type="number" id="evaluation_factor" name="evaluation_factor" step="0.1" min="1" max="7" required oninput="updateRating()"><br>
 
-        <!-- Rating -->
+        <!-- Rating (Auto-completed based on Evaluation Factor) -->
         <label for="rating">Rating:</label>
-        <input type="number" id="rating" name="rating" min="1" max="5" required><br>
+        <input type="text" id="rating" name="rating" readonly><br>
 
         <!-- Comments -->
         <label for="comments">Comments:</label>
