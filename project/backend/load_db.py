@@ -37,7 +37,7 @@ session.commit()
 
 # Insert data into Employee table
 employee_data = [
-    {'id': 1, 'rut': '20.890.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(2000, 9, 18), 'start_date': date(2020, 1, 15), 'phone': '555-2345', 'email': 'john.doe@psyonix.com', 'salary': 1200.00, 'nationality': 'Chilean'},
+    {'id': 1, 'rut': '20.890.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(2000, 9, 18), 'start_date': date(2023, 1, 15), 'phone': '555-2345', 'email': 'john.doe@psyonix.com', 'salary': 1200.00, 'nationality': 'Chilean'},
     {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'email': 'mary.johnson@psyonix.com', 'salary': 2500.00, 'nationality': 'American'},
     {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'email': 'carlos.williams@psyonix.com', 'salary': 1800.00, 'nationality': 'Mexican'},
     {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'email': 'anna.brown@psyonix.com', 'salary': 2300.00, 'nationality': 'British'},
