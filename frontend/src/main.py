@@ -27,7 +27,7 @@ def index():
 # Route for menu page (homepage)
 @app.route('/menu')
 def menu():
-    employees = all_employees()
+    employees = all_employees(session)
     return render_template('index.html', employees = employees)
 
 # Route for the employee (optional)

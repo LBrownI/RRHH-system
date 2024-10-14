@@ -3,60 +3,65 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Menú - Lista de Empleados</title>
+    <title>Employee List</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/menu.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   </head>
   <body>
-    <!-- Barra superior con búsqueda, opciones y usuario -->
+    <!-- Top bar with search, options, and user -->
     <header>
       {% include 'topbar.html' %}
     </header>
 
-    <!-- Contenido principal: lista de empleados y filtros -->
+    <!-- Main content: employee list and filters -->
     <main>
       <div class="content">
-        <!-- Lista de empleados -->
+        <!-- Employee list -->
         <section class="employee-list">
-          <h2>Lista de Empleados</h2>
+          <h2>Employee List</h2>
           <ul id="employees">
-            <li>1.111.111-1 - Juanito Pérez - Supervisor - Finanzas</li>
             {% for employee in employees %}
-                <li> <a href="{{employee.href}}">{{employee.rut}} - {{employee.name}} - {{employee.position}} -{{employee.department}} </a></li>
-                <!-- Aquí irán más empleados que se cargarán desde la base de datos -->
+              <li>
+                <!-- Make the employee's name clickable and redirect to /employee?employee_id=ID on a new tab -->
+                <a href="{{ url_for('user', employee_id=employee.id) }}" target="_blank">
+                  {{ employee.id }} - {{ employee.rut }} - {{ employee.first_name }} {{ employee.last_name }} - {{ employee.position }} - {{ employee.department }}
+                </a>
+              </li>
+            {% else %}
+              <li>No employees found.</li>
             {% endfor %}
           </ul>
         </section>
 
-
-        <!-- Filtros -->
+        <!-- Filters -->
         <aside class="filters">
-          <h3>Filtros</h3>
-          <label for="filter-role">Cargo:</label>
+          <h3>Filters</h3>
+
+          <label for="filter-role">Role:</label>
           <select id="filter-role">
-            <option value="">Todos</option>
+            <option value="">All</option>
             <option value="Supervisor">Supervisor</option>
-            <option value="Practicante">Practicante</option>
-            <!-- Más cargos que vendrán de la base de datos -->
+            <option value="Intern">Intern</option>
+            <!-- More roles will be dynamically loaded from the database -->
           </select>
 
-          <label for="filter-department">Departamento:</label>
+          <label for="filter-department">Department:</label>
           <select id="filter-department">
-            <option value="">Todos</option>
-            <option value="Finanzas">Finanzas</option>
+            <option value="">All</option>
+            <option value="Finance">Finance</option>
             <option value="eCommerce">eCommerce</option>
-            <!-- Más departamentos que vendrán de la base de datos -->
+            <!-- More departments will be dynamically loaded from the database -->
           </select>
 
-          <label for="filter-training">Capacitaciones:</label>
+          <label for="filter-training">Training:</label>
           <select id="filter-training">
-            <option value="">Todas</option>
-            <option value="Capacitacion 1">Capacitación 1</option>
-            <option value="Capacitacion 2">Capacitación 2</option>
-            <!-- Más capacitaciones que vendrán de la base de datos -->
+            <option value="">All</option>
+            <option value="Training 1">Training 1</option>
+            <option value="Training 2">Training 2</option>
+            <!-- More training options will be dynamically loaded from the database -->
           </select>
 
-          <button id="apply-filters">Aplicar Filtros</button>
+          <button id="apply-filters">Apply Filters</button>
         </aside>
       </div>
     </main>

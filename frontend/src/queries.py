@@ -57,23 +57,36 @@ def aditional_info(employee_id_to_find: int):
 
 # test = aditional_info(1)
 # print(test)
-def all_employees():
-    """Select all the data from the Employee table"""
+def all_employees(session):
+    """Select all the data from the Employee table."""
     print('\n--- Running query_1 ---')
+    session = Session()
     try:
-        with engine.connect() as conn:
-            res = conn.execute(text(f"SELECT rut, first_name, last_name FROM Employee"))
-            employees = []
-            for row in res:
-                employees.append({
-                    'rut': row['rut'],
-                    'first_name': row['first_name'],
-                    'last_name': row['last_name']
-                })
-            print(employees)  # Para verificar los datos
-            return employees
+        # Query the Employee table using SQLAlchemy's session.query
+        employees = session.query(Employee).all()
+        
+        # Create a list of dictionaries to store the employee data
+        employee_list = []
+        for employee in employees:
+            employee_list.append({
+                'id': employee.id,
+                'rut': employee.rut,
+                'first_name': employee.first_name,
+                'last_name': employee.last_name
+            })
+        
+        if not employee_list:
+            print("No employees found.")
+        else:
+            print(f"Employees found: {employee_list}")
+        
+        return employee_list
+
     except Exception as e:
         print(f'Error in query_1: {e}')
+        return []  # Return an empty list if there's an error
+    finally:
+        session.close()
 
 
 def add_contract(session, contract_data):
