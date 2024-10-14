@@ -4,7 +4,7 @@ from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey,
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
 from datetime import date
 from werkzeug.security import generate_password_hash, check_password_hash
-from tables import Employee, EmployeePosition, JobPosition, Remuneration, HealthPlan
+from tables import Employee, EmployeePosition, JobPosition, Remuneration, HealthPlan, Company, Contract
 # Load the MySQL root password from environment variables
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
 # You can set it up by doing: export MYSQL_ROOT_PASSWORD=your_secure_password
@@ -73,3 +73,63 @@ def all_employees():
             return employees
     except Exception as e:
         print(f'Error in query_1: {e}')
+
+
+def add_contract(session, contract_data):
+    # Fetch the Employee to get the department_id
+    employee = session.query(Employee).get(contract_data['employee_id'])
+    
+    if not employee:
+        return f"Employee with ID {contract_data['employee_id']} not found."
+
+    # Fetch the position_id from the EmployeePosition table
+    employee_position = session.query(EmployeePosition).filter_by(employee_id=contract_data['employee_id']).first()
+    
+    if not employee_position:
+        return f"Position for employee with ID {contract_data['employee_id']} not found."
+    
+    # Auto-complete position_id based on EmployeePosition
+    contract_data['position_id'] = employee_position.position_id
+
+    # Auto-complete registration_date with the current date
+    contract_data['registration_date'] = date.today()
+
+    # Create the Contract object and add it to the session
+    contract = Contract(**contract_data)
+    session.add(contract)
+    session.commit()
+    
+    return f"Contract added successfully."
+
+def get_employee_name_by_id(employee_id):
+    """Fetch employee name by ID"""
+    session = Session()
+    try:
+        employee = session.query(Employee).get(employee_id)
+        if employee:
+            return employee.first_name + ' ' + employee.last_name
+        else:
+            return None
+    finally:
+        session.close()
+
+def all_companies():
+    """Select all the data from the Company table"""
+    print('\n--- Running all_companies query ---') 
+    try:
+        companies = session.query(Company).all()
+        result = []
+        for company in companies:
+            result.append({
+                'rut': company.rut,
+                'name': company.name,
+                'address': company.address,
+                'phone': company.phone,
+                'industry': company.industry
+            })
+        print(result)  # Debug output to verify the data
+        return result
+    except Exception as e:
+        print(f'Error in all_companies query: {e}')
+    finally:
+        session.close()

@@ -1,16 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from queries import *
-# from sqlalchemy.orm import Session, sessionmaker
-# from tables import engine, Colaborador
-# from db_operations import add_contrato
-# from vacation_logic import add_vacation_logic
 
 app = Flask(__name__)
 app.secret_key = 'magickey'
 
-# Set up session for SQLAlchemy (Commented out for now)
-# Session = sessionmaker(bind=engine)
-# session = Session()
 
 # Route for login page
 @app.route('/', methods=['GET', 'POST'])
@@ -57,9 +50,15 @@ def user():
     ad = aditional_info(employee_id)
     return render_template('employee.html', first_name=gi[0], last_name=gi[1], phone=gi[2], rut=gi[3], position=gi[4], net_amount=ad[0], health_plan=ad[1])
 
-# Route for the option of adding a new "Contrato" (mocked functionality)
-@app.route('/add-contrato', methods=['GET', 'POST'])
-def add_contrato_page():
+@app.route('/companies')
+def show_companies():
+    companies = all_companies()
+    return render_template('companies.html', companies=companies)
+
+# Route for the option of adding a new "Contract"
+# WORKING BUT redirects to /add_contract instead of staying on the colaborator page.
+@app.route('/add_contract', methods=['GET', 'POST'])
+def add_contract_page():
     if request.method == 'POST':
         # Gather form data
         contract_data = {
@@ -69,20 +68,15 @@ def add_contrato_page():
             'end_date': request.form['end_date'],
             'classification': request.form['classification']
         }
-        
-        # Mock message for adding contrato
-        message = "Mock: Contract added successfully!"
+
+        # Fetch the session and call the add_contract function
+        session = Session()
+        message = add_contract(session, contract_data)
         flash(message)
+        
+        return redirect(url_for('add_contract_page'))
 
-        # Original setup
-        """
-         Call function from db_operations.py
-         message = add_contract(session, contract_data)
-         flash(message)
-        """
-        return redirect(url_for('add_contrato_page'))
-
-    return render_template('add_contrato.html')
+    return render_template('add_contract.html')
 
 # Route for register vacation page
 @app.route('/register_vacation')
@@ -112,19 +106,11 @@ def add_vacation():
     
     return redirect('/register_vacation')
 
-# Part of the /add-contrato and /register_vacation page for showing colaborador name to the side of the id (mocked functionality)
 @app.route('/get_employee_name/<int:employee_id>', methods=['GET'])
 def get_employee_name(employee_id):
-
-    # Mocked employee lookup
-    employee = {'name': 'Mock Employee'} if employee_id == 1 else None
-
-    # Original setup
-    """
-    employee = session.query(Employee).get(employee_id)  # Use SQLAlchemy to fetch the employee
-    """
-    if employee:
-        return employee['name']
+    employee_name = get_employee_name_by_id(employee_id)
+    if employee_name:
+        return employee_name  # Return the name as plain text
     else:
         return "Does not exist", 404
 
