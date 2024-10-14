@@ -62,12 +62,12 @@ def all_employees():
     print('\n--- Running query_1 ---')
     try:
         with engine.connect() as conn:
-            res = conn.execute(text(f"SELECT rut, first_name, last_name"))
+            res = conn.execute(text(f"SELECT rut, first_name, last_name FROM Employee"))
             employees = []
             for row in res:
                 employees.append({
                     'rut': row['rut'],
-                    'first_name': row['name'],
+                    'first_name': row['first_name'],
                     'last_name': row['last_name']
                 })
             print(employees)  # Para verificar los datos
