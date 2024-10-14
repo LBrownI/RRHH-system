@@ -1,7 +1,6 @@
 import os
 from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey, DECIMAL, Date, Text, Boolean
-from sqlalchemy.orm import relationship, declarative_base, sessionmaker
-from datetime import date
+from sqlalchemy.orm import relationship, declarative_base
 from werkzeug.security import generate_password_hash, check_password_hash
 
 # Load the MySQL root password from environment variables

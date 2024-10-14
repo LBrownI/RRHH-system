@@ -2,8 +2,7 @@ import os
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 from datetime import date
-from werkzeug.security import generate_password_hash, check_password_hash
-from tables import Company, Employee, JobPosition, EmployeePosition, AFP, Department, Vacation, Evaluation, Training, Remuneration, HealthPlan, Fonasa, Isapre, Bonus, Contract, User
+from project.setup.tables import Company, Employee, JobPosition, EmployeePosition, AFP, Department, Vacation, Evaluation, Training, Remuneration, HealthPlan, Fonasa, Isapre, Bonus, Contract, User
 
 # Load the MySQL root password from environment variables
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
-from tables import engine, Vacation, Employee
+from project.setup.tables import engine, Vacation, Employee
 
 # Create a session to interact with the database
 Session = sessionmaker(bind=engine)

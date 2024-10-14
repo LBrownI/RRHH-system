@@ -1,4 +1,4 @@
-from load_db import Session, User
+from project.setup.tables import Session, User
 
 # Function for authenticating users
 def authenticate(username, password):
