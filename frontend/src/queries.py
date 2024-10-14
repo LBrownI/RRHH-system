@@ -1,11 +1,11 @@
 import os
 from decimal import Decimal
-from sqlalchemy import create_engine, text, Column, Integer, String, ForeignKey, DECIMAL, Date, Text, Boolean
+from sqlalchemy import create_engine, text, func
 from sqlalchemy.orm import relationship, declarative_base, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
-from datetime import date
+from datetime import date, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from tables import Employee, EmployeePosition, JobPosition, Remuneration, HealthPlan, Company, Contract, Training, Evaluation
+from tables import Employee, EmployeePosition, JobPosition, Remuneration, HealthPlan, Company, Contract, Training, Evaluation, AFP
 # Load the MySQL root password from environment variables
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
 # You can set it up by doing: export MYSQL_ROOT_PASSWORD=your_secure_password
@@ -27,29 +27,71 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 def aditional_info(employee_id_to_find: int):
-    """Get net amount and health plan of an employee"""
+    """Get additional information about an employee including net amount, health plan, nationality, birth date, start date, salary, and AFP."""
     print('\n--- Running query aditional_info ---')
     try:
-        info = session.query(Remuneration.net_amount, HealthPlan.name).select_from(Employee) \
-            .join(Remuneration, Employee.id == Remuneration.employee_id) \
-            .join(HealthPlan, Remuneration.health_plan_id == HealthPlan.id) \
-            .filter(Employee.id == employee_id_to_find).first()  # Changed to first()
-        
+        # Perform the query to get all the additional information
+        info = session.query(
+            Employee.nationality,
+            Employee.birth_date,
+            Employee.start_date,
+            Employee.salary,
+            Remuneration.net_amount,
+            HealthPlan.name.label('health_plan'),
+            AFP.name.label('afp_name')
+        ).select_from(Employee) \
+        .join(Remuneration, Employee.id == Remuneration.employee_id) \
+        .join(HealthPlan, Remuneration.health_plan_id == HealthPlan.id) \
+        .join(AFP, Remuneration.afp_id == AFP.id) \
+        .filter(Employee.id == employee_id_to_find).first()  # Changed to first()
+
         if info:
-            net_amount = int(info[0]) if isinstance(info[0], Decimal) else info[0]
-            health_plan = info[1] if info[1] else "No health plan registered"
-            return net_amount, health_plan
+            # Extract the information
+            nationality = info[0]
+            birth_date = info[1]
+            start_date = info[2]
+            salary = info[3]
+            net_amount = int(info[4]) if isinstance(info[4], Decimal) else info[4]
+            health_plan = info[5] if info[5] else "No health plan registered"
+            afp_name = info[6] if info[6] else "No AFP registered"
+
+            # Calculate age
+            age = None
+            if birth_date:
+                today = datetime.today().date()
+                age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
+
+            # Calculate days since start date
+            days_since_start = None
+            if start_date:
+                today = datetime.today().date()
+                days_since_start = (today - start_date).days
+
+            # Return the collected information
+            return {
+                'nationality': nationality,
+                'birth_date': birth_date,
+                'age': age,
+                'start_date': start_date,
+                'days_since_start': days_since_start,
+                'salary': salary,
+                'net_amount': net_amount,
+                'health_plan': health_plan,
+                'afp_name': afp_name
+            }
+
         else:
-            return None, "No additional info available"
+            return None
+
     except Exception as e:
         print(f'Error in query aditional_info: {e}')
-        return None, "Error fetching additional info"
+        return None
 
 def general_info(employee_id: int):
     """Get first name, last name, phone, rut and position of an employee"""
     print('\n--- Running query general_info ---')
     try:
-        info = session.query(Employee.first_name, Employee.last_name, Employee.phone, Employee.rut, JobPosition.name) \
+        info = session.query(Employee.first_name, Employee.last_name, Employee.email, Employee.phone, Employee.rut, JobPosition.name) \
             .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
             .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
             .filter(Employee.id == employee_id).first()  # Changed to first()
