@@ -56,13 +56,26 @@ for data in employee_data:
     session.add(employee)
 session.commit()
 
+# Insert data into Department table
+department_data = [
+    {'id': 1, 'name': 'IT Department'},
+    {'id': 2, 'name': 'HR Department'},
+    {'id': 3, 'name': 'Finance Department'},
+    {'id': 4, 'name': 'Marketing Department'}
+]
+
+for data in department_data:
+    department = Department(**data)
+    session.add(department)
+session.commit()
+
 # Insert data into JobPosition table
 job_position_data = [
-    {'id': 1, 'name': 'Software Engineer', 'description': 'Develops and maintains software applications.'},
-    {'id': 2, 'name': 'HR Specialist', 'description': 'Handles employee relations and recruitment.'},
-    {'id': 3, 'name': 'Project Manager', 'description': 'Leads and manages project execution.'},
-    {'id': 4, 'name': 'System Administrator', 'description': 'Manages IT systems and infrastructure.'},
-    {'id': 5, 'name': 'Marketing Analyst', 'description': 'Analyzes marketing data and trends.'}
+    {'id': 1, 'name': 'Software Engineer', 'description': 'Develops and maintains software applications.', 'department_id': 1},
+    {'id': 2, 'name': 'HR Specialist', 'description': 'Handles employee relations and recruitment.', 'department_id': 2},
+    {'id': 3, 'name': 'Project Manager', 'description': 'Leads and manages project execution.', 'department_id': 1},
+    {'id': 4, 'name': 'System Administrator', 'description': 'Manages IT systems and infrastructure.', 'department_id': 1},
+    {'id': 5, 'name': 'Marketing Analyst', 'description': 'Analyzes marketing data and trends.', 'department_id': 4}
 ]
 
 for data in job_position_data:
@@ -105,18 +118,6 @@ for data in afp_data:
     session.add(afp)
 session.commit()
 
-# Insert data into Department table
-department_data = [
-    {'id': 1, 'name': 'IT Department'},
-    {'id': 2, 'name': 'HR Department'},
-    {'id': 3, 'name': 'Finance Department'},
-    {'id': 4, 'name': 'Marketing Department'}
-]
-
-for data in department_data:
-    department = Department(**data)
-    session.add(department)
-session.commit()
 
 # Insert data into HealthPlan, Fonasa, and Isapre tables
 health_plan_data = [
@@ -159,11 +160,11 @@ session.commit()
 
 # Insert data into Contract table
 contract_data = [
-    {'id': 1, 'employee_id': 1, 'contract_type': 'permanent', 'start_date': date(2020, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'professional', 'department_id': 1, 'registration_date': date(2020, 1, 15)},
-    {'id': 2, 'employee_id': 2, 'contract_type': 'fixed-term', 'start_date': date(2019, 3, 10), 'end_date': date(2022, 3, 10), 'classification': 'administrative', 'department_id': 2, 'registration_date': date(2019, 3, 10)},
-    {'id': 3, 'employee_id': 3, 'contract_type': 'temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'technical', 'department_id': 3, 'registration_date': date(2021, 6, 5)},
-    {'id': 4, 'employee_id': 4, 'contract_type': 'substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'auxiliary', 'department_id': 4, 'registration_date': date(2018, 9, 25)},
-    {'id': 5, 'employee_id': 5, 'contract_type': 'permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2025, 2, 1), 'classification': 'executive', 'department_id': 1, 'registration_date': date(2022, 2, 1)}
+    {'id': 1, 'employee_id': 1, 'contract_type': 'permanent', 'start_date': date(2020, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'professional', 'position_id': 1, 'registration_date': date(2020, 1, 15)},
+    {'id': 2, 'employee_id': 2, 'contract_type': 'fixed-term', 'start_date': date(2019, 3, 10), 'end_date': date(2022, 3, 10), 'classification': 'administrative', 'position_id': 2, 'registration_date': date(2019, 3, 10)},
+    {'id': 3, 'employee_id': 3, 'contract_type': 'temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'technical', 'position_id': 3, 'registration_date': date(2021, 6, 5)},
+    {'id': 4, 'employee_id': 4, 'contract_type': 'substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'auxiliary', 'position_id': 4, 'registration_date': date(2018, 9, 25)},
+    {'id': 5, 'employee_id': 5, 'contract_type': 'permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2025, 2, 1), 'classification': 'executive', 'position_id': 1, 'registration_date': date(2022, 2, 1)}
 ]
 
 for data in contract_data:
