@@ -1,7 +1,12 @@
+import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from queries import *
 
-app = Flask(__name__)
+app = Flask(
+    __name__, 
+    template_folder=os.path.join(os.getcwd(), 'project', 'frontend', 'src', 'templates'),
+    static_folder=os.path.join(os.getcwd(), 'project', 'frontend', 'src', 'static')
+)
 app.secret_key = 'magickey'
 
 
