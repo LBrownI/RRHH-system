@@ -37,17 +37,22 @@ session.commit()
 
 # Insert data into Employee table
 employee_data = [
-    {'id': 1, 'rut': '12.345.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(1980, 5, 12), 'start_date': date(2020, 1, 15), 'phone': '555-2345', 'salary': 2000.00, 'nationality': 'Chilean'},
-    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'salary': 2500.00, 'nationality': 'Chilean'},
-    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'salary': 1800.00, 'nationality': 'Chilean'},
-    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'salary': 2300.00, 'nationality': 'Chilean'},
-    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birth_date': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'salary': 2100.00, 'nationality': 'Chilean'},
-    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birth_date': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'salary': 2400.00, 'nationality': 'Chilean'},
-    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birth_date': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'salary': 2200.00, 'nationality': 'Chilean'},
-    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birth_date': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'salary': 2700.00, 'nationality': 'Chilean'},
-    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birth_date': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'salary': 2600.00, 'nationality': 'Chilean'},
-    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birth_date': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'salary': 1900.00, 'nationality': 'Chilean'},
-    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birth_date': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'salary': 2100.00, 'nationality': 'Haitian'}
+    {'id': 1, 'rut': '12.345.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(1980, 5, 12), 'start_date': date(2020, 1, 15), 'phone': '555-2345', 'email': 'john.doe@example.com', 'salary': 2000.00, 'nationality': 'Chilean'},
+    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'email': 'mary.johnson@example.com', 'salary': 2500.00, 'nationality': 'American'},
+    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'email': 'carlos.williams@example.com', 'salary': 1800.00, 'nationality': 'Mexican'},
+    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'email': 'anna.brown@example.com', 'salary': 2300.00, 'nationality': 'British'},
+    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birth_date': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'email': 'louis.davis@example.com', 'salary': 2100.00, 'nationality': 'Canadian'},
+    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birth_date': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'email': 'laura.miller@example.com', 'salary': 2400.00, 'nationality': 'German'},
+    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birth_date': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'email': 'robert.wilson@example.com', 'salary': 2200.00, 'nationality': 'Australian'},
+    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birth_date': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'email': 'fernanda.taylor@example.com', 'salary': 2700.00, 'nationality': 'Brazilian'},
+    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birth_date': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'email': 'george.anderson@example.com', 'salary': 2600.00, 'nationality': 'American'},
+    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birth_date': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'email': 'claudia.thomas@example.com', 'salary': 1900.00, 'nationality': 'Spanish'},
+    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birth_date': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'email': 'jean.baptiste@example.com', 'salary': 2100.00, 'nationality': 'Haitian'},
+    {'id': 12, 'rut': '19.877.654-4', 'first_name': 'Lucas', 'last_name': 'Rodriguez', 'birth_date': date(1994, 4, 2), 'start_date': date(2022, 1, 20), 'phone': '555-9999', 'email': 'lucas.rodriguez@example.com', 'salary': 2400.00, 'nationality': 'Argentine'},
+    {'id': 13, 'rut': '11.777.111-5', 'first_name': 'Sofia', 'last_name': 'Martinez', 'birth_date': date(1998, 12, 16), 'start_date': date(2023, 7, 5), 'phone': '555-1111', 'email': 'sofia.martinez@example.com', 'salary': 2100.00, 'nationality': 'Chilean'},
+    {'id': 14, 'rut': '20.555.666-7', 'first_name': 'Ariane', 'last_name': 'Dupont', 'birth_date': date(1989, 5, 9), 'start_date': date(2020, 5, 10), 'phone': '555-5555', 'email': 'ariane.dupont@example.com', 'salary': 2800.00, 'nationality': 'French'},
+    {'id': 15, 'rut': '17.876.543-8', 'first_name': 'Hiroshi', 'last_name': 'Tanaka', 'birth_date': date(1992, 10, 21), 'start_date': date(2019, 2, 13), 'phone': '555-8888', 'email': 'hiroshi.tanaka@example.com', 'salary': 2500.00, 'nationality': 'Japanese'},
+    {'id': 16, 'rut': '13.111.222-3', 'first_name': 'Maya', 'last_name': 'Singh', 'birth_date': date(1986, 8, 14), 'start_date': date(2017, 12, 5), 'phone': '555-7777', 'email': 'maya.singh@example.com', 'salary': 2600.00, 'nationality': 'Indian'}
 ]
 
 
@@ -58,10 +63,12 @@ session.commit()
 
 # Insert data into Department table
 department_data = [
-    {'id': 1, 'name': 'IT Department'},
-    {'id': 2, 'name': 'HR Department'},
-    {'id': 3, 'name': 'Finance Department'},
-    {'id': 4, 'name': 'Marketing Department'}
+    {'id': 1, 'name': 'Development', 'description': 'Responsible for all technical aspects of game creation, including programming and software development.'},
+    {'id': 2, 'name': 'Design', 'description': 'Creates gameplay mechanics, levels, user interfaces, and the overall player experience.'},
+    {'id': 3, 'name': 'Art', 'description': 'Responsible for the visual aspects of the game, including 3D modeling, textures, animations, and visual effects.'},
+    {'id': 4, 'name': 'Marketing', 'description': 'Handles promotion, community engagement, player feedback, and in-game monetization.'},
+    {'id': 5, 'name': 'Quality Assurance (QA)', 'description': 'Ensures the game is bug-free, plays smoothly, and meets quality standards before release.'},
+    {'id': 6, 'name': 'Operations', 'description': 'Manages game servers, backend infrastructure, and the deployment of online multiplayer features.'}
 ]
 
 for data in department_data:
@@ -71,12 +78,30 @@ session.commit()
 
 # Insert data into JobPosition table
 job_position_data = [
-    {'id': 1, 'name': 'Software Engineer', 'description': 'Develops and maintains software applications.', 'department_id': 1},
-    {'id': 2, 'name': 'HR Specialist', 'description': 'Handles employee relations and recruitment.', 'department_id': 2},
-    {'id': 3, 'name': 'Project Manager', 'description': 'Leads and manages project execution.', 'department_id': 1},
-    {'id': 4, 'name': 'System Administrator', 'description': 'Manages IT systems and infrastructure.', 'department_id': 1},
-    {'id': 5, 'name': 'Marketing Analyst', 'description': 'Analyzes marketing data and trends.', 'department_id': 4}
+    {'id': 1, 'name': 'Software Engineer', 'description': 'Develops and maintains software applications.', 'department_id': 1},  # Development
+    {'id': 2, 'name': 'HR Specialist', 'description': 'Handles employee relations and recruitment.', 'department_id': 2},  # Design (Could be general HR role)
+    {'id': 3, 'name': 'Project Manager', 'description': 'Leads and manages project execution.', 'department_id': 1},  # Development
+    {'id': 4, 'name': 'System Administrator', 'description': 'Manages IT systems and infrastructure.', 'department_id': 1},  # Development (Operations)
+    {'id': 5, 'name': 'Marketing Analyst', 'description': 'Analyzes marketing data and trends.', 'department_id': 4},  # Marketing
+    
+    # Game Development-focused positions
+    {'id': 6, 'name': 'Game Designer', 'description': 'Designs gameplay mechanics, rules, and features to enhance player experience.', 'department_id': 2},  # Design
+    {'id': 7, 'name': 'Level Designer', 'description': 'Creates engaging and immersive levels within the game.', 'department_id': 2},  # Design
+    {'id': 8, 'name': 'Gameplay Programmer', 'description': 'Develops the core gameplay systems, mechanics, and interactions for the game.', 'department_id': 1},  # Development
+    {'id': 9, 'name': '3D Artist', 'description': 'Creates 3D models, textures, and animations for game environments and characters.', 'department_id': 3},  # Art
+    {'id': 10, 'name': 'Sound Designer', 'description': 'Responsible for creating and implementing sound effects, music, and voiceovers.', 'department_id': 3},  # Art
+    {'id': 11, 'name': 'UI/UX Designer', 'description': 'Designs and optimizes user interfaces and user experiences for the game.', 'department_id': 2},  # Design
+    {'id': 12, 'name': 'Game Writer', 'description': 'Creates the story, dialogue, and world-building elements for the game.', 'department_id': 2},  # Design
+    {'id': 13, 'name': 'Animation Lead', 'description': 'Leads the animation team in creating character and environment animations for the game.', 'department_id': 3},  # Art
+    {'id': 14, 'name': 'QA Tester', 'description': 'Tests the game for bugs, performance issues, and user experience improvements.', 'department_id': 5},  # QA
+    {'id': 15, 'name': 'Community Manager', 'description': 'Engages with the game community through social media, events, and feedback channels.', 'department_id': 4},  # Marketing
+    {'id': 16, 'name': 'Monetization Specialist', 'description': 'Designs and implements in-game purchasing strategies and monetization features.', 'department_id': 4},  # Marketing
+    {'id': 17, 'name': 'Backend Developer', 'description': 'Develops and maintains server-side infrastructure for online multiplayer features.', 'department_id': 6},  # Operations
+    {'id': 18, 'name': 'DevOps Engineer', 'description': 'Manages the deployment, automation, and monitoring of game servers and cloud services.', 'department_id': 6},  # Operations
+    {'id': 19, 'name': 'Technical Artist', 'description': 'Bridges the gap between art and programming by ensuring that artwork is optimized for the game engine.', 'department_id': 3},  # Art
+    {'id': 20, 'name': 'Marketing Director', 'description': 'Leads marketing strategies and campaigns to promote the game.', 'department_id': 4}  # Marketing
 ]
+
 
 for data in job_position_data:
     job_position = JobPosition(**data)
@@ -84,17 +109,22 @@ for data in job_position_data:
 session.commit()
 
 employee_position_data = [
-    {'employee_id': 1, 'position_id': 1},  # John -> Software Engineer
-    {'employee_id': 2, 'position_id': 2},  # Mary -> HR Specialist
-    {'employee_id': 3, 'position_id': 1},  # Carlos -> Software Engineer
-    {'employee_id': 4, 'position_id': 2},  # Anna -> HR Specialist
+    {'employee_id': 1, 'position_id': 7},  # John -> Game Developer
+    {'employee_id': 2, 'position_id': 6},  # Mary -> Talent Acquisition Manager
+    {'employee_id': 3, 'position_id': 8},  # Carlos -> Gameplay Programmer
+    {'employee_id': 4, 'position_id': 9},  # Anna -> Game Designer
     {'employee_id': 5, 'position_id': 3},  # Louis -> Project Manager
     {'employee_id': 6, 'position_id': 4},  # Laura -> System Administrator
-    {'employee_id': 7, 'position_id': 4},  # Robert -> System Administrator
-    {'employee_id': 8, 'position_id': 5},  # Fernanda -> Marketing Analyst
-    {'employee_id': 9, 'position_id': 5},  # George -> Marketing Analyst
-    {'employee_id': 10, 'position_id': 3},  # Claudia -> Project Manager
-    {'employee_id': 11, 'position_id': 1}   # Jean -> Software Engineer
+    {'employee_id': 7, 'position_id': 11}, # Robert -> IT Support Specialist
+    {'employee_id': 8, 'position_id': 5},  # Fernanda -> UI/UX Designer
+    {'employee_id': 9, 'position_id': 5},  # George -> UI/UX Designer
+    {'employee_id': 10, 'position_id': 10},  # Claudia -> Technical Artist
+    {'employee_id': 11, 'position_id': 12},  # Jean -> Quality Assurance Tester
+    {'employee_id': 12, 'position_id': 2},  # Lucas -> 3D Artist
+    {'employee_id': 13, 'position_id': 1},  # Sofia -> Game Writer
+    {'employee_id': 14, 'position_id': 13},  # Ariane -> Animation Lead
+    {'employee_id': 15, 'position_id': 14},  # Hiroshi -> DevOps Engineer
+    {'employee_id': 16, 'position_id': 15},  # Maya -> Community Manager
 ]
 
 for data in employee_position_data:
@@ -125,8 +155,16 @@ health_plan_data = [
     {'id': 2, 'name': 'Fonasa Plan B', 'type': 'Fonasa'},
     {'id': 3, 'name': 'Fonasa Plan C', 'type': 'Fonasa'},
     {'id': 4, 'name': 'Fonasa Plan D', 'type': 'Fonasa'},
-    {'id': 5, 'name': 'Isapre Plan 1', 'type': 'Isapre'},
-    {'id': 6, 'name': 'Isapre Plan 2', 'type': 'Isapre'}
+    {'id': 5, 'name': 'Banmédica S.A.', 'type': 'Isapre'},
+    {'id': 6, 'name': 'Isalud Ltda.', 'type': 'Isapre'},
+    {'id': 7, 'name': 'Colmena Golden Cross S.A.', 'type': 'Isapre'},
+    {'id': 8, 'name': 'Consalud S.A.', 'type': 'Isapre'},
+    {'id': 9, 'name': 'Cruz Blanca S.A.', 'type': 'Isapre'},
+    {'id': 10, 'name': 'Cruz del Norte Ltda.', 'type': 'Isapre'},
+    {'id': 11, 'name': 'Nueva Masvida S.A.', 'type': 'Isapre'},
+    {'id': 12, 'name': 'Fundación Ltda.', 'type': 'Isapre'},
+    {'id': 13, 'name': 'Vida Tres S.A.', 'type': 'Isapre'},
+    {'id': 14, 'name': 'Esencial S.A.', 'type': 'Isapre'}
 ]
 
 for data in health_plan_data:
@@ -150,7 +188,15 @@ session.commit()
 # Insert data into Isapre table
 isapre_data = [
     {'id': 1, 'health_plan_id': 5, 'discount': 10.00},
-    {'id': 2, 'health_plan_id': 6, 'discount': 12.00}
+    {'id': 2, 'health_plan_id': 6, 'discount': 12.00},
+    {'id': 3, 'health_plan_id': 7, 'discount': 8.50},
+    {'id': 4, 'health_plan_id': 8, 'discount': 15.00},
+    {'id': 5, 'health_plan_id': 9, 'discount': 9.00},
+    {'id': 6, 'health_plan_id': 10, 'discount': 11.00},
+    {'id': 7, 'health_plan_id': 11, 'discount': 13.50},
+    {'id': 8, 'health_plan_id': 12, 'discount': 10.00},
+    {'id': 9, 'health_plan_id': 13, 'discount': 14.00},
+    {'id': 10, 'health_plan_id': 14, 'discount': 16.00}
 ]
 
 for data in isapre_data:
@@ -160,11 +206,22 @@ session.commit()
 
 # Insert data into Contract table
 contract_data = [
-    {'id': 1, 'employee_id': 1, 'contract_type': 'permanent', 'start_date': date(2020, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'professional', 'position_id': 1, 'registration_date': date(2020, 1, 15)},
-    {'id': 2, 'employee_id': 2, 'contract_type': 'fixed-term', 'start_date': date(2019, 3, 10), 'end_date': date(2022, 3, 10), 'classification': 'administrative', 'position_id': 2, 'registration_date': date(2019, 3, 10)},
-    {'id': 3, 'employee_id': 3, 'contract_type': 'temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'technical', 'position_id': 3, 'registration_date': date(2021, 6, 5)},
-    {'id': 4, 'employee_id': 4, 'contract_type': 'substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'auxiliary', 'position_id': 4, 'registration_date': date(2018, 9, 25)},
-    {'id': 5, 'employee_id': 5, 'contract_type': 'permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2025, 2, 1), 'classification': 'executive', 'position_id': 1, 'registration_date': date(2022, 2, 1)}
+    {'id': 1, 'employee_id': 1, 'contract_type': 'Permanent', 'start_date': date(2020, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'Professional', 'position_id': 1, 'registration_date': date(2020, 1, 15)},
+    {'id': 2, 'employee_id': 2, 'contract_type': 'Fixed', 'start_date': date(2019, 3, 10), 'end_date': date(2022, 3, 10), 'classification': 'Administrative', 'position_id': 2, 'registration_date': date(2019, 3, 10)},
+    {'id': 3, 'employee_id': 3, 'contract_type': 'Temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'Technical', 'position_id': 3, 'registration_date': date(2021, 6, 5)},
+    {'id': 4, 'employee_id': 4, 'contract_type': 'Substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'Auxiliary', 'position_id': 4, 'registration_date': date(2018, 9, 25)},
+    {'id': 5, 'employee_id': 5, 'contract_type': 'Permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2025, 2, 1), 'classification': 'Executive', 'position_id': 1, 'registration_date': date(2022, 2, 1)},
+    {'id': 6, 'employee_id': 6, 'contract_type': 'Fixed', 'start_date': date(2020, 8, 14), 'end_date': date(2023, 8, 14), 'classification': 'Professional', 'position_id': 4, 'registration_date': date(2020, 8, 14)},
+    {'id': 7, 'employee_id': 7, 'contract_type': 'Temporary', 'start_date': date(2017, 10, 12), 'end_date': date(2020, 10, 12), 'classification': 'Technical', 'position_id': 3, 'registration_date': date(2017, 10, 12)},
+    {'id': 8, 'employee_id': 8, 'contract_type': 'Permanent', 'start_date': date(2021, 4, 8), 'end_date': date(2024, 4, 8), 'classification': 'Administrative', 'position_id': 5, 'registration_date': date(2021, 4, 8)},
+    {'id': 9, 'employee_id': 9, 'contract_type': 'Substitute', 'start_date': date(2020, 3, 14), 'end_date': date(2022, 3, 14), 'classification': 'Executive', 'position_id': 5, 'registration_date': date(2020, 3, 14)},
+    {'id': 10, 'employee_id': 10, 'contract_type': 'Fixed', 'start_date': date(2016, 7, 3), 'end_date': date(2019, 7, 3), 'classification': 'Professional', 'position_id': 3, 'registration_date': date(2016, 7, 3)},
+    {'id': 11, 'employee_id': 11, 'contract_type': 'Permanent', 'start_date': date(2021, 7, 12), 'end_date': date(2024, 7, 12), 'classification': 'Auxiliary', 'position_id': 1, 'registration_date': date(2021, 7, 12)},
+    {'id': 12, 'employee_id': 12, 'contract_type': 'Fixed', 'start_date': date(2021, 1, 20), 'end_date': date(2024, 1, 20), 'classification': 'Technical', 'position_id': 2, 'registration_date': date(2021, 1, 20)},
+    {'id': 13, 'employee_id': 13, 'contract_type': 'Temporary', 'start_date': date(2021, 11, 15), 'end_date': date(2022, 11, 15), 'classification': 'Administrative', 'position_id': 4, 'registration_date': date(2021, 11, 15)},
+    {'id': 14, 'employee_id': 14, 'contract_type': 'Substitute', 'start_date': date(2022, 5, 1), 'end_date': date(2024, 5, 1), 'classification': 'Executive', 'position_id': 5, 'registration_date': date(2022, 5, 1)},
+    {'id': 15, 'employee_id': 15, 'contract_type': 'Permanent', 'start_date': date(2022, 6, 25), 'end_date': date(2025, 6, 25), 'classification': 'Professional', 'position_id': 3, 'registration_date': date(2022, 6, 25)},
+    {'id': 16, 'employee_id': 16, 'contract_type': 'Fixed', 'start_date': date(2023, 3, 5), 'end_date': date(2026, 3, 5), 'classification': 'Technical', 'position_id': 2, 'registration_date': date(2023, 3, 5)}
 ]
 
 for data in contract_data:
@@ -221,7 +278,18 @@ remuneration_data = [
     {'id': 2, 'employee_id': 2, 'afp_id': 2, 'health_plan_id': 2, 'gross_amount': 3000.00, 'tax': 12.0, 'deductions': 200.00, 'bonus': 250.00, 'welfare_contribution': 60.00, 'net_amount': 2650.00},
     {'id': 3, 'employee_id': 3, 'afp_id': 3, 'health_plan_id': 3, 'gross_amount': 2300.00, 'tax': 9.0, 'deductions': 130.00, 'bonus': 150.00, 'welfare_contribution': 40.00, 'net_amount': 2070.00},
     {'id': 4, 'employee_id': 4, 'afp_id': 4, 'health_plan_id': 1, 'gross_amount': 2800.00, 'tax': 11.0, 'deductions': 180.00, 'bonus': 300.00, 'welfare_contribution': 55.00, 'net_amount': 2455.00},
-    {'id': 5, 'employee_id': 5, 'afp_id': 5, 'health_plan_id': 2, 'gross_amount': 2700.00, 'tax': 10.5, 'deductions': 170.00, 'bonus': 280.00, 'welfare_contribution': 50.00, 'net_amount': 2390.00}
+    {'id': 5, 'employee_id': 5, 'afp_id': 5, 'health_plan_id': 2, 'gross_amount': 2700.00, 'tax': 10.5, 'deductions': 170.00, 'bonus': 280.00, 'welfare_contribution': 50.00, 'net_amount': 2390.00},
+    {'id': 6, 'employee_id': 6, 'afp_id': 6, 'health_plan_id': 3, 'gross_amount': 2400.00, 'tax': 9.5, 'deductions': 160.00, 'bonus': 220.00, 'welfare_contribution': 45.00, 'net_amount': 2110.00},
+    {'id': 7, 'employee_id': 7, 'afp_id': 7, 'health_plan_id': 4, 'gross_amount': 3100.00, 'tax': 11.5, 'deductions': 250.00, 'bonus': 200.00, 'welfare_contribution': 65.00, 'net_amount': 2735.00},
+    {'id': 8, 'employee_id': 8, 'afp_id': 8, 'health_plan_id': 5, 'gross_amount': 2600.00, 'tax': 10.0, 'deductions': 140.00, 'bonus': 230.00, 'welfare_contribution': 50.00, 'net_amount': 2380.00},
+    {'id': 9, 'employee_id': 9, 'afp_id': 9, 'health_plan_id': 6, 'gross_amount': 2900.00, 'tax': 12.0, 'deductions': 210.00, 'bonus': 270.00, 'welfare_contribution': 55.00, 'net_amount': 2415.00},
+    {'id': 10, 'employee_id': 10, 'afp_id': 10, 'health_plan_id': 7, 'gross_amount': 2200.00, 'tax': 9.0, 'deductions': 120.00, 'bonus': 180.00, 'welfare_contribution': 40.00, 'net_amount': 1940.00},
+    {'id': 11, 'employee_id': 11, 'afp_id': 11, 'health_plan_id': 8, 'gross_amount': 2500.00, 'tax': 10.5, 'deductions': 150.00, 'bonus': 210.00, 'welfare_contribution': 50.00, 'net_amount': 2200.00},
+    {'id': 12, 'employee_id': 12, 'afp_id': 12, 'health_plan_id': 9, 'gross_amount': 3000.00, 'tax': 11.0, 'deductions': 190.00, 'bonus': 250.00, 'welfare_contribution': 60.00, 'net_amount': 2700.00},
+    {'id': 13, 'employee_id': 13, 'afp_id': 13, 'health_plan_id': 10, 'gross_amount': 2800.00, 'tax': 10.5, 'deductions': 180.00, 'bonus': 240.00, 'welfare_contribution': 55.00, 'net_amount': 2505.00},
+    {'id': 14, 'employee_id': 14, 'afp_id': 14, 'health_plan_id': 11, 'gross_amount': 3200.00, 'tax': 12.0, 'deductions': 210.00, 'bonus': 290.00, 'welfare_contribution': 70.00, 'net_amount': 2890.00},
+    {'id': 15, 'employee_id': 15, 'afp_id': 15, 'health_plan_id': 12, 'gross_amount': 3000.00, 'tax': 10.0, 'deductions': 200.00, 'bonus': 300.00, 'welfare_contribution': 60.00, 'net_amount': 2740.00},
+    {'id': 16, 'employee_id': 16, 'afp_id': 16, 'health_plan_id': 13, 'gross_amount': 3400.00, 'tax': 13.0, 'deductions': 220.00, 'bonus': 310.00, 'welfare_contribution': 75.00, 'net_amount': 3180.00}
 ]
 
 for data in remuneration_data:

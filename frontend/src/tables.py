@@ -40,6 +40,7 @@ class Employee(Base):
     last_name = Column(String(50))
     birth_date = Column(Date)
     start_date = Column(Date)
+    email = Column(String(320))
     phone = Column(String(20))
     salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
@@ -49,6 +50,14 @@ class Employee(Base):
     trainings = relationship('Training', back_populates='employees')
     remunerations = relationship('Remuneration', back_populates='employees')
     job_positions = relationship('JobPosition', secondary='EmployeePosition', back_populates='employees')  # Many-to-Many with JobPosition
+
+# Department model
+class Department(Base):
+    __tablename__ = 'Department'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100))
+    description = Column(Text)
+    job_positions = relationship('JobPosition', back_populates='departments')  # Relationship to JobPosition
 
 # Position model
 class JobPosition(Base):
@@ -74,13 +83,6 @@ class AFP(Base):
     name = Column(String(100))
     commission_percentage = Column(DECIMAL(5, 2))
     remunerations = relationship('Remuneration', back_populates='afps')
-
-# Department model
-class Department(Base):
-    __tablename__ = 'Department'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100))
-    job_positions = relationship('JobPosition', back_populates='departments')  # Relationship to JobPosition
 
 # Vacation model
 class Vacation(Base):
