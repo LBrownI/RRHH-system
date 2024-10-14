@@ -4,46 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trainings and Evaluations</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='train_eval.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
+<body class="bg-gray-100 p-6">
+    <div class="container mx-auto">
+        <div class="flex justify-between">
+            <!-- Evaluations Block -->
+            <div class="w-full max-w-lg bg-white p-4 shadow-md rounded-md">
+                <h2 class="text-2xl font-semibold text-center mb-4">Evaluations</h2>
+                <table class="table-auto w-full border-collapse border border-gray-300">
+                    <colgroup>
+                        <col class="w-1/4">
+                        <col class="w-1/4">
+                        <col class="w-1/4">
+                        <col class="w-1/4">
+                    </colgroup>
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 px-4 py-2 text-left">Evaluator</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Date</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Rating</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for evaluation in evaluations %}
+                        <tr>
+                            <td class="border border-gray-300 px-4 py-2">{{ evaluation.evaluator }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ evaluation.evaluation_date }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ evaluation.rating }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ evaluation.comments }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
 
-    <div class="container">
-        <div class="left-block">
-            <h2>Evaluations</h2>
-            <ul>
-                {% for evaluation in evaluations %}
-                    <li>
-                        <p><strong>Evaluator:</strong> {{ evaluation.evaluator }}</p>
-                        <p><strong>Date:</strong> {{ evaluation.evaluation_date }}</p>
-                        <p><strong>Factor:</strong> {{ evaluation.evaluation_factor }}</p>
-                        <p><strong>Rating:</strong> {{ evaluation.rating }}</p>
-                        <p><strong>Comments:</strong> {{ evaluation.comments }}</p>
-                    </li>
-                {% else %}
-                    <p>No evaluations found.</p>
-                {% endfor %}
-            </ul>
-        </div>
-        
-        <div class="right-block">
-            <h2>Trainings</h2>
-            <ul>
-                {% for training in trainings %}
-                    <li>
-                        <p><strong>Course:</strong> {{ training.course }}</p>
-                        <p><strong>Date:</strong> {{ training.training_date }}</p>
-                        <p><strong>Score:</strong> {{ training.score }}</p>
-                        <p><strong>Institution:</strong> {{ training.institution }}</p>
-                        <p><strong>Comments:</strong> {{ training.comments }}</p>
-                    </li>
-                {% else %}
-                    <p>No trainings found.</p>
-                {% endfor %}
-            </ul>
+            <!-- Trainings Block -->
+            <div class="w-full max-w-lg bg-white p-4 shadow-md rounded-md">
+                <h2 class="text-2xl font-semibold text-center mb-4">Trainings</h2>
+                <table class="table-auto w-full border-collapse border border-gray-300">
+                    <colgroup>
+                        <col class="w-1/4">
+                        <col class="w-1/4">
+                        <col class="w-1/4">
+                        <col class="w-1/4">
+                    </colgroup>
+                    <thead>
+                        <tr class="bg-gray-200">
+                            <th class="border border-gray-300 px-4 py-2 text-left">Course</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Date</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Institution</th>
+                            <th class="border border-gray-300 px-4 py-2 text-left">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for training in trainings %}
+                        <tr>
+                            <td class="border border-gray-300 px-4 py-2">{{ training.course }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ training.training_date }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ training.institution }}</td>
+                            <td class="border border-gray-300 px-4 py-2">{{ training.score }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-
 </body>
 </html>
-
