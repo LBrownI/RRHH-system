@@ -16,49 +16,61 @@
     <!-- Main content: employee list and filters -->
     <main>
       <div class="content">
-        <!-- Employee list -->
-        <section class="employee-list">
-          <h2>Employee List</h2>
-          <ul id="employees">
-            {% for employee in employees %}
-              <li>
-                <!-- Make the employee's name clickable and redirect to /employee?employee_id=ID on a new tab -->
-                <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
-                  {{ employee.rut }} - {{ employee.first_name }} {{ employee.last_name }} - {{ employee.position }} - {{ employee.department }}
-                </a>
-              </li>
-            {% else %}
-              <li>No employees found.</li>
-            {% endfor %}
-          </ul>
-        </section>
+        <div class="employee-list">
+            <h2>Lista de Empleados</h2>
+            <table class="employee-table">
+                <thead>
+                    <tr>
+                        <th>RUT</th>
+                        <th>Nombre</th>
+                        <th>Apellido</th>
+                        <th>Posición de Trabajo</th>
+                        <th>Departamento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for employee in employees %}
+                    <tr>
+                        <td><a href="{{ url_for('user', id=employee.id) }}" target="_blank">{{ employee.rut }}</a></td>
+                        <td><a href="{{ url_for('user', id=employee.id) }}" target="_blank">{{ employee.first_name }}</a></td>
+                        <td><a href="{{ url_for('user', id=employee.id) }}" target="_blank">{{ employee.last_name }}</a></td>
+                        <td><a href="{{ url_for('user', id=employee.id) }}" target="_blank">{{ employee.position }}</a></td>
+                        <td><a href="{{ url_for('user', id=employee.id) }}" target="_blank">{{ employee.department }}</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
 
         <!-- Filters -->
         <aside class="filters">
           <h3>Filters</h3>
 
-          <label for="filter-role">Role:</label>
-          <select id="filter-role">
-            <option value="">All</option>
-            <option value="Supervisor">Supervisor</option>
-            <option value="Intern">Intern</option>
-            <!-- More roles will be dynamically loaded from the database -->
-          </select>
+          <form method="GET" action="{{ url_for('index') }}">
+            <label for="job_position">Posición de Trabajo:</label>
+            <select id="job_position" name="job_position">
+                <option value="">Seleccionar</option>
+                <!-- Agrega opciones aquí -->
+                {% for position in job_positions %}
+                <option value="{{ position.id }}">{{ position.name }}</option>
+                {% endfor %}
+            </select>
 
-          <label for="filter-department">Department:</label>
-          <select id="filter-department">
-            <option value="">All</option>
-            <option value="Finance">Finance</option>
-            <option value="eCommerce">eCommerce</option>
-            <!-- More departments will be dynamically loaded from the database -->
-          </select>
+            <label for="department">Departamento:</label>
+            <select id="department" name="department">
+                <option value="">Seleccionar</option>
+                <!-- Agrega opciones aquí -->
+                {% for dept in departments %}
+                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                {% endfor %}
+            </select>
 
           <label for="filter-training">Training:</label>
           <select id="filter-training">
-            <option value="">All</option>
-            <option value="Training 1">Training 1</option>
-            <option value="Training 2">Training 2</option>
-            <!-- More training options will be dynamically loaded from the database -->
+            <option value="">Seleccionar</option>
+            {% for dept in trainings %}
+                <option value="{{ train.id }}">{{ train.name }}</option>
+            {% endfor %}
           </select>
 
           <button id="apply-filters">Apply Filters</button>
