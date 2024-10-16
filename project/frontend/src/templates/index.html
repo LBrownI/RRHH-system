@@ -24,7 +24,7 @@
               <li>
                 <!-- Make the employee's name clickable and redirect to /employee?employee_id=ID on a new tab -->
                 <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
-                  {{ employee.id }} - {{ employee.rut }} - {{ employee.first_name }} {{ employee.last_name }} - {{ employee.position }} - {{ employee.department }}
+                  {{ employee.rut }} - {{ employee.first_name }} {{ employee.last_name }} - {{ employee.position }} - {{ employee.department }}
                 </a>
               </li>
             {% else %}

@@ -5,7 +5,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import date, datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from tables import Employee, EmployeePosition, JobPosition, Remuneration, HealthPlan, Company, Contract, Training, Evaluation, AFP
+from tables import *
 
 # Load the MySQL root password from environment variables
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
@@ -108,35 +108,39 @@ def general_info(employee_id: int):
 # test = aditional_info(1)
 # print(test)
 def all_employees(session):
-    """Select all the data from the Employee table."""
-    print('\n--- Running query_1 ---')
-    session = Session()
+    """Select all employees with their rut, first name, last name, position, and department"""
+    print('\n--- Running all_employees query ---')
     try:
-        # Query the Employee table using SQLAlchemy's session.query
-        employees = session.query(Employee).all()
-        
-        # Create a list of dictionaries to store the employee data
-        employee_list = []
-        for employee in employees:
-            employee_list.append({
-                'id': employee.id,
-                'rut': employee.rut,
-                'first_name': employee.first_name,
-                'last_name': employee.last_name
-            })
-        
-        if not employee_list:
-            print("No employees found.")
-        else:
-            print(f"Employees found: {employee_list}")
-        
-        return employee_list
+        # Consulta usando SQLAlchemy para obtener los empleados junto con su posición y departamento
+        info = (
+            session.query(Employee.id,Employee.rut, Employee.first_name, Employee.last_name, JobPosition.name.label('position_name'), Department.name.label('department_name')).
+            outerjoin(EmployeePosition, Employee.id == EmployeePosition.employee_id).
+            outerjoin(JobPosition, EmployeePosition.position_id == JobPosition.id).
+            outerjoin(Department, JobPosition.department_id == Department.id).all()
+        )
 
+        
+        # Crear una lista de diccionarios para cada empleado
+        employees = [
+            {
+                "id": row.id,
+                "rut": row.rut,
+                "first_name": row.first_name,
+                "last_name": row.last_name,
+                "position": row.position_name if row.position_name else "Sin posición",
+                "department": row.department_name if row.department_name else "Sin departamento",
+            }
+            for row in info
+        ]
+
+
+        
+        return employees  # Agregar este return para asegurarse de que la función devuelve la lista de empleados
     except Exception as e:
-        print(f'Error in query_1: {e}')
-        return []  # Return an empty list if there's an error
-    finally:
-        session.close()
+        print(f'Error in all_employees query: {e}')
+        return []  # Devolver una lista vacía en caso de error
+
+
 
 
 def add_contract(session, contract_data):
