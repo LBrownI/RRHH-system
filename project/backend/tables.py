@@ -12,8 +12,12 @@ config = {'host': 'localhost',
           'user': 'root',
           'password': mysql_root_password}
 
+#engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
+engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
+
+with engine.connect() as connection:
+    connection.execute(text("CREATE DATABASE IF NOT EXISTS hr"))
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
-# engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
 
 Base = declarative_base()
 
@@ -195,3 +199,5 @@ class User(Base):
     # Method to check password
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+Base.metadata.create_all(engine)
