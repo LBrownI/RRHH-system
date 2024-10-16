@@ -269,6 +269,26 @@ def get_all_trainings(session):
 
     return trainings_with_employee
 
+def get_employees_by_department(department_id):
+    """
+    Fetches all employees who are in positions within a given department.
+    """
+    # Query the employees through the JobPosition and Department relationship
+    employees = session.query(Employee).join(EmployeePosition).join(JobPosition).filter(JobPosition.department_id == department_id).all()
+
+    return employees
+
+def department_info(department_id):
+    """
+    Fetches department name and description by department ID.
+    """
+    # Query for the department name and description
+    department = session.query(Department).filter(Department.id == department_id).first()
+
+    if department:
+        return department.name, department.description
+    return None
+
 def all_companies():
     """Select all the data from the Company table"""
     print('\n--- Running all_companies query ---') 
