@@ -71,28 +71,31 @@
         <aside class="filters">
           <h3>Filters</h3>
 
-          <label for="filter-role">Role:</label>
-          <select id="filter-role">
-            <option value="">All</option>
-            <option value="Supervisor">Supervisor</option>
-            <option value="Intern">Intern</option>
-            <!-- More roles will be dynamically loaded from the database -->
-          </select>
+          <form method="GET" action="{{ url_for('index') }}">
+            <label for="job_position">Posición de Trabajo:</label>
+            <select id="job_position" name="job_position">
+                <option value="">Seleccionar</option>
+                <!-- Agrega opciones aquí -->
+                {% for position in job_positions %}
+                <option value="{{ position.id }}">{{ position.name }}</option>
+                {% endfor %}
+            </select>
 
-          <label for="filter-department">Department:</label>
-          <select id="filter-department">
-            <option value="">All</option>
-            <option value="Finance">Finance</option>
-            <option value="eCommerce">eCommerce</option>
-            <!-- More departments will be dynamically loaded from the database -->
-          </select>
+            <label for="department">Departamento:</label>
+            <select id="department" name="department">
+                <option value="">Seleccionar</option>
+                <!-- Agrega opciones aquí -->
+                {% for dept in departments %}
+                <option value="{{ dept.id }}">{{ dept.name }}</option>
+                {% endfor %}
+            </select>
 
           <label for="filter-training">Training:</label>
           <select id="filter-training">
-            <option value="">All</option>
-            <option value="Training 1">Training 1</option>
-            <option value="Training 2">Training 2</option>
-            <!-- More training options will be dynamically loaded from the database -->
+            <option value="">Seleccionar</option>
+            {% for dept in trainings %}
+                <option value="{{ train.id }}">{{ train.name }}</option>
+            {% endfor %}
           </select>
 
           <button id="apply-filters">Apply Filters</button>
