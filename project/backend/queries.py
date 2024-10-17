@@ -16,11 +16,8 @@ config = {'host': 'localhost',
           'user': 'root',
           'password': mysql_root_password}
 
-engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}')
+engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
 # engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
-
-with engine.connect() as conn:
-    conn.execute(text(f"CREATE DATABASE IF NOT EXISTS {config['database_name']}"))
 
 Base = declarative_base()
 
@@ -132,8 +129,6 @@ def all_employees(session):
             }
             for row in info
         ]
-
-
         
         return employees  # Agregar este return para asegurarse de que la función devuelve la lista de empleados
     except Exception as e:
