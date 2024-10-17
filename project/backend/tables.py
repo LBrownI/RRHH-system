@@ -44,6 +44,7 @@ class Employee(Base):
     phone = Column(String(20))
     salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
+    active_employee = Column(Boolean)
     contracts = relationship('Contract', back_populates='employees')
     vacations = relationship('Vacation', back_populates='employees')
     evaluations = relationship('Evaluation', back_populates='employees')
@@ -93,7 +94,7 @@ class Vacation(Base):
     end_date = Column(Date)
     days_taken = Column(Integer)
     accumulated_days = Column(Integer)
-    long_service_employee = Column(Boolean)  # Equivalent to 'colaborador_antiguo'
+    long_service_employee = Column(Boolean) 
     employees = relationship('Employee', back_populates='vacations')
 
 # Evaluation model

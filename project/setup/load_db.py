@@ -44,6 +44,7 @@ class Employee(Base):
     phone = Column(String(20))
     salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
+    active_employee = Column(Boolean)
     contracts = relationship('Contract', back_populates='employees')
     vacations = relationship('Vacation', back_populates='employees')
     evaluations = relationship('Evaluation', back_populates='employees')
@@ -221,22 +222,22 @@ session.commit()
 
 # Insert data into Employee table
 employee_data = [
-    {'id': 1, 'rut': '20.890.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(2000, 9, 18), 'start_date': date(2023, 1, 15), 'phone': '555-2345', 'email': 'john.doe@psyonix.com', 'salary': 1200.00, 'nationality': 'Chilean'},
-    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'email': 'mary.johnson@psyonix.com', 'salary': 2500.00, 'nationality': 'American'},
-    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'email': 'carlos.williams@psyonix.com', 'salary': 1800.00, 'nationality': 'Mexican'},
-    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'email': 'anna.brown@psyonix.com', 'salary': 2300.00, 'nationality': 'British'},
-    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birth_date': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'email': 'louis.davis@psyonix.com', 'salary': 2100.00, 'nationality': 'Canadian'},
-    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birth_date': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'email': 'laura.miller@psyonix.com', 'salary': 2400.00, 'nationality': 'German'},
-    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birth_date': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'email': 'robert.wilson@psyonix.com', 'salary': 2200.00, 'nationality': 'Australian'},
-    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birth_date': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'email': 'fernanda.taylor@psyonix.com', 'salary': 2700.00, 'nationality': 'Brazilian'},
-    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birth_date': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'email': 'george.anderson@psyonix.com', 'salary': 2600.00, 'nationality': 'American'},
-    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birth_date': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'email': 'claudia.thomas@psyonix.com', 'salary': 1900.00, 'nationality': 'Spanish'},
-    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birth_date': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'email': 'jean.baptiste@psyonix.com', 'salary': 2100.00, 'nationality': 'Haitian'},
-    {'id': 12, 'rut': '19.877.654-4', 'first_name': 'Lucas', 'last_name': 'Rodriguez', 'birth_date': date(1994, 4, 2), 'start_date': date(2022, 1, 20), 'phone': '555-9999', 'email': 'lucas.rodriguez@psyonix.com', 'salary': 2400.00, 'nationality': 'Argentine'},
-    {'id': 13, 'rut': '11.777.111-5', 'first_name': 'Sofia', 'last_name': 'Martinez', 'birth_date': date(1998, 12, 16), 'start_date': date(2023, 7, 5), 'phone': '555-1111', 'email': 'sofia.martinez@psyonix.com', 'salary': 2100.00, 'nationality': 'Chilean'},
-    {'id': 14, 'rut': '20.555.666-7', 'first_name': 'Ariane', 'last_name': 'Dupont', 'birth_date': date(1989, 5, 9), 'start_date': date(2020, 5, 10), 'phone': '555-5555', 'email': 'ariane.dupont@psyonix.com', 'salary': 2800.00, 'nationality': 'French'},
-    {'id': 15, 'rut': '17.876.543-8', 'first_name': 'Hiroshi', 'last_name': 'Tanaka', 'birth_date': date(1992, 10, 21), 'start_date': date(2019, 2, 13), 'phone': '555-8888', 'email': 'hiroshi.tanaka@psyonix.com', 'salary': 2500.00, 'nationality': 'Japanese'},
-    {'id': 16, 'rut': '13.111.222-3', 'first_name': 'Maya', 'last_name': 'Singh', 'birth_date': date(1986, 8, 14), 'start_date': date(2017, 12, 5), 'phone': '555-7777', 'email': 'maya.singh@psyonix.com', 'salary': 2600.00, 'nationality': 'Indian'}
+    {'id': 1, 'rut': '20.890.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(2000, 9, 18), 'start_date': date(2023, 1, 15), 'phone': '555-2345', 'email': 'john.doe@psyonix.com', 'salary': 1200.00, 'nationality': 'Chilean', 'active_employee':'True'},
+    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'email': 'mary.johnson@psyonix.com', 'salary': 2500.00, 'nationality': 'American', 'active_employee':'True'},
+    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'email': 'carlos.williams@psyonix.com', 'salary': 1800.00, 'nationality': 'Mexican', 'active_employee':'False'},
+    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'email': 'anna.brown@psyonix.com', 'salary': 2300.00, 'nationality': 'British', 'active_employee':'False'},
+    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birth_date': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'email': 'louis.davis@psyonix.com', 'salary': 2100.00, 'nationality': 'Canadian', 'active_employee':'True'},
+    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birth_date': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'email': 'laura.miller@psyonix.com', 'salary': 2400.00, 'nationality': 'German', 'active_employee':'True'},
+    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birth_date': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'email': 'robert.wilson@psyonix.com', 'salary': 2200.00, 'nationality': 'Australian', 'active_employee':'False'},
+    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birth_date': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'email': 'fernanda.taylor@psyonix.com', 'salary': 2700.00, 'nationality': 'Brazilian', 'active_employee':'True'},
+    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birth_date': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'email': 'george.anderson@psyonix.com', 'salary': 2600.00, 'nationality': 'American', 'active_employee':'False'},
+    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birth_date': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'email': 'claudia.thomas@psyonix.com', 'salary': 1900.00, 'nationality': 'Spanish', 'active_employee':'False'},
+    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birth_date': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'email': 'jean.baptiste@psyonix.com', 'salary': 2100.00, 'nationality': 'Haitian', 'active_employee':'True'},
+    {'id': 12, 'rut': '19.877.654-4', 'first_name': 'Lucas', 'last_name': 'Rodriguez', 'birth_date': date(1994, 4, 2), 'start_date': date(2022, 1, 20), 'phone': '555-9999', 'email': 'lucas.rodriguez@psyonix.com', 'salary': 2400.00, 'nationality': 'Argentine', 'active_employee':'True'},
+    {'id': 13, 'rut': '11.777.111-5', 'first_name': 'Sofia', 'last_name': 'Martinez', 'birth_date': date(1998, 12, 16), 'start_date': date(2023, 7, 5), 'phone': '555-1111', 'email': 'sofia.martinez@psyonix.com', 'salary': 2100.00, 'nationality': 'Chilean', 'active_employee':'False'},
+    {'id': 14, 'rut': '20.555.666-7', 'first_name': 'Ariane', 'last_name': 'Dupont', 'birth_date': date(1989, 5, 9), 'start_date': date(2020, 5, 10), 'phone': '555-5555', 'email': 'ariane.dupont@psyonix.com', 'salary': 2800.00, 'nationality': 'French', 'active_employee':'False'},
+    {'id': 15, 'rut': '17.876.543-8', 'first_name': 'Hiroshi', 'last_name': 'Tanaka', 'birth_date': date(1992, 10, 21), 'start_date': date(2019, 2, 13), 'phone': '555-8888', 'email': 'hiroshi.tanaka@psyonix.com', 'salary': 2500.00, 'nationality': 'Japanese', 'active_employee':'True'},
+    {'id': 16, 'rut': '13.111.222-3', 'first_name': 'Maya', 'last_name': 'Singh', 'birth_date': date(1986, 8, 14), 'start_date': date(2017, 12, 5), 'phone': '555-7777', 'email': 'maya.singh@psyonix.com', 'salary': 2600.00, 'nationality': 'Indian', 'active_employee':'True'}
 ]
 
 
@@ -391,17 +392,17 @@ session.commit()
 # Insert data into Contract table
 contract_data = [
     {'id': 1, 'employee_id': 1, 'contract_type': 'Permanent', 'start_date': date(2023, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'Professional', 'position_id': 1, 'registration_date': date(2020, 1, 15)},
-    {'id': 2, 'employee_id': 2, 'contract_type': 'Fixed', 'start_date': date(2019, 3, 10), 'end_date': date(2022, 3, 10), 'classification': 'Administrative', 'position_id': 2, 'registration_date': date(2019, 3, 10)},
+    {'id': 2, 'employee_id': 2, 'contract_type': 'Fixed', 'start_date': date(2019, 3, 10), 'end_date': date(2025, 3, 10), 'classification': 'Administrative', 'position_id': 2, 'registration_date': date(2019, 3, 10)},
     {'id': 3, 'employee_id': 3, 'contract_type': 'Temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'Technical', 'position_id': 3, 'registration_date': date(2021, 6, 5)},
     {'id': 4, 'employee_id': 4, 'contract_type': 'Substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'Auxiliary', 'position_id': 4, 'registration_date': date(2018, 9, 25)},
     {'id': 5, 'employee_id': 5, 'contract_type': 'Permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2022, 2, 1), 'classification': 'Executive', 'position_id': 1, 'registration_date': date(2022, 2, 1)},
-    {'id': 6, 'employee_id': 6, 'contract_type': 'Fixed', 'start_date': date(2020, 8, 14), 'end_date': date(2023, 8, 14), 'classification': 'Professional', 'position_id': 4, 'registration_date': date(2020, 8, 14)},
+    {'id': 6, 'employee_id': 6, 'contract_type': 'Fixed', 'start_date': date(2020, 8, 14), 'end_date': date(2025, 8, 14), 'classification': 'Professional', 'position_id': 4, 'registration_date': date(2020, 8, 14)},
     {'id': 7, 'employee_id': 7, 'contract_type': 'Temporary', 'start_date': date(2017, 10, 12), 'end_date': date(2020, 10, 12), 'classification': 'Technical', 'position_id': 3, 'registration_date': date(2017, 10, 12)},
     {'id': 8, 'employee_id': 8, 'contract_type': 'Permanent', 'start_date': date(2021, 4, 8), 'end_date': date(2021, 4, 8), 'classification': 'Administrative', 'position_id': 5, 'registration_date': date(2021, 4, 8)},
     {'id': 9, 'employee_id': 9, 'contract_type': 'Substitute', 'start_date': date(2020, 3, 14), 'end_date': date(2022, 3, 14), 'classification': 'Executive', 'position_id': 5, 'registration_date': date(2020, 3, 14)},
     {'id': 10, 'employee_id': 10, 'contract_type': 'Fixed', 'start_date': date(2016, 7, 3), 'end_date': date(2019, 7, 3), 'classification': 'Professional', 'position_id': 3, 'registration_date': date(2016, 7, 3)},
     {'id': 11, 'employee_id': 11, 'contract_type': 'Permanent', 'start_date': date(2021, 7, 12), 'end_date': date(2021, 7, 12), 'classification': 'Auxiliary', 'position_id': 1, 'registration_date': date(2021, 7, 12)},
-    {'id': 12, 'employee_id': 12, 'contract_type': 'Fixed', 'start_date': date(2021, 1, 20), 'end_date': date(2024, 1, 20), 'classification': 'Technical', 'position_id': 2, 'registration_date': date(2021, 1, 20)},
+    {'id': 12, 'employee_id': 12, 'contract_type': 'Fixed', 'start_date': date(2021, 1, 20), 'end_date': date(2025, 1, 20), 'classification': 'Technical', 'position_id': 2, 'registration_date': date(2021, 1, 20)},
     {'id': 13, 'employee_id': 13, 'contract_type': 'Temporary', 'start_date': date(2021, 11, 15), 'end_date': date(2022, 11, 15), 'classification': 'Administrative', 'position_id': 4, 'registration_date': date(2021, 11, 15)},
     {'id': 14, 'employee_id': 14, 'contract_type': 'Substitute', 'start_date': date(2022, 5, 1), 'end_date': date(2024, 5, 1), 'classification': 'Executive', 'position_id': 5, 'registration_date': date(2022, 5, 1)},
     {'id': 15, 'employee_id': 15, 'contract_type': 'Permanent', 'start_date': date(2022, 6, 25), 'end_date': date(2022, 6, 25), 'classification': 'Professional', 'position_id': 3, 'registration_date': date(2022, 6, 25)},
