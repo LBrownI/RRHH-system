@@ -31,7 +31,7 @@ Base = declarative_base()
 class Company(Base):
     __tablename__ = 'Company'
     id = Column(Integer, primary_key=True)
-    rut = Column(String(20))  # Equivalent to 'rut'
+    rut = Column(String(20))
     name = Column(String(100))
     address = Column(String(255))
     phone = Column(String(20))
