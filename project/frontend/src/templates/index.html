@@ -1,106 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee List</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  </head>
-  <body>
-    <!-- Top bar with search, options, and user -->
-    <header>
-      {% include 'topbar.html' %}
-    </header>
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Employee List</title>
+      <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    </head>
+    <body>
+      <!-- Top bar with search, options, and user -->
+      <header>
+        {% include 'topbar.html' %}
+      </header>
 
-    <!-- Main content: employee list and filters -->
-    <main>
-      <div class="content">
-        <!-- Employee list -->
-        <section class="employee-list">
-          <h2>Employee List</h2>
-          <table class="employee-table">
-            <thead>
-              <tr>
-                <th>RUT</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Position</th>
-                <th>Department</th>
-              </tr>
+      <!-- Main content: employee list and filters -->
+      <main>
+        <div class="content">
+          <!-- Employee list -->
+          <section class="employee-list">
+            <h2>Employee List</h2>
+            <table class="employee-table">
+              <thead>
+                <tr>
+                    <th>RUT</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Position</th>
+                    <th>Department</th>
+                </tr>
             </thead>
-            <tbody id="employees">
-              {% for employee in employees %}
-              <tr>
-                <td>
-                  <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
-                    {{ employee.rut }}
-                  </a>
-                </td>
-                <td>
-                  <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
-                    {{ employee.first_name }}
-                  </a>
-                </td>
-                <td>
-                  <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
-                    {{ employee.last_name }}
-                  </a>
-                </td>
-                <td>
-                  <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
-                    {{ employee.position }}
-                  </a>
-                </td>
-                <td>
-                  <a href="{{ url_for('department', id=employee.department_id) }}" target="_blank">
-                    {{ employee.department }}
-                  </a>
-                </td>
-              </tr>
-              {% else %}
-              <tr>
-                <td colspan="5">No employees found.</td>
-              </tr>
-              {% endfor %}
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>
+                      <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
+                        {{ employee.rut }}
+                      </a>
+                    </td>
+
+                    <td>
+                      <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
+                        {{ employee.first_name }}
+                      </a>
+                    </td>
+
+                    <td>
+                      <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
+                        {{ employee.last_name }}
+                      </a>
+                    </td>
+                    <td>
+                      <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
+                        {{ employee.position }}
+                      </a>
+                    </td>
+                    <td>
+                      <a href="{{ url_for('user', id=employee.id) }}" target="_blank">
+                        {{ employee.department}}
+                      </a>
+                    </td>
+                </tr>
+                {% endfor %}
             </tbody>
-          </table>
-        </section>      
+            </table>
+          </section>      
 
-        <!-- Filters -->
-        <aside class="filters">
-          <h3>Filters</h3>
+          <!-- Filters -->
+          <aside class="filters">
+            <h3>Filters</h3>
 
-          <form method="GET" action="{{ url_for('index') }}">
-            <label for="job_position">Posición de Trabajo:</label>
-            <select id="job_position" name="job_position">
-                <option value="">Seleccionar</option>
-                <!-- Agrega opciones aquí -->
-                {% for position in job_positions %}
-                <option value="{{ position.id }}">{{ position.name }}</option>
-                {% endfor %}
-            </select>
-
-            <label for="department">Departamento:</label>
-            <select id="department" name="department">
-                <option value="">Seleccionar</option>
-                <!-- Agrega opciones aquí -->
-                {% for dept in departments %}
-                <option value="{{ dept.id }}">{{ dept.name }}</option>
-                {% endfor %}
-            </select>
-
-          <label for="filter-training">Training:</label>
-          <select id="filter-training">
-            <option value="">Seleccionar</option>
-            {% for dept in trainings %}
-                <option value="{{ train.id }}">{{ train.name }}</option>
-            {% endfor %}
-          </select>
-
-          <button id="apply-filters">Apply Filters</button>
-        </aside>
-      </div>
-    </main>
-  </body>
-</html>
+            <form method="GET" action="{{ url_for('homepage') }}">
+              <label for="job_position">Job Position:</label>
+              <select id="job_position" name="job_position">
+                  <option value="">All Positions</option>
+                  {% for position in job_positions %}
+                      <option value="{{ position.id }}" {% if request.args.get('job_position') == position.id|string %}selected{% endif %}>
+                          {{ position.name }}
+                      </option>
+                  {% endfor %}
+              </select>
+          
+              <label for="department">Department:</label>
+              <select id="department" name="department">
+                  <option value="">All Departments</option>
+                  {% for department in departments %}
+                      <option value="{{ department.id }}" {% if request.args.get('department') == department.id|string %}selected{% endif %}>
+                          {{ department.name }}
+                      </option>
+                  {% endfor %}
+              </select>
+          
+              <button type="submit">Apply Filters</button>
+          </form>
+          
+          </aside>
+        </div>
+      </main>
+    </body>
+  </html>
