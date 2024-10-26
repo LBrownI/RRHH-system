@@ -32,8 +32,19 @@ def index():
 # Route for menu page (homepage)
 @app.route('/homepage')
 def homepage():
-    employees = all_employees(session)
-    return render_template('index.html', employees = employees)
+    job_position_id = request.args.get('job_position', type=int)
+    department_id = request.args.get('department', type=int)
+
+    # Get filtered employees
+    employees = get_filtered_employees(session, job_position_id, department_id)
+    
+    # Fetch job positions and departments for the dropdown lists
+    job_positions = get_job_positions(session)
+    departments = get_departments(session)
+
+    return render_template('index.html', employees=employees, job_positions=job_positions, departments=departments)
+
+
 
 # Route for the employee (optional)
 @app.route('/employee')

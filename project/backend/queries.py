@@ -14,7 +14,7 @@ mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # F
 config = {'host': 'localhost',
           'database_name': 'hr',
           'user': 'root',
-          'password': mysql_root_password}
+          'password': 'rootpass'}
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
 # engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
@@ -23,6 +23,54 @@ Base = declarative_base()
 
 Session = sessionmaker(bind=engine)
 session = Session()
+
+def get_job_positions(session):
+    """
+    Get all job positions.
+    """
+    job_positions = session.query(JobPosition).all()
+    return job_positions
+
+def get_departments(session):
+    """
+    Get all departments.
+    """
+    departments = session.query(Department).all()
+    return departments
+
+def get_filtered_employees(session, job_position_id=None, department_id=None):
+    """
+    Get employees filtered by job position and/or department.
+    """
+    query = (
+        session.query(Employee.id, Employee.rut, Employee.first_name, Employee.last_name, JobPosition.name.label('position_name'), Department.name.label('department_name'))
+        .outerjoin(EmployeePosition, Employee.id == EmployeePosition.employee_id)
+        .outerjoin(JobPosition, EmployeePosition.position_id == JobPosition.id)
+        .outerjoin(Department, JobPosition.department_id == Department.id)
+    )
+    
+    # Apply filters if provided
+    if job_position_id:
+        query = query.filter(JobPosition.id == job_position_id)
+    if department_id:
+        query = query.filter(Department.id == department_id)
+    
+    employees = query.all()
+
+    return [
+        {
+            "id": emp.id,
+            "rut": emp.rut,
+            "first_name": emp.first_name,
+            "last_name": emp.last_name,
+            "position": emp.position_name if emp.position_name else "Sin posición",
+            "department": emp.department_name if emp.department_name else "Sin departamento",
+        }
+        for emp in employees
+    ]
+
+
+
 
 def aditional_info(employee_id_to_find: int):
     """Get additional information about an employee including net amount, health plan, nationality, birth date, start date, salary, and AFP."""
