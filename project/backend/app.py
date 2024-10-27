@@ -23,7 +23,7 @@ def index():
         # REVISE: https://webdamn.com/login-and-registration-with-python-flask-mysql/cl
 
         # If validation is correct, redirects to homepage (index.html)
-        if username == 'user' and password == 'pass':  # Validación simple de ejemplo
+        if username == 'user' and password == 'pass': # Simple example of user validation
             return redirect(url_for('homepage'))
         else:
             return render_template('login.html', error="Usuario o contraseña incorrectos")
@@ -38,7 +38,7 @@ def homepage():
     # Get filtered employees
     employees = get_filtered_employees(session, job_position_id, department_id)
     
-    # Fetch job positions and departments for the dropdown lists
+    # Fetch job positions and departments for dropdown lists
     job_positions = get_job_positions(session)
     departments = get_departments(session)
 
@@ -46,27 +46,42 @@ def homepage():
 
 
 
-# Route for the employee (optional)
+# Route for the employee profile with integrated search
 @app.route('/employee')
 def user():
     """
     Gets the employee_id from the URL and returns the info of the employee.
     If certain data is missing, it will show a message on the page instead of redirecting.
     """
+    search_query = request.args.get('search_query')
+    
+    # Perform the search if there is a search parameter
+    if search_query:
+        employee = search_employee_by_name_or_rut(search_query, session)
+        
+        # Redirect to the profile if an employee is found
+        if employee:
+            return redirect(url_for('user', id=employee.id))
+        
+        # Display an error message if the employee is not found
+        return render_template('index.html', error_message="Employee not found")
+    
+    # Get the employee ID if there is no search parameter
     employee_id = request.args.get('id')
 
     if not employee_id:
         # Show a message if no employee_id is provided
         return render_template('employee.html', error_message="No employee ID provided")
 
-    # Retrieve general and additional information
-    gi = general_info(employee_id)
-    ad_info = aditional_info(employee_id)
+    # Get general and additional employee information
+    gi = general_info(session, employee_id)
+    ad_info = aditional_info(session, employee_id)
 
     # Check if general info is missing
     if not gi:
         return render_template('employee.html', error_message="Employee not found")
 
+    # Employee data
     first_name, last_name, email, phone, rut, position = gi
 
     # Display missing info
@@ -189,6 +204,7 @@ def register_vacation():
 # Route for adding vacation (no database interaction)
 @app.route('/add_vacation', methods=['POST'])
 def add_vacation():
+
     employee_id = request.form.get('employee_id')
     start_date = request.form.get('start_date')
     end_date = request.form.get('end_date')

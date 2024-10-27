@@ -11,10 +11,12 @@ from tables import *
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
 # You can set it up by doing: export MYSQL_ROOT_PASSWORD=your_secure_password
 
-config = {'host': 'localhost',
-          'database_name': 'hr',
-          'user': 'root',
-          'password': mysql_root_password}
+config = {
+    'host': 'localhost',
+    'database_name': 'hr',
+    'user': 'root',
+    'password': mysql_root_password
+    }
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
 # engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
@@ -24,59 +26,63 @@ Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
 
+def search_employee_by_name_or_rut(search_query, session):
+    """Search an employee by name or RUT with flexible matching."""
+    search_terms = search_query.split()
+    if len(search_terms) == 1:
+        term = f"%{search_terms[0]}%"
+        result = session.query(Employee).filter(
+            (Employee.first_name.like(term)) | 
+            (Employee.last_name.like(term)) | 
+            (Employee.rut == search_query)
+        ).first()
+    elif len(search_terms) == 2:
+        result = session.query(Employee).filter(
+            (Employee.first_name.like(f"%{search_terms[0]}%")) &
+            (Employee.last_name.like(f"%{search_terms[1]}%"))
+        ).first()
+    else:
+        result = None
+    return result
+
 def get_job_positions(session):
-    """
-    Get all job positions.
-    """
-    job_positions = session.query(JobPosition).all()
-    return job_positions
+    """Get all job positions."""
+    return session.query(JobPosition).all()
 
 def get_departments(session):
-    """
-    Get all departments.
-    """
-    departments = session.query(Department).all()
-    return departments
+    """Get all departments."""
+    return session.query(Department).all()
 
 def get_filtered_employees(session, job_position_id=None, department_id=None):
-    """
-    Get employees filtered by job position and/or department.
-    """
+    """Get employees filtered by job position and/or department."""
     query = (
         session.query(Employee.id, Employee.rut, Employee.first_name, Employee.last_name, JobPosition.name.label('position_name'), Department.name.label('department_name'))
         .outerjoin(EmployeePosition, Employee.id == EmployeePosition.employee_id)
         .outerjoin(JobPosition, EmployeePosition.position_id == JobPosition.id)
         .outerjoin(Department, JobPosition.department_id == Department.id)
     )
-    
+
     # Apply filters if provided
     if job_position_id:
         query = query.filter(JobPosition.id == job_position_id)
     if department_id:
         query = query.filter(Department.id == department_id)
     
-    employees = query.all()
-
     return [
         {
             "id": emp.id,
             "rut": emp.rut,
             "first_name": emp.first_name,
             "last_name": emp.last_name,
-            "position": emp.position_name if emp.position_name else "Sin posición",
-            "department": emp.department_name if emp.department_name else "Sin departamento",
+            "position": emp.position_name or "Sin posición",
+            "department": emp.department_name or "Sin departamento",
         }
-        for emp in employees
+        for emp in query.all()
     ]
 
-
-
-
-def aditional_info(employee_id_to_find: int):
+def aditional_info(session, employee_id):
     """Get additional information about an employee including net amount, health plan, nationality, birth date, start date, salary, and AFP."""
-    print('\n--- Running query aditional_info ---')
     try:
-        # Perform the query to get all the additional information
         info = session.query(
             Employee.nationality,
             Employee.birth_date,
@@ -89,128 +95,64 @@ def aditional_info(employee_id_to_find: int):
         .join(Remuneration, Employee.id == Remuneration.employee_id) \
         .join(HealthPlan, Remuneration.health_plan_id == HealthPlan.id) \
         .join(AFP, Remuneration.afp_id == AFP.id) \
-        .filter(Employee.id == employee_id_to_find).first()  # Changed to first()
+        .filter(Employee.id == employee_id).first()  # Changed to first()
 
         if info:
-            # Extract the information
-            nationality = info[0]
-            birth_date = info[1]
-            start_date = info[2]
-            salary = info[3]
+            today = datetime.today().date()
+            age = (today.year - info[1].year) if info[1] else None
+            days_since_start = (today - info[2]).days if info[2] else None
             net_amount = int(info[4]) if isinstance(info[4], Decimal) else info[4]
-            health_plan = info[5] if info[5] else "No health plan registered"
-            afp_name = info[6] if info[6] else "No AFP registered"
 
-            # Calculate age
-            age = None
-            if birth_date:
-                today = datetime.today().date()
-                age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
-
-            # Calculate days since start date
-            days_since_start = None
-            if start_date:
-                today = datetime.today().date()
-                days_since_start = (today - start_date).days
-
-            # Return the collected information
             return {
-                'nationality': nationality,
-                'birth_date': birth_date,
+                'nationality': info[0],
+                'birth_date': info[1],
                 'age': age,
-                'start_date': start_date,
+                'start_date': info[2],
                 'days_since_start': days_since_start,
-                'salary': salary,
+                'salary': info[3],
                 'net_amount': net_amount,
-                'health_plan': health_plan,
-                'afp_name': afp_name
+                'health_plan': info[5] or "No health plan registered",
+                'afp_name': info[6] or "No AFP registered"
             }
-
-        else:
-            return None
-
     except Exception as e:
-        print(f'Error in query aditional_info: {e}')
-        return None
+        print(f'Error in aditional_info: {e}')
+    return None
 
-def general_info(employee_id: int):
-    """Get first name, last name, phone, rut and position of an employee"""
-    print('\n--- Running query general_info ---')
+def general_info(session, employee_id):
+    """Get basic information about an employee."""
     try:
         info = session.query(Employee.first_name, Employee.last_name, Employee.email, Employee.phone, Employee.rut, JobPosition.name) \
             .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
             .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
-            .filter(Employee.id == employee_id).first()  # Changed to first()
-
-        if info:
-            return info
-        else:
-            return None
+            .filter(Employee.id == employee_id).first()
+        return info
     except Exception as e:
-        print(f'Error in query general_info: {e}')
-        return None
+        print(f'Error in general_info: {e}')
+    return None
 
-# test = aditional_info(1)
-# print(test)
 def all_employees(session):
-    """Select all employees with their rut, first name, last name, position, and department"""
-    print('\n--- Running all_employees query ---')
+    """Retrieve all employees with their rut, first name, last name, position, and department"""
     try:
-        # Consulta usando SQLAlchemy para obtener los empleados junto con su posición y departamento
-        info = (
-            session.query(Employee.id,Employee.rut, Employee.first_name, Employee.last_name, JobPosition.name.label('position_name'), Department.name.label('department_name')).
-            outerjoin(EmployeePosition, Employee.id == EmployeePosition.employee_id).
-            outerjoin(JobPosition, EmployeePosition.position_id == JobPosition.id).
-            outerjoin(Department, JobPosition.department_id == Department.id).all()
-        )
-
-        
-        # Crear una lista de diccionarios para cada empleado
-        employees = [
+        query = session.query(
+            Employee.id, Employee.rut, Employee.first_name, Employee.last_name,
+            JobPosition.name.label('position_name'), Department.name.label('department_name')
+        ).outerjoin(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
+         .outerjoin(JobPosition, EmployeePosition.position_id == JobPosition.id) \
+         .outerjoin(Department, JobPosition.department_id == Department.id)
+        return [
             {
                 "id": row.id,
                 "rut": row.rut,
                 "first_name": row.first_name,
                 "last_name": row.last_name,
-                "position": row.position_name if row.position_name else "Sin posición",
-                "department": row.department_name if row.department_name else "Sin departamento",
+                "position": row.position_name or "Sin posición",
+                "department": row.department_name or "Sin departamento",
             }
-            for row in info
+            for row in query.all()
         ]
-        
-        return employees  # Agregar este return para asegurarse de que la función devuelve la lista de empleados
     except Exception as e:
-        print(f'Error in all_employees query: {e}')
-        return []  # Devolver una lista vacía en caso de error
-
-
-
-
-def add_contract(session, contract_data):
-    # Fetch the Employee to get the position_id
-    employee = session.query(Employee).get(contract_data['employee_id'])
-    
-    if not employee:
-        return f"Employee with ID {contract_data['employee_id']} not found."
-
-    # Fetch the position_id from the EmployeePosition table
-    employee_position = session.query(EmployeePosition).filter_by(employee_id=contract_data['employee_id']).first()
-    
-    if not employee_position:
-        return f"Position for employee with ID {contract_data['employee_id']} not found."
-    
-    # Auto-complete position_id based on EmployeePosition
-    contract_data['position_id'] = employee_position.position_id
-
-    # Auto-complete registration_date with the current date
-    contract_data['registration_date'] = date.today()
-
-    # Create the Contract object and add it to the session
-    contract = Contract(**contract_data)
-    session.add(contract)
-    session.commit()
-    
-    return f"Contract added successfully."
+        print(f'Error in all_employees: {e}')
+    return []
 
 def get_employee_name_by_id(employee_id):
     """Fetch employee name by ID"""
@@ -224,93 +166,98 @@ def get_employee_name_by_id(employee_id):
     finally:
         session.close()
 
-def add_training(session, training_data):
+def add_contract(session, contract_data):
+    """Add a contract for an employee."""
     try:
-        training = Training(**training_data)
-        session.add(training)
+        # Fetch the Employee to get the position_id
+        employee = session.query(Employee).get(contract_data['employee_id'])
+
+        if not employee:
+            return f"Employee with ID {contract_data['employee_id']} not found."
+        
+         # Fetch the position_id from the EmployeePosition table
+        employee_position = session.query(EmployeePosition).filter_by(employee_id=contract_data['employee_id']).first()
+        if not employee_position:
+            return f"Position for employee with ID {contract_data['employee_id']} not found."
+
+        # Auto-complete position_id based on EmployeePosition
+        contract_data['position_id'] = employee_position.position_id
+
+         # Auto-complete registration_date with the current date
+        contract_data['registration_date'] = date.today()
+
+        # Create the Contract object and add it to the session
+        contract = Contract(**contract_data)
+        session.add(contract)
+        session.commit()
+
+        return "Contract added successfully."
+    except SQLAlchemyError as e:
+        session.rollback()
+        return f"Error adding contract: {str(e)}"
+
+def add_training(session, training_data):
+    """Add a training record."""
+    try:
+        session.add(Training(**training_data))
         session.commit()
         return "Training added successfully."
     except SQLAlchemyError as e:
         session.rollback()  # Rollback the transaction on error
-        return f"An error occurred while adding training: {str(e)}"
-    finally:
-        session.close()  # Ensure session is closed
+        return f"Error adding training: {str(e)}"
 
 def add_evaluation(session, evaluation_data):
+    """Add an evaluation for an employee."""
     try:
         # Get the evaluation factor (numeric grade)
         evaluation_factor = float(evaluation_data.get('evaluation_factor', 0))
-        
-        # Initialize the rating variable
-        rating = ""
-        
-        # Determine rating based on the evaluation factor ranges
-        if evaluation_factor == 7:
-            rating = "Excellent"
-        elif 6.5 <= evaluation_factor < 7:
-            rating = "Very Good"
-        elif 6 <= evaluation_factor < 6.4:
-            rating = "Good"
-        elif 5 <= evaluation_factor < 6:
-            rating = "Satisfactory"
-        elif 4 >= evaluation_factor > 5:
-            rating = "Fair"
-        else:
-            rating = "Deficient"  # If it's below 4.0
 
         # Add the rating to the evaluation data
+        rating = (
+             # Determine rating based on the evaluation factor ranges
+            "Excellent" if evaluation_factor == 7 else
+            "Very Good" if 6.5 <= evaluation_factor < 7 else
+            "Good" if 6 <= evaluation_factor < 6.4 else
+            "Satisfactory" if 5 <= evaluation_factor < 6 else
+            "Fair" if 4 >= evaluation_factor > 5 else "Deficient"
+        )
         evaluation_data['rating'] = rating
-
-        # Create the evaluation record and add to the database
-        evaluation = Evaluation(**evaluation_data)
-        session.add(evaluation)
+        session.add(Evaluation(**evaluation_data))
         session.commit()
-
         return "Evaluation added successfully."
-
     except SQLAlchemyError as e:
-        session.rollback()  # Rollback the transaction on error
-        return f"An error occurred while adding evaluation: {str(e)}"
-    finally:
-        session.close()  # Ensure session is closed
+        session.rollback()
+        return f"Error adding evaluation: {str(e)}"
 
 def get_all_evaluations(session):
-    # Perform a join with the Employee table to get the first name and last name
+    """Get all evaluations with employee details."""
     evaluations = session.query(Evaluation, Employee).join(Employee, Evaluation.employee_id == Employee.id).all()
-
-    # Prepare a list of evaluations with employee details
-    evals_with_employee = []
-    for evaluation, employee in evaluations:
-        eval_with_name = {
-            'evaluation_date': evaluation.evaluation_date,
-            'evaluator': evaluation.evaluator,
-            'evaluation_factor': evaluation.evaluation_factor,
-            'rating': evaluation.rating,
-            'comments': evaluation.comments,
-            'employee_name': f"{employee.first_name} {employee.last_name}"  # Add employee's full name
+    return [
+        {
+            'evaluation_date': eval.evaluation_date,
+            'evaluator': eval.evaluator,
+            'evaluation_factor': eval.evaluation_factor,
+            'rating': eval.rating,
+            'comments': eval.comments,
+            'employee_name': f"{employee.first_name} {employee.last_name}"
         }
-        evals_with_employee.append(eval_with_name)
-
-    return evals_with_employee
+        for eval, employee in evaluations
+    ]
 
 def get_all_trainings(session):
-    # Perform a join with the Employee table to get the first name and last name
+    """Get all trainings with employee details."""
     trainings = session.query(Training, Employee).join(Employee, Training.employee_id == Employee.id).all()
-
-    # Prepare a list of trainings with employee details
-    trainings_with_employee = []
-    for training, employee in trainings:
-        training_with_name = {
-            'training_date': training.training_date,
-            'course': training.course,
-            'score': training.score,
-            'institution': training.institution,
-            'comments': training.comments,
+    return [
+        {
+            'training_date': train.training_date,
+            'course': train.course,
+            'score': train.score,
+            'institution': train.institution,
+            'comments': train.comments,
             'employee_name': f"{employee.first_name} {employee.last_name}"  # Add employee's full name
         }
-        trainings_with_employee.append(training_with_name)
-
-    return trainings_with_employee
+        for train, employee in trainings
+    ]
 
 def get_employees_by_department(department_id):
     """
@@ -332,23 +279,20 @@ def department_info(department_id):
         return department.name, department.description
     return None
 
-def all_companies():
-    """Select all the data from the Company table"""
-    print('\n--- Running all_companies query ---') 
+def all_companies(session):
+    """Retrieve all companies and their data."""
     try:
         companies = session.query(Company).all()
-        result = []
-        for company in companies:
-            result.append({
+        return [
+            {
                 'rut': company.rut,
                 'name': company.name,
                 'address': company.address,
                 'phone': company.phone,
                 'industry': company.industry
-            })
-        print(result)  # Debug output to verify the data
-        return result
+            }
+            for company in companies
+        ]
     except Exception as e:
-        print(f'Error in all_companies query: {e}')
-    finally:
-        session.close()
+        print(f'Error in all_companies: {e}')
+    return []
