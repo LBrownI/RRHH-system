@@ -9,28 +9,8 @@ app = Flask(
 )
 app.secret_key = 'magickey'
 
-
-# Route for login page
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    if request.method == 'POST':
-        username = request.form.get('username')
-        password = request.form.get('password')
-        
-        # Logic to validate user
-        # For example, checking if user and password are correct.
-        
-        # REVISE: https://webdamn.com/login-and-registration-with-python-flask-mysql/cl
-
-        # If validation is correct, redirects to homepage (index.html)
-        if username == 'user' and password == 'pass': # Simple example of user validation
-            return redirect(url_for('homepage'))
-        else:
-            return render_template('login.html', error="Usuario o contraseña incorrectos")
-    return render_template('login.html')
-
 # Route for menu page (homepage)
-@app.route('/homepage')
+@app.route('/')
 def homepage():
     job_position_id = request.args.get('job_position', type=int)
     department_id = request.args.get('department', type=int)
@@ -116,8 +96,15 @@ def user():
 
 @app.route('/companies')
 def show_companies():
-    companies = all_companies()
+    with Session() as session:
+        companies = all_companies(session)
     return render_template('companies.html', companies=companies)
+
+@app.route('/afps')
+def show_afps():
+    with Session() as session:
+        afps = all_afps(session)
+    return render_template('afps.html', afps=afps)
 
 # Route for the option of adding a new "Contract"
 # WORKING BUT redirects to /add_contract instead of staying on the colaborator page.

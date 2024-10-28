@@ -296,3 +296,19 @@ def all_companies(session):
     except Exception as e:
         print(f'Error in all_companies: {e}')
     return []
+
+def all_afps(session):
+    """Retrieve all afps and their data."""
+    try:
+        afps = session.query(AFP).all()
+        return [
+            {
+                'id': afp.id,
+                'name': afp.name,
+                'commission_percentage': afp.commission_percentage,
+            }
+            for afp in afps
+        ]
+    except Exception as e:
+        print(f'Error in all_companies: {e}')
+    return []
