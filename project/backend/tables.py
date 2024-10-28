@@ -7,14 +7,15 @@ from werkzeug.security import generate_password_hash, check_password_hash
 mysql_root_password = os.getenv('MYSQL_ROOT_PASSWORD', 'default_root_pass')  # Fallback in case the env variable isn't set
 # You can set it up by doing: export MYSQL_ROOT_PASSWORD=your_secure_password
 
-config = {'host': 'localhost',
-          'database_name': 'hr',
-          'user': 'root',
-          'password': mysql_root_password
-          }
+config = {
+    'host': 'localhost',
+    'database_name': 'hr',
+    'user': 'root',
+    'password': mysql_root_password
+    }
 
-#engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
-engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
+engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
+#engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
 
 with engine.connect() as connection:
     connection.execute(text("CREATE DATABASE IF NOT EXISTS hr"))

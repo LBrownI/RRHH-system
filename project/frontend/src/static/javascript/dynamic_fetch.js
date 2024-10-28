@@ -1,9 +1,9 @@
 function fetchEmployeeName() {
-    var employeeId = document.getElementById('employee_id').value;
+    var employeeRut = document.getElementById('employee_rut').value; // Cambiado de employee_id a employee_rut
     var employeeNameSpan = document.getElementById('employee_name');
 
-    if (employeeId) {
-        fetch(`/get_employee_name/${employeeId}`)
+    if (employeeRut) {
+        fetch(`/get_employee_name/${employeeRut}`) // Modificado para usar el RUT
             .then(response => {
                 if (response.ok) {
                     return response.text();
@@ -18,9 +18,10 @@ function fetchEmployeeName() {
                 employeeNameSpan.innerText = "Error fetching employee name.";
             });
     } else {
-        employeeNameSpan.innerText = "Enter ID to fetch name";
+        employeeNameSpan.innerText = "Enter RUT to fetch name"; // Modificado el texto indicativo
     }
 }
+
 
 // Function to update the rating based on evaluation factor (grade)
 function updateRating() {

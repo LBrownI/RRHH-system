@@ -54,6 +54,21 @@
       </div>
     </div>
     
+    <!-- Current Contract Information -->
+    <div class="contract-info">
+      <h2>Current Contract</h2>
+      {% if contract %}
+        <p>Contract Type: {{ contract.contract_type }}</p>
+        <p>Start Date: {{ contract.start_date }}</p>
+        <p>End Date: {{ contract.end_date if contract.end_date else "Ongoing" }}</p>
+        <p>Classification: {{ contract.classification }}</p>
+        <p>Position: {{ contract.position }}</p>
+        <p>Registration Date: {{ contract.registration_date }}</p>
+      {% else %}
+        <p>No contract registered</p>
+      {% endif %}
+    </div>
+    
     <button class="open-button" onclick="openForm()">Add contract</button>
 
     <div class="form-popup" id="myForm">

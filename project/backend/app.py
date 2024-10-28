@@ -11,6 +11,7 @@ app.secret_key = 'magickey'
 
 # Route for menu page (homepage)
 @app.route('/')
+@app.route('/')
 def homepage():
     job_position_id = request.args.get('job_position', type=int)
     department_id = request.args.get('department', type=int)
@@ -26,45 +27,54 @@ def homepage():
 
 
 
-# Route for the employee profile with integrated search
+# Ruta para el perfil del empleado con búsqueda integrada
 @app.route('/employee')
 def user():
-    """
-    Gets the employee_id from the URL and returns the info of the employee.
-    If certain data is missing, it will show a message on the page instead of redirecting.
-    """
     search_query = request.args.get('search_query')
     
-    # Perform the search if there is a search parameter
+    # Realizar la búsqueda si hay un parámetro de búsqueda
     if search_query:
         employee = search_employee_by_name_or_rut(search_query, session)
         
-        # Redirect to the profile if an employee is found
+        # Redireccionar al perfil si se encuentra un empleado
         if employee:
             return redirect(url_for('user', id=employee.id))
         
-        # Display an error message if the employee is not found
+        # Mostrar un mensaje de error si el empleado no es encontrado
         return render_template('index.html', error_message="Employee not found")
     
-    # Get the employee ID if there is no search parameter
+    # Obtener el ID del empleado si no hay parámetro de búsqueda
     employee_id = request.args.get('id')
 
     if not employee_id:
-        # Show a message if no employee_id is provided
+        # Mostrar un mensaje si no se proporciona employee_id
         return render_template('employee.html', error_message="No employee ID provided")
 
-    # Get general and additional employee information
+    # Obtener información general y adicional del empleado
     gi = general_info(session, employee_id)
     ad_info = aditional_info(session, employee_id)
 
-    # Check if general info is missing
+    # Verificar si falta información general
     if not gi:
         return render_template('employee.html', error_message="Employee not found")
 
-    # Employee data
+    # Obtener el contrato actual del empleado
+    contract = session.query(Contract).filter_by(employee_id=employee_id).order_by(Contract.start_date.desc()).first()
+
+    # Preparar datos del contrato actual si existe
+    contract_data = {
+        'contract_type': contract.contract_type,
+        'start_date': contract.start_date,
+        'end_date': contract.end_date,
+        'classification': contract.classification,
+        'position': contract.position_id,
+        'registration_date': contract.registration_date
+    } if contract else None
+
+    # Datos del empleado
     first_name, last_name, email, phone, rut, position = gi
 
-    # Display missing info
+    # Mostrar información faltante
     missing_info = []
     if not ad_info:
         missing_info.append("No additional info available")
@@ -73,7 +83,7 @@ def user():
     if ad_info.get('health_plan') == "No health plan registered":
         missing_info.append("No health plan registered")
 
-    # Pass the data to the template, including missing information
+    # Pasar los datos a la plantilla, incluyendo el contrato actual
     return render_template(
         'employee.html',
         first_name=first_name,
@@ -91,8 +101,10 @@ def user():
         net_amount=ad_info.get('net_amount', "Not registered"),
         health_plan=ad_info.get('health_plan', "Not registered"),
         afp_name=ad_info.get('afp_name', "Not registered"),
-        missing_info=missing_info
+        missing_info=missing_info,
+        contract=contract_data
     )
+
 
 @app.route('/companies')
 def show_companies():
@@ -113,7 +125,7 @@ def add_contract_page():
     if request.method == 'POST':
         # Gather form data
         contract_data = {
-            'employee_id': request.form['employee_id'],
+            'employee_rut': request.form['employee_rut'],  # Cambiado de employee_id a employee_rut
             'contract_type': request.form['contract_type'],
             'start_date': request.form['start_date'],
             'end_date': request.form['end_date'],
@@ -128,6 +140,7 @@ def add_contract_page():
         return redirect(url_for('add_contract_page'))
 
     return render_template('add_contract.html')
+
 
 @app.route('/train-eval')
 def eval_train():
@@ -212,13 +225,14 @@ def add_vacation():
     
     return redirect('/register_vacation')
 
-@app.route('/get_employee_name/<int:employee_id>', methods=['GET'])
-def get_employee_name(employee_id):
-    employee_name = get_employee_name_by_id(employee_id)
+@app.route('/get_employee_name/<string:employee_rut>', methods=['GET'])  # Cambiado a <string:employee_rut>
+def get_employee_name(employee_rut):
+    employee_name = get_employee_name_by_rut(employee_rut)  # Llamamos a la nueva función
     if employee_name:
         return employee_name  # Return the name as plain text
     else:
         return "Does not exist", 404
+
 
 if __name__ == '__main__':
     app.run(debug=True)

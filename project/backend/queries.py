@@ -15,7 +15,7 @@ config = {
     'host': 'localhost',
     'database_name': 'hr',
     'user': 'root',
-    'password': mysql_root_password
+    'password': mysql_root_password 
     }
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
@@ -154,17 +154,18 @@ def all_employees(session):
         print(f'Error in all_employees: {e}')
     return []
 
-def get_employee_name_by_id(employee_id):
-    """Fetch employee name by ID"""
+def get_employee_name_by_rut(employee_rut):
+    """Fetch employee name by RUT"""
     session = Session()
     try:
-        employee = session.query(Employee).get(employee_id)
+        employee = session.query(Employee).filter_by(rut=employee_rut).first()  # Buscar por RUT
         if employee:
             return employee.first_name + ' ' + employee.last_name
         else:
             return None
     finally:
         session.close()
+
 
 def add_contract(session, contract_data):
     """Add a contract for an employee."""

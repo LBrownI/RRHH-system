@@ -1,5 +1,10 @@
-<link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
-<div class="top-bar">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/homepage.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar.css') }}">
     <div class="dropdown">
         <button onclick="myFunction()" class="dropbtn"><i class="fa fa-bars"></i> Menu</button>
@@ -15,11 +20,10 @@
         <img src="{{ url_for('static', filename='images/hr-icon.png') }}" alt="Homepage Image" style="height: 40px; margin: 0 15px;">
     </a>
 
-    <!-- Search Bar -->
-    <form action="{{ url_for('user') }}" method="get" class="search-form">
-        <input type="text" id="search-bar" name="search_query" placeholder="Search employees...">
-        <button type="submit" style="display: none;">Search</button>
-    </form>
+        <!-- Search Bar -->
+        <form action="{{ url_for('user') }}" method="get" class="search-form">
+            <input type="text" id="search-bar" name="search_query" placeholder="Search employees...">
+        </form>
 
     <nav class="menu-options">
         <a href="/add-contract">Contracts</a>
