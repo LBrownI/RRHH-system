@@ -4,9 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Contract</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add-contract.css') }}">
     <script src="{{ url_for('static', filename='javascript/dynamic_fetch.js') }}"></script>
 </head>
 <body>
+    <header>
+      {% include 'topbar.html' %}
+    </header>
+
     <h1>Add New Contract</h1>
 
     {% with messages = get_flashed_messages() %}
@@ -20,11 +25,11 @@
     {% endwith %}
 
     <form action="/add-contract" method="POST" id="contractForm">
-      <label for="employee_id">Employee ID:</label>
-      <input type="number" id="employee_id" name="employee_id" required min="1" oninput="fetchEmployeeName()"><br>
+      <label for="employee_rut">Employee RUT:</label>
+      <input type="text" id="employee_rut" name="employee_rut" required oninput="fetchEmployeeName()"><br>
       
       <span id="employee_name" style="font-weight: bold;">
-          Employee name: Enter ID to fetch name
+          Employee name: Enter RUT to fetch name
       </span><br>
       
       <!-- Type of Contract Dropdown -->
@@ -53,6 +58,6 @@
       </select><br>
       
       <button type="submit">Add Contract</button>
-  </form>
+    </form>
 </body>
 </html>
