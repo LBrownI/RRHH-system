@@ -26,6 +26,17 @@ Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
 
+def get_contract_by_employee_id(session, employee_id):
+    """Get the contract associated with a specific employee."""
+    try:
+        contract = session.query(Contract).filter_by(employee_id=employee_id).first()
+        return contract
+    except SQLAlchemyError as e:
+        print(f'Error retrieving contract for employee {employee_id}: {e}')
+        return None
+
+
+
 def search_employee_by_name_or_rut(search_query, session):
     """Search an employee by name or RUT with flexible matching."""
     search_terms = search_query.split()
@@ -170,22 +181,24 @@ def get_employee_name_by_rut(employee_rut):
 def add_contract(session, contract_data):
     """Add a contract for an employee."""
     try:
-        # Fetch the Employee to get the position_id
-        employee = session.query(Employee).get(contract_data['employee_id'])
-
-        if not employee:
-            return f"Employee with ID {contract_data['employee_id']} not found."
+        # Fetch the Employee using employee_rut
+        employee = session.query(Employee).filter_by(rut=contract_data['employee_rut']).first()
         
-         # Fetch the position_id from the EmployeePosition table
-        employee_position = session.query(EmployeePosition).filter_by(employee_id=contract_data['employee_id']).first()
+        if not employee:
+            return f"Employee with RUT {contract_data['employee_rut']} not found."
+
+        # Fetch the position_id from the EmployeePosition table using employee.id
+        employee_position = session.query(EmployeePosition).filter_by(employee_id=employee.id).first()
         if not employee_position:
-            return f"Position for employee with ID {contract_data['employee_id']} not found."
+            return f"Position for employee with RUT {contract_data['employee_rut']} not found."
 
-        # Auto-complete position_id based on EmployeePosition
+        # Auto-complete position_id and registration_date
         contract_data['position_id'] = employee_position.position_id
-
-         # Auto-complete registration_date with the current date
+        contract_data['employee_id'] = employee.id
         contract_data['registration_date'] = date.today()
+
+        # Remove 'employee_rut' from contract_data as it is not a field in the Contract model
+        contract_data.pop('employee_rut', None)
 
         # Create the Contract object and add it to the session
         contract = Contract(**contract_data)

@@ -78,6 +78,22 @@
       </div>
       <script src="{{ url_for('static', filename='javascript/add_button.js') }}"></script>
     </div>
+
+    <button class="remove-contract-btn" id="" onclick="openRemoveForm()">Remove Contract</button>
+
+    <div class="form-popup" id="removeForm">
+      <div class="form-container">
+        {% include 'remove_contract.html' %}
+        <button type="button" class="btn cancel" onclick="closeRemoveForm()">Close</button>
+      </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='javascript/remove_button.js') }}"></script>
+    
+    
+    </div>
   {% endif %}
 </body>
 </html>
+
+

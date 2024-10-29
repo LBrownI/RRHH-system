@@ -122,6 +122,37 @@ button {
   font-size: 16px;
 }
 
+#remove-contract-btn {
+  background-color: #296b2d;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  position: fixed;
+  bottom: 100px;
+  right: 28px;
+  width: 280px;
+  transition: opacity 0.3s;
+  font-size: 16px;
+}
+
+#remove-contract-btn:hover {
+  opacity: 0.9;
+}
+
+/* Styling for Remove Contract form */
+#remove-contract-form {
+  display: none;
+  position: fixed;
+  bottom: 200px;
+  right: 15px;
+  border: 3px solid #fb0808;
+  z-index: 9;
+  
+}
+
+
 .open-button:hover {
   opacity: 0.9;
 }

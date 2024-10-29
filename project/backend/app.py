@@ -11,7 +11,6 @@ app.secret_key = 'magickey'
 
 # Route for menu page (homepage)
 @app.route('/')
-@app.route('/')
 def homepage():
     job_position_id = request.args.get('job_position', type=int)
     department_id = request.args.get('department', type=int)
@@ -86,6 +85,7 @@ def user():
     # Pasar los datos a la plantilla, incluyendo el contrato actual
     return render_template(
         'employee.html',
+        employee_id=employee_id,
         first_name=first_name,
         last_name=last_name,
         email=email,
@@ -140,6 +140,24 @@ def add_contract_page():
         return redirect(url_for('add_contract_page'))
 
     return render_template('add_contract.html')
+
+@app.route('/remove_contract/<int:employee_id>')
+def remove_contract(employee_id):
+    # Lógica para cargar la información del contrato que se desea eliminar
+    employee = Employee.query.get(employee_id)
+    return render_template('remove_contract.html', employee=employee)
+
+
+@app.route('/confirm_remove_contract/<int:employee_id>', methods=['POST'])
+def confirm_remove_contract(employee_id):
+    # Obtener el contrato usando la función de consulta personalizada
+    contract = get_contract_by_employee_id(session, employee_id)
+    if contract:
+        session.delete(contract)
+        session.commit()
+    return redirect(url_for('user', id=employee_id))
+
+
 
 
 @app.route('/train-eval')
@@ -232,6 +250,7 @@ def get_employee_name(employee_rut):
         return employee_name  # Return the name as plain text
     else:
         return "Does not exist", 404
+
 
 
 if __name__ == '__main__':

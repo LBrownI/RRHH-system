@@ -1,0 +1,5 @@
+<h2>Confirm Removal of Contract</h2>
+<p>Are you sure you want to remove the contract for {{ employee_name }}?</p>
+<form action="{{ url_for('confirm_remove_contract', employee_id=employee_id) }}" method="POST">
+  <button type="submit" class="btn btn-danger">Confirm</button>
+</form>
