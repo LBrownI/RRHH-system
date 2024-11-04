@@ -9,6 +9,7 @@
 <body>
     <h1>Register Vacations</h1>
 
+    <!-- Display flashed messages -->
     {% with messages = get_flashed_messages() %}
       {% if messages %}
         <ul>
@@ -19,23 +20,44 @@
       {% endif %}
     {% endwith %}
 
+    <!-- Vacation Registration Form -->
     <form action="/add_vacation" method="POST" id="vacationForm">
-        <label for="employee_id">Employee ID:</label>
-        <input type="number" id="employee_id" name="employee_id" required min="1" oninput="fetchEmployeeName()"><br>
-        
-        <span id="employee_name" style="font-weight: bold;">Employee Name: </span><br>
+      <!-- Employee ID with dynamic name display -->
+      <label for="employee_id">Employee ID:</label>
+      <input type="number" id="employee_id" name="employee_id" required min="1" oninput="fetchEmployeeName()">
+      <br>
+      <span id="employee_name" style="font-weight: bold;">Employee Name: </span>
+      <br>
 
-        <label for="start_date">Start Date:</label>
-        <input type="date" id="start_date" name="start_date" required><br>
+      <!-- Start and End Dates -->
+      <label for="start_date">Start Date:</label>
+      <input type="date" id="start_date" name="start_date" required>
+      <br>
 
-        <label for="end_date">End Date:</label>
-        <input type="date" id="end_date" name="end_date" required><br>
+      <label for="end_date">End Date:</label>
+      <input type="date" id="end_date" name="end_date" required>
+      <br>
 
-        <button type="submit">Submit</button>
+      <!-- Days Taken and Accumulated Days -->
+      <label for="days_taken">Days Taken:</label>
+      <input type="number" id="days_taken" name="days_taken" min="1" required>
+      <br>
+
+      <label for="accumulated_days">Accumulated Days:</label>
+      <input type="number" id="accumulated_days" name="accumulated_days" min="0">
+      <br>
+
+      <!-- Long Service Employee Checkbox -->
+      <label for="long_service_employee">Long Service Employee:</label>
+      <input type="checkbox" id="long_service_employee" name="long_service_employee">
+      <br>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn">Save Vacation</button>
     </form>
 
     <!-- JavaScript for fetching the employee's name -->
-    <script src="{{ url_for('static', filename='javascript/employee.js') }}"></script> 
+    <script src="{{ url_for('static', filename='javascript/employee.js') }}"></script>
 
 </body>
 </html>

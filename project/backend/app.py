@@ -9,6 +9,7 @@ app = Flask(
 )
 app.secret_key = 'magickey'
 
+
 # Route for menu page (homepage)
 @app.route('/')
 def homepage():
@@ -23,7 +24,6 @@ def homepage():
     departments = get_departments(session)
 
     return render_template('index.html', employees=employees, job_positions=job_positions, departments=departments)
-
 
 
 # Ruta para el perfil del empleado con búsqueda integrada
@@ -112,14 +112,22 @@ def show_companies():
         companies = all_companies(session)
     return render_template('companies.html', companies=companies)
 
+
 @app.route('/afps')
 def show_afps():
     with Session() as session:
         afps = all_afps(session)
     return render_template('afps.html', afps=afps)
 
+# WORKS, BUT DOES NOT LOOK/FEEL OK 
+@app.route('/contracts')
+def show_contracts():
+    with Session() as session:
+        contracts = all_contracts(session)
+    return render_template('contracts.html', contracts=contracts)
+
+
 # Route for the option of adding a new "Contract"
-# WORKING BUT redirects to /add_contract instead of staying on the colaborator page.
 @app.route('/add-contract', methods=['GET', 'POST'])
 def add_contract_page():
     if request.method == 'POST':
@@ -141,6 +149,7 @@ def add_contract_page():
 
     return render_template('add_contract.html')
 
+
 @app.route('/remove_contract/<int:employee_id>')
 def remove_contract(employee_id):
     # Lógica para cargar la información del contrato que se desea eliminar
@@ -158,14 +167,13 @@ def confirm_remove_contract(employee_id):
     return redirect(url_for('user', id=employee_id))
 
 
-
-
 @app.route('/train-eval')
 def eval_train():
     with Session() as session:
         evaluations = get_all_evaluations(session)
         trainings = get_all_trainings(session)
     return render_template('train_eval.html', evaluations=evaluations, trainings=trainings)
+
 
 @app.route('/add-evaluation', methods=['GET', 'POST'])
 def handle_add_evaluation():
@@ -185,6 +193,7 @@ def handle_add_evaluation():
         return redirect(url_for('train_eval'))
     
     return render_template('add_eval.html')
+
 
 @app.route('/department')
 def department():
@@ -213,11 +222,19 @@ def department():
         employees=employees
     )
 
+# PENDING TO SOLVE THE ADDING FEATURE
+@app.route('/vacations')
+def show_vacations():
+    with Session() as session:
+        vacations = all_vacations(session)
+    return render_template('vacations.html', vacations=vacations)
+
 
 # Route for register vacation page
 @app.route('/register_vacation')
 def register_vacation():
     return render_template('register_vacation.html')  # Render the HTML form
+
 
 # Route for adding vacation (no database interaction)
 @app.route('/add_vacation', methods=['POST'])
@@ -242,6 +259,7 @@ def add_vacation():
         flash(f'Error: {message}', 'danger')
     
     return redirect('/register_vacation')
+
 
 @app.route('/get_employee_name/<string:employee_rut>', methods=['GET'])  # Cambiado a <string:employee_rut>
 def get_employee_name(employee_rut):

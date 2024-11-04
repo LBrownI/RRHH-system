@@ -326,3 +326,42 @@ def all_afps(session):
     except Exception as e:
         print(f'Error in all_companies: {e}')
     return []
+
+def all_contracts(session):
+    """Retrieve all contracts and their employee data."""
+    try:
+        contracts = session.query(Contract, Employee, JobPosition).join(Employee, Contract.employee_id == Employee.id).join(JobPosition, Contract.position_id == JobPosition.id).all()
+        return [
+            {
+                'id': contract.id,
+                'employee': f"{employee.first_name} {employee.last_name}",
+                'contract_type': contract.contract_type,
+                'start_date': contract.start_date,
+                'end_date': contract.end_date,
+                'classification': contract.classification,
+                'position': position.name,
+                'registration_date': contract.registration_date,
+            }
+            for contract, employee, position in contracts
+        ]
+    except Exception as e:
+        print(f'Error in all_contracts: {e}')
+    return []
+
+def all_vacations(session):
+    """Retrieve all vacations and their employee data."""
+    vacations = (
+        session.query(
+            Vacation.id,
+            (Employee.first_name + " " + Employee.last_name).label("name"),
+            Vacation.start_date,
+            Vacation.end_date,
+            Vacation.days_taken,
+            Vacation.accumulated_days,
+            Vacation.long_service_employee
+        )
+        .join(Employee, Vacation.employee_id == Employee.id)
+        .all()
+    )
+    return vacations
+
