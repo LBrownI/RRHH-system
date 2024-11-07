@@ -37,19 +37,19 @@ def user():
         
         # Redireccionar al perfil si se encuentra un empleado
         if employee:
-            return redirect(url_for('user', id=employee.id))
-        
-        # Mostrar un mensaje de error si el empleado no es encontrado
+            return redirect(url_for('user', id=employee.id))  # Cambio aquí para asegurar redireccionamiento con ?id
+
+        # Mostrar mensaje de error si el empleado no es encontrado
         return render_template('index.html', error_message="Employee not found")
     
     # Obtener el ID del empleado si no hay parámetro de búsqueda
     employee_id = request.args.get('id')
 
     if not employee_id:
-        # Mostrar un mensaje si no se proporciona employee_id
+        # Mostrar mensaje si no se proporciona employee_id
         return render_template('employee.html', error_message="No employee ID provided")
 
-    # Obtener información general y adicional del empleado
+    # Obtener la información del empleado
     gi = general_info(session, employee_id)
     ad_info = aditional_info(session, employee_id)
 
@@ -57,10 +57,8 @@ def user():
     if not gi:
         return render_template('employee.html', error_message="Employee not found")
 
-    # Obtener el contrato actual del empleado
+    # Obtener el contrato actual
     contract = session.query(Contract).filter_by(employee_id=employee_id).order_by(Contract.start_date.desc()).first()
-
-    # Preparar datos del contrato actual si existe
     contract_data = {
         'contract_type': contract.contract_type,
         'start_date': contract.start_date,
