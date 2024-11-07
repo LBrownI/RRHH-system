@@ -139,7 +139,6 @@ class Remuneration(Base):
     employees = relationship('Employee', back_populates='remunerations')
     afps = relationship('AFP', back_populates='remunerations')
     health_plans = relationship('HealthPlan', back_populates='remunerations')
-    bonuses = relationship("Bonus", back_populates="remunerations")
 
 # HealthPlan model
 class HealthPlan(Base):
@@ -166,14 +165,6 @@ class Isapre(Base):
     health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
     discount = Column(DECIMAL(10, 2)) 
     health_plans = relationship('HealthPlan', back_populates='isapre')
-
-# Bonus model
-class Bonus(Base):
-    __tablename__ = 'Bonus'
-    id = Column(Integer, primary_key=True)
-    remuneration_id = Column(Integer, ForeignKey('Remuneration.id')) 
-    benefit = Column(DECIMAL(10, 2))  
-    remunerations = relationship("Remuneration", back_populates="bonuses")
 
 # Contract model
 class Contract(Base):

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Remuneration</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h2 class="text-2xl font-semibold mb-4">Add Remuneration</h2>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                <ul>
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        {% endwith %}
+
+        <form action="/add_remuneration" method="POST" id="remunerationForm">
+            <div class="mb-4">
+                <label for="employee_id" class="block text-sm font-medium text-gray-700">Employee ID</label>
+                <input type="number" id="employee_id" name="employee_id" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" min="1">
+            </div>
+
+            <div class="mb-4">
+                <label for="afp_id" class="block text-sm font-medium text-gray-700">AFP</label>
+                <input type="text" id="afp_id" name="afp_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" list="afpList" required>
+                <datalist id="afpList">
+                    {% for afp in afps %}
+                        <option value="{{ afp.id }}">{{ afp.name }}</option>
+                    {% endfor %}
+                </datalist>
+            </div>
+
+            <div class="mb-4">
+                <label for="health_plan_id" class="block text-sm font-medium text-gray-700">Health Plan</label>
+                <input type="text" id="health_plan_id" name="health_plan_id" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md" list="healthPlanList" required>
+                <datalist id="healthPlanList">
+                    {% for health_plan in health_plans %}
+                        <option value="{{ health_plan.id }}">{{ health_plan.name }}</option>
+                    {% endfor %}
+                </datalist>
+            </div>
+
+            <div class="mb-4">
+                <label for="gross_amount" class="block text-sm font-medium text-gray-700">Gross Amount</label>
+                <input type="number" id="gross_amount" name="gross_amount" required step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div class="mb-4">
+                <label for="tax" class="block text-sm font-medium text-gray-700">Tax</label>
+                <input type="number" id="tax" name="tax" required step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div class="mb-4">
+                <label for="deductions" class="block text-sm font-medium text-gray-700">Deductions</label>
+                <input type="number" id="deductions" name="deductions" required step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div class="mb-4">
+                <label for="bonus" class="block text-sm font-medium text-gray-700">Bonus</label>
+                <input type="number" id="bonus" name="bonus" required step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div class="mb-4">
+                <label for="welfare_contribution" class="block text-sm font-medium text-gray-700">Welfare Contribution</label>
+                <input type="number" id="welfare_contribution" name="welfare_contribution" required step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+            </div>
+
+            <div class="mb-4">
+                <label for="net_amount" class="block text-sm font-medium text-gray-700">Net Amount</label>
+                <input type="number" id="net_amount" name="net_amount" required step="0.01" class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+            </div>
+
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Submit</button>
+        </form>
+    </div>
+</body>
+</html>

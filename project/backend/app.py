@@ -167,6 +167,51 @@ def confirm_remove_contract(employee_id):
     return redirect(url_for('user', id=employee_id))
 
 
+@app.route('/remuneration')
+def remunerations_page():
+    session = Session()
+    remunerations = all_remunerations(session)
+    session.close()
+    return render_template('remunerations.html', remunerations=remunerations)
+
+@app.route('/add_remuneration', methods=['GET', 'POST'])
+def add_remuneration_page():
+    if request.method == 'POST':
+        remuneration_data = {
+            'employee_id': request.form['employee_id'],
+            'afp_id': request.form['afp_id'],
+            'health_plan_id': request.form['health_plan_id'],
+            'gross_amount': request.form['gross_amount'],
+            'tax': request.form['tax'],
+            'deductions': request.form['deductions'],
+            'bonus': request.form['bonus'],
+            'welfare_contribution': request.form['welfare_contribution'],
+            'net_amount': request.form['net_amount']
+        }
+
+        session = Session()
+        result = add_remuneration(session, remuneration_data)
+        flash(result)
+
+        return redirect(url_for('add_remuneration.html'))
+
+    # Fetch AFP and HealthPlan data for autocomplete
+    session = Session()
+    afps = session.query(AFP).all()
+    health_plans = session.query(HealthPlan).all()
+
+    return render_template('add_remuneration.html', afps=afps, health_plans=health_plans)
+
+@app.route('/health_plans')
+def health_plans_page():
+    session = Session()
+
+    # Get all health plans with their discounts
+    health_plans = all_health_plans(session)
+
+    # Return the template with the health plans data
+    return render_template('health_plans.html', health_plans=health_plans)
+
 @app.route('/train-eval')
 def eval_train():
     with Session() as session:

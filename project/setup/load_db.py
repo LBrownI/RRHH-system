@@ -143,7 +143,6 @@ class Remuneration(Base):
     employees = relationship('Employee', back_populates='remunerations')
     afps = relationship('AFP', back_populates='remunerations')
     health_plans = relationship('HealthPlan', back_populates='remunerations')
-    bonuses = relationship("Bonus", back_populates="remunerations")
 
 # HealthPlan model
 class HealthPlan(Base):
@@ -171,14 +170,6 @@ class Isapre(Base):
     discount = Column(DECIMAL(10, 2)) 
     health_plans = relationship('HealthPlan', back_populates='isapre')
 
-# Bonus model
-class Bonus(Base):
-    __tablename__ = 'Bonus'
-    id = Column(Integer, primary_key=True)
-    remuneration_id = Column(Integer, ForeignKey('Remuneration.id')) 
-    benefit = Column(DECIMAL(10, 2))  
-    remunerations = relationship("Remuneration", back_populates="bonuses")
-
 # Contract model
 class Contract(Base):
     __tablename__ = 'Contract'
@@ -192,21 +183,6 @@ class Contract(Base):
     registration_date = Column(Date)
     employees = relationship('Employee', back_populates='contracts')  # Relationship to Employee
     job_positions = relationship('JobPosition', back_populates='contracts')  # Relationship to JobPosition
-
-class User(Base):
-    __tablename__ = 'User'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(100), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
-    
-    # Method to set hashed password
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    
-    # Method to check password
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
 
 # Create the tables in the database
 Base.metadata.create_all(engine)
@@ -486,20 +462,6 @@ remuneration_data = [
 for data in remuneration_data:
     remuneration = Remuneration(**data)
     session.add(remuneration)
-session.commit()
-
-# Insert data into Bonus table
-bonus_data = [
-    {'id': 1, 'remuneration_id': 1, 'benefit': 500.00},
-    {'id': 2, 'remuneration_id': 2, 'benefit': 300.00},
-    {'id': 3, 'remuneration_id': 3, 'benefit': 400.00},
-    {'id': 4, 'remuneration_id': 4, 'benefit': 200.00},
-    {'id': 5, 'remuneration_id': 5, 'benefit': 350.00}
-]
-
-for data in bonus_data:
-    bonus = Bonus(**data)
-    session.add(bonus)
 session.commit()
 
 # Close the session
