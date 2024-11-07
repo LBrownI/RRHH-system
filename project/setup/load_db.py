@@ -502,11 +502,5 @@ for data in bonus_data:
     session.add(bonus)
 session.commit()
 
-# Insert user and password into User table
-new_user = User(username='LBrownI')
-new_user.set_password('Ingreso_07')
-session.add(new_user)
-session.commit()
-
 # Close the session
 session.close()

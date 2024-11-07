@@ -189,18 +189,4 @@ class Contract(Base):
     employees = relationship('Employee', back_populates='contracts')  # Relationship to Employee
     job_positions = relationship('JobPosition', back_populates='contracts')  # Relationship to JobPosition
 
-class User(Base):
-    __tablename__ = 'User'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(100), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
-    
-    # Method to set hashed password
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    
-    # Method to check password
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
 Base.metadata.create_all(engine)
