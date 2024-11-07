@@ -209,6 +209,21 @@ def add_contract(session, contract_data):
     except SQLAlchemyError as e:
         session.rollback()
         return f"Error adding contract: {str(e)}"
+    
+
+def deactivate_employee(session, employee_id):
+    """Deactivate an employee by setting active_employee to False."""
+    try:
+        employee = session.query(Employee).filter_by(id=employee_id).first()
+        if employee:
+            employee.active_employee = False
+            session.commit()
+            return "Employee deactivated successfully."
+        return f"Employee with ID {employee_id} not found."
+    except SQLAlchemyError as e:
+        session.rollback()
+        return f"Error deactivating employee: {str(e)}"
+
 
 def add_training(session, training_data):
     """Add a training record."""

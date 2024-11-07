@@ -14,8 +14,7 @@ config = {
     'password': mysql_root_password
     }
 
-engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
-#engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
+engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
 
 with engine.connect() as connection:
     connection.execute(text("CREATE DATABASE IF NOT EXISTS hr"))
@@ -46,7 +45,7 @@ class Employee(Base):
     phone = Column(String(20))
     salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
-    active_employee = Column(Boolean)
+    active_employee = Column(Boolean, default=True)
     contracts = relationship('Contract', back_populates='employees')
     vacations = relationship('Vacation', back_populates='employees')
     evaluations = relationship('Evaluation', back_populates='employees')

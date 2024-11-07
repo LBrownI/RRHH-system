@@ -65,7 +65,7 @@
         <p>Position: {{ contract.position }}</p>
         <p>Registration Date: {{ contract.registration_date }}</p>
       {% else %}
-        <p>No contract registered</p>
+          <p>No contract registered</p>
       {% endif %}
     </div>
     
@@ -79,7 +79,7 @@
       <script src="{{ url_for('static', filename='javascript/add_button.js') }}"></script>
     </div>
 
-    <button class="remove-contract-btn" id="" onclick="openRemoveForm()">Remove Contract</button>
+    <button class="remove-contract-btn" id="" onclick="openRemoveForm()">Deactivate Employee</button>
 
     <div class="form-popup" id="removeForm">
       <div class="form-container">
@@ -95,5 +95,3 @@
   {% endif %}
 </body>
 </html>
-
-
