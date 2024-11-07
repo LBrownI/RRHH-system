@@ -158,10 +158,14 @@ def remove_contract(employee_id):
 @app.route('/confirm_remove_contract/<int:employee_id>', methods=['POST'])
 def confirm_remove_contract(employee_id):
     # Obtener el contrato usando la función de consulta personalizada
-    contract = get_contract_by_employee_id(session, employee_id)
-    if contract:
-        session.delete(contract)
-        session.commit()
+    contract_deactivated = deactivate_employee(session, employee_id)
+
+    # Mostrar mensaje de éxito o error
+    if contract_deactivated:
+        flash('Contract successfully deactivated', 'success')
+    else:
+        flash('Error: Contract could not be deactivated', 'danger')
+
     return redirect(url_for('user', id=employee_id))
 
 
