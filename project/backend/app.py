@@ -126,7 +126,7 @@ def show_contracts():
 
 
 # Route for the option of adding a new "Contract"
-@app.route('/add-contract', methods=['GET', 'POST'])
+@app.route('/add_contract', methods=['GET', 'POST'])
 def add_contract_page():
     if request.method == 'POST':
         # Gather form data

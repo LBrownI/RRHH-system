@@ -415,6 +415,16 @@ def all_remunerations(session):
 def add_remuneration(session, remuneration_data):
     """Add a remuneration for an employee."""
     try:
+        # Fetch the Employee using employee_id
+        employee = session.query(Employee).filter_by(id=remuneration_data['employee_id']).first()
+        
+        if not employee:
+            return f"Employee with ID {remuneration_data['employee_id']} not found."
+        
+        # Auto-complete afp_id and health_plan_id from Employee's AFP and HealthPlan
+        remuneration_data['afp_id'] = employee.afp_id
+        remuneration_data['health_plan_id'] = employee.health_plan_id
+
         # Ensure numeric fields are converted to float
         gross_amount = float(remuneration_data.get('gross_amount', 0))
         tax = float(remuneration_data.get('tax', 0))

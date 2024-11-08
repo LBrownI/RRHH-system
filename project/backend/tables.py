@@ -46,6 +46,10 @@ class Employee(Base):
     salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
     active_employee = Column(Boolean, default=True)
+    afp_id = Column(Integer, ForeignKey('AFP.id'))
+    health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
+    afp = relationship('AFP', back_populates='employees')  # Relationship to AFP
+    health_plan = relationship('HealthPlan', back_populates='employees')  # Relationship to HealthPlan
     contracts = relationship('Contract', back_populates='employees')
     vacations = relationship('Vacation', back_populates='employees')
     evaluations = relationship('Evaluation', back_populates='employees')
@@ -84,6 +88,7 @@ class AFP(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     commission_percentage = Column(DECIMAL(5, 2))
+    employees = relationship('Employee', back_populates='afp')
     remunerations = relationship('Remuneration', back_populates='afps')
 
 # Vacation model
@@ -145,6 +150,7 @@ class HealthPlan(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     type = Column(String(50))
+    employees = relationship('Employee', back_populates='health_plan')
     fonasa = relationship('Fonasa', back_populates='health_plans')
     isapre = relationship('Isapre', back_populates='health_plans')
     remunerations = relationship('Remuneration', back_populates='health_plans')
