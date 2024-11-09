@@ -207,6 +207,77 @@ for data in company_data:
     session.add(company)
 session.commit()
 
+# Insert data into AFP table
+afp_data = [
+    {'id': 1, 'name': 'AFP Capital', 'commission_percentage': 1.44},
+    {'id': 2, 'name': 'AFP Cuprum', 'commission_percentage': 1.44},
+    {'id': 3, 'name': 'AFP Habitat', 'commission_percentage': 1.27},
+    {'id': 4, 'name': 'AFP Modelo', 'commission_percentage': 0.58},
+    {'id': 5, 'name': 'AFP Planvital', 'commission_percentage': 1.16},
+    {'id': 6, 'name': 'AFP Provida', 'commission_percentage': 1.45},
+    {'id': 7, 'name': 'AFP Uno', 'commission_percentage': 0.49}
+]
+
+for data in afp_data:
+    afp = AFP(**data)
+    session.add(afp)
+session.commit()
+
+# Insert data into HealthPlan, Fonasa, and Isapre tables
+health_plan_data = [
+    {'id': 1, 'name': 'Fonasa Plan A', 'type': 'Fonasa'},
+    {'id': 2, 'name': 'Fonasa Plan B', 'type': 'Fonasa'},
+    {'id': 3, 'name': 'Fonasa Plan C', 'type': 'Fonasa'},
+    {'id': 4, 'name': 'Fonasa Plan D', 'type': 'Fonasa'},
+    {'id': 5, 'name': 'Banmédica S.A.', 'type': 'Isapre'},
+    {'id': 6, 'name': 'Isalud Ltda.', 'type': 'Isapre'},
+    {'id': 7, 'name': 'Colmena Golden Cross S.A.', 'type': 'Isapre'},
+    {'id': 8, 'name': 'Consalud S.A.', 'type': 'Isapre'},
+    {'id': 9, 'name': 'Cruz Blanca S.A.', 'type': 'Isapre'},
+    {'id': 10, 'name': 'Cruz del Norte Ltda.', 'type': 'Isapre'},
+    {'id': 11, 'name': 'Nueva Masvida S.A.', 'type': 'Isapre'},
+    {'id': 12, 'name': 'Fundación Ltda.', 'type': 'Isapre'},
+    {'id': 13, 'name': 'Vida Tres S.A.', 'type': 'Isapre'},
+    {'id': 14, 'name': 'Esencial S.A.', 'type': 'Isapre'}
+]
+
+for data in health_plan_data:
+    health_plan = HealthPlan(**data)
+    session.add(health_plan)
+session.commit()
+
+# Insert data into Fonasa table
+fonasa_data = [
+    {'id': 1, 'health_plan_id': 1, 'discount': 4.00},
+    {'id': 2, 'health_plan_id': 2, 'discount': 6.00},
+    {'id': 3, 'health_plan_id': 3, 'discount': 7.00},
+    {'id': 4, 'health_plan_id': 4, 'discount': 7.00},
+]
+
+for data in fonasa_data:
+    fonasa = Fonasa(**data)
+    session.add(fonasa)
+session.commit()
+
+# Insert data into Isapre table
+isapre_data = [
+    {'id': 1, 'health_plan_id': 5, 'discount': 10.00},
+    {'id': 2, 'health_plan_id': 6, 'discount': 12.00},
+    {'id': 3, 'health_plan_id': 7, 'discount': 8.50},
+    {'id': 4, 'health_plan_id': 8, 'discount': 15.00},
+    {'id': 5, 'health_plan_id': 9, 'discount': 9.00},
+    {'id': 6, 'health_plan_id': 10, 'discount': 11.00},
+    {'id': 7, 'health_plan_id': 11, 'discount': 13.50},
+    {'id': 8, 'health_plan_id': 12, 'discount': 10.00},
+    {'id': 9, 'health_plan_id': 13, 'discount': 14.00},
+    {'id': 10, 'health_plan_id': 14, 'discount': 16.00}
+]
+
+for data in isapre_data:
+    isapre = Isapre(**data)
+    session.add(isapre)
+session.commit()
+
 # Insert data into Employee table
 employee_data = [
     {'id': 1, 'rut': '20.890.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(2000, 9, 18), 'start_date': date(2023, 1, 15), 'phone': '555-2345', 'email': 'john.doe@psyonix.com', 'salary': 1200.00, 'nationality': 'Chilean', 'active_employee': True, 'afp_id': 7, 'health_plan_id': 1},
@@ -304,77 +375,10 @@ for data in employee_position_data:
     session.add(emp_pos)
 session.commit()
 
-# Insert data into AFP table
-afp_data = [
-    {'id': 1, 'name': 'AFP Capital', 'commission_percentage': 1.44},
-    {'id': 2, 'name': 'AFP Cuprum', 'commission_percentage': 1.44},
-    {'id': 3, 'name': 'AFP Habitat', 'commission_percentage': 1.27},
-    {'id': 4, 'name': 'AFP Modelo', 'commission_percentage': 0.58},
-    {'id': 5, 'name': 'AFP Planvital', 'commission_percentage': 1.16},
-    {'id': 6, 'name': 'AFP Provida', 'commission_percentage': 1.45},
-    {'id': 7, 'name': 'AFP Uno', 'commission_percentage': 0.49}
-]
-
-for data in afp_data:
-    afp = AFP(**data)
-    session.add(afp)
-session.commit()
 
 
-# Insert data into HealthPlan, Fonasa, and Isapre tables
-health_plan_data = [
-    {'id': 1, 'name': 'Fonasa Plan A', 'type': 'Fonasa'},
-    {'id': 2, 'name': 'Fonasa Plan B', 'type': 'Fonasa'},
-    {'id': 3, 'name': 'Fonasa Plan C', 'type': 'Fonasa'},
-    {'id': 4, 'name': 'Fonasa Plan D', 'type': 'Fonasa'},
-    {'id': 5, 'name': 'Banmédica S.A.', 'type': 'Isapre'},
-    {'id': 6, 'name': 'Isalud Ltda.', 'type': 'Isapre'},
-    {'id': 7, 'name': 'Colmena Golden Cross S.A.', 'type': 'Isapre'},
-    {'id': 8, 'name': 'Consalud S.A.', 'type': 'Isapre'},
-    {'id': 9, 'name': 'Cruz Blanca S.A.', 'type': 'Isapre'},
-    {'id': 10, 'name': 'Cruz del Norte Ltda.', 'type': 'Isapre'},
-    {'id': 11, 'name': 'Nueva Masvida S.A.', 'type': 'Isapre'},
-    {'id': 12, 'name': 'Fundación Ltda.', 'type': 'Isapre'},
-    {'id': 13, 'name': 'Vida Tres S.A.', 'type': 'Isapre'},
-    {'id': 14, 'name': 'Esencial S.A.', 'type': 'Isapre'}
-]
 
-for data in health_plan_data:
-    health_plan = HealthPlan(**data)
-    session.add(health_plan)
-session.commit()
 
-# Insert data into Fonasa table
-fonasa_data = [
-    {'id': 1, 'health_plan_id': 1, 'discount': 4.00},
-    {'id': 2, 'health_plan_id': 2, 'discount': 6.00},
-    {'id': 3, 'health_plan_id': 3, 'discount': 7.00},
-    {'id': 4, 'health_plan_id': 4, 'discount': 7.00},
-]
-
-for data in fonasa_data:
-    fonasa = Fonasa(**data)
-    session.add(fonasa)
-session.commit()
-
-# Insert data into Isapre table
-isapre_data = [
-    {'id': 1, 'health_plan_id': 5, 'discount': 10.00},
-    {'id': 2, 'health_plan_id': 6, 'discount': 12.00},
-    {'id': 3, 'health_plan_id': 7, 'discount': 8.50},
-    {'id': 4, 'health_plan_id': 8, 'discount': 15.00},
-    {'id': 5, 'health_plan_id': 9, 'discount': 9.00},
-    {'id': 6, 'health_plan_id': 10, 'discount': 11.00},
-    {'id': 7, 'health_plan_id': 11, 'discount': 13.50},
-    {'id': 8, 'health_plan_id': 12, 'discount': 10.00},
-    {'id': 9, 'health_plan_id': 13, 'discount': 14.00},
-    {'id': 10, 'health_plan_id': 14, 'discount': 16.00}
-]
-
-for data in isapre_data:
-    isapre = Isapre(**data)
-    session.add(isapre)
-session.commit()
 
 # Insert data into Contract table
 contract_data = [
