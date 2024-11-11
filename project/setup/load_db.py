@@ -31,7 +31,7 @@ Base = declarative_base()
 class Company(Base):
     __tablename__ = 'Company'
     id = Column(Integer, primary_key=True)
-    rut = Column(String(20))
+    rut = Column(String(20))  # Equivalent to 'rut'
     name = Column(String(100))
     address = Column(String(255))
     phone = Column(String(20))
@@ -50,7 +50,11 @@ class Employee(Base):
     phone = Column(String(20))
     salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
-    active_employee = Column(Boolean)
+    active_employee = Column(Boolean, default=True)
+    afp_id = Column(Integer, ForeignKey('AFP.id'))
+    health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
+    afp = relationship('AFP', back_populates='employees')  # Relationship to AFP
+    health_plan = relationship('HealthPlan', back_populates='employees')  # Relationship to HealthPlan
     contracts = relationship('Contract', back_populates='employees')
     vacations = relationship('Vacation', back_populates='employees')
     evaluations = relationship('Evaluation', back_populates='employees')
@@ -89,6 +93,7 @@ class AFP(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     commission_percentage = Column(DECIMAL(5, 2))
+    employees = relationship('Employee', back_populates='afp')
     remunerations = relationship('Remuneration', back_populates='afps')
 
 # Vacation model
@@ -100,7 +105,7 @@ class Vacation(Base):
     end_date = Column(Date)
     days_taken = Column(Integer)
     accumulated_days = Column(Integer)
-    long_service_employee = Column(Boolean)  # Equivalent to 'colaborador_antiguo'
+    long_service_employee = Column(Boolean) 
     employees = relationship('Employee', back_populates='vacations')
 
 # Evaluation model
@@ -143,7 +148,6 @@ class Remuneration(Base):
     employees = relationship('Employee', back_populates='remunerations')
     afps = relationship('AFP', back_populates='remunerations')
     health_plans = relationship('HealthPlan', back_populates='remunerations')
-    bonuses = relationship("Bonus", back_populates="remunerations")
 
 # HealthPlan model
 class HealthPlan(Base):
@@ -151,6 +155,7 @@ class HealthPlan(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     type = Column(String(50))
+    employees = relationship('Employee', back_populates='health_plan')
     fonasa = relationship('Fonasa', back_populates='health_plans')
     isapre = relationship('Isapre', back_populates='health_plans')
     remunerations = relationship('Remuneration', back_populates='health_plans')
@@ -171,14 +176,6 @@ class Isapre(Base):
     discount = Column(DECIMAL(10, 2)) 
     health_plans = relationship('HealthPlan', back_populates='isapre')
 
-# Bonus model
-class Bonus(Base):
-    __tablename__ = 'Bonus'
-    id = Column(Integer, primary_key=True)
-    remuneration_id = Column(Integer, ForeignKey('Remuneration.id')) 
-    benefit = Column(DECIMAL(10, 2))  
-    remunerations = relationship("Remuneration", back_populates="bonuses")
-
 # Contract model
 class Contract(Base):
     __tablename__ = 'Contract'
@@ -192,22 +189,6 @@ class Contract(Base):
     registration_date = Column(Date)
     employees = relationship('Employee', back_populates='contracts')  # Relationship to Employee
     job_positions = relationship('JobPosition', back_populates='contracts')  # Relationship to JobPosition
-
-class User(Base):
-    __tablename__ = 'User'
-    id = Column(Integer, primary_key=True)
-    username = Column(String(100), unique=True, nullable=False)
-    password_hash = Column(String(255), nullable=False)
-    
-    # Method to set hashed password
-    def set_password(self, password):
-        self.password_hash = generate_password_hash(password)
-    
-    # Method to check password
-    def check_password(self, password):
-        return check_password_hash(self.password_hash, password)
-
-
 # Create the tables in the database
 Base.metadata.create_all(engine)
 
@@ -226,25 +207,96 @@ for data in company_data:
     session.add(company)
 session.commit()
 
+# Insert data into AFP table
+afp_data = [
+    {'id': 1, 'name': 'AFP Capital', 'commission_percentage': 1.44},
+    {'id': 2, 'name': 'AFP Cuprum', 'commission_percentage': 1.44},
+    {'id': 3, 'name': 'AFP Habitat', 'commission_percentage': 1.27},
+    {'id': 4, 'name': 'AFP Modelo', 'commission_percentage': 0.58},
+    {'id': 5, 'name': 'AFP Planvital', 'commission_percentage': 1.16},
+    {'id': 6, 'name': 'AFP Provida', 'commission_percentage': 1.45},
+    {'id': 7, 'name': 'AFP Uno', 'commission_percentage': 0.49}
+]
+
+for data in afp_data:
+    afp = AFP(**data)
+    session.add(afp)
+session.commit()
+
+# Insert data into HealthPlan, Fonasa, and Isapre tables
+health_plan_data = [
+    {'id': 1, 'name': 'Fonasa Plan A', 'type': 'Fonasa'},
+    {'id': 2, 'name': 'Fonasa Plan B', 'type': 'Fonasa'},
+    {'id': 3, 'name': 'Fonasa Plan C', 'type': 'Fonasa'},
+    {'id': 4, 'name': 'Fonasa Plan D', 'type': 'Fonasa'},
+    {'id': 5, 'name': 'Banmédica S.A.', 'type': 'Isapre'},
+    {'id': 6, 'name': 'Isalud Ltda.', 'type': 'Isapre'},
+    {'id': 7, 'name': 'Colmena Golden Cross S.A.', 'type': 'Isapre'},
+    {'id': 8, 'name': 'Consalud S.A.', 'type': 'Isapre'},
+    {'id': 9, 'name': 'Cruz Blanca S.A.', 'type': 'Isapre'},
+    {'id': 10, 'name': 'Cruz del Norte Ltda.', 'type': 'Isapre'},
+    {'id': 11, 'name': 'Nueva Masvida S.A.', 'type': 'Isapre'},
+    {'id': 12, 'name': 'Fundación Ltda.', 'type': 'Isapre'},
+    {'id': 13, 'name': 'Vida Tres S.A.', 'type': 'Isapre'},
+    {'id': 14, 'name': 'Esencial S.A.', 'type': 'Isapre'}
+]
+
+for data in health_plan_data:
+    health_plan = HealthPlan(**data)
+    session.add(health_plan)
+session.commit()
+
+# Insert data into Fonasa table
+fonasa_data = [
+    {'id': 1, 'health_plan_id': 1, 'discount': 4.00},
+    {'id': 2, 'health_plan_id': 2, 'discount': 6.00},
+    {'id': 3, 'health_plan_id': 3, 'discount': 7.00},
+    {'id': 4, 'health_plan_id': 4, 'discount': 7.00},
+]
+
+for data in fonasa_data:
+    fonasa = Fonasa(**data)
+    session.add(fonasa)
+session.commit()
+
+# Insert data into Isapre table
+isapre_data = [
+    {'id': 1, 'health_plan_id': 5, 'discount': 10.00},
+    {'id': 2, 'health_plan_id': 6, 'discount': 12.00},
+    {'id': 3, 'health_plan_id': 7, 'discount': 8.50},
+    {'id': 4, 'health_plan_id': 8, 'discount': 15.00},
+    {'id': 5, 'health_plan_id': 9, 'discount': 9.00},
+    {'id': 6, 'health_plan_id': 10, 'discount': 11.00},
+    {'id': 7, 'health_plan_id': 11, 'discount': 13.50},
+    {'id': 8, 'health_plan_id': 12, 'discount': 10.00},
+    {'id': 9, 'health_plan_id': 13, 'discount': 14.00},
+    {'id': 10, 'health_plan_id': 14, 'discount': 16.00}
+]
+
+for data in isapre_data:
+    isapre = Isapre(**data)
+    session.add(isapre)
+session.commit()
+
 # Insert data into Employee table
 employee_data = [
-    {'id': 1, 'rut': '20.890.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(2000, 9, 18), 'start_date': date(2023, 1, 15), 'phone': '555-2345', 'email': 'john.doe@psyonix.com', 'salary': 1200.00, 'nationality': 'Chilean', 'active_employee':True},
-    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'email': 'mary.johnson@psyonix.com', 'salary': 2500.00, 'nationality': 'American', 'active_employee':True},
-    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'email': 'carlos.williams@psyonix.com', 'salary': 1800.00, 'nationality': 'Mexican', 'active_employee':False},
-    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'email': 'anna.brown@psyonix.com', 'salary': 2300.00, 'nationality': 'British', 'active_employee':False},
-    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birth_date': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'email': 'louis.davis@psyonix.com', 'salary': 2100.00, 'nationality': 'Canadian', 'active_employee':True},
-    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birth_date': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'email': 'laura.miller@psyonix.com', 'salary': 2400.00, 'nationality': 'German', 'active_employee':True},
-    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birth_date': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'email': 'robert.wilson@psyonix.com', 'salary': 2200.00, 'nationality': 'Australian', 'active_employee':False},
-    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birth_date': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'email': 'fernanda.taylor@psyonix.com', 'salary': 2700.00, 'nationality': 'Brazilian', 'active_employee':True},
-    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birth_date': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'email': 'george.anderson@psyonix.com', 'salary': 2600.00, 'nationality': 'American', 'active_employee':False},
-    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birth_date': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'email': 'claudia.thomas@psyonix.com', 'salary': 1900.00, 'nationality': 'Spanish', 'active_employee':False},
-    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birth_date': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'email': 'jean.baptiste@psyonix.com', 'salary': 2100.00, 'nationality': 'Haitian', 'active_employee':True},
-    {'id': 12, 'rut': '19.877.654-4', 'first_name': 'Lucas', 'last_name': 'Rodriguez', 'birth_date': date(1994, 4, 2), 'start_date': date(2022, 1, 20), 'phone': '555-9999', 'email': 'lucas.rodriguez@psyonix.com', 'salary': 2400.00, 'nationality': 'Argentine', 'active_employee':True},
-    {'id': 13, 'rut': '11.777.111-5', 'first_name': 'Sofia', 'last_name': 'Martinez', 'birth_date': date(1998, 12, 16), 'start_date': date(2023, 7, 5), 'phone': '555-1111', 'email': 'sofia.martinez@psyonix.com', 'salary': 2100.00, 'nationality': 'Chilean', 'active_employee':False},
-    {'id': 14, 'rut': '20.555.666-7', 'first_name': 'Ariane', 'last_name': 'Dupont', 'birth_date': date(1989, 5, 9), 'start_date': date(2020, 5, 10), 'phone': '555-5555', 'email': 'ariane.dupont@psyonix.com', 'salary': 2800.00, 'nationality': 'French', 'active_employee':False},
-    {'id': 15, 'rut': '17.876.543-8', 'first_name': 'Hiroshi', 'last_name': 'Tanaka', 'birth_date': date(1992, 10, 21), 'start_date': date(2019, 2, 13), 'phone': '555-8888', 'email': 'hiroshi.tanaka@psyonix.com', 'salary': 2500.00, 'nationality': 'Japanese', 'active_employee':True},
-    {'id': 16, 'rut': '13.111.222-3', 'first_name': 'Maya', 'last_name': 'Singh', 'birth_date': date(1986, 8, 14), 'start_date': date(2017, 12, 5), 'phone': '555-7777', 'email': 'maya.singh@psyonix.com', 'salary': 2600.00, 'nationality': 'Indian', 'active_employee':True}
-]
+    {'id': 1, 'rut': '20.890.678-9', 'first_name': 'John', 'last_name': 'Doe', 'birth_date': date(2000, 9, 18), 'start_date': date(2023, 1, 15), 'phone': '555-2345', 'email': 'john.doe@psyonix.com', 'salary': 1200.00, 'nationality': 'Chilean', 'active_employee': True, 'afp_id': 7, 'health_plan_id': 1},
+    {'id': 2, 'rut': '12.345.678-1', 'first_name': 'Mary', 'last_name': 'Johnson', 'birth_date': date(1985, 9, 22), 'start_date': date(2019, 3, 10), 'phone': '555-6789', 'email': 'mary.johnson@psyonix.com', 'salary': 2500.00, 'nationality': 'American', 'active_employee': True, 'afp_id': 2, 'health_plan_id': 2},
+    {'id': 3, 'rut': '13.345.678-2', 'first_name': 'Carlos', 'last_name': 'Williams', 'birth_date': date(1990, 7, 18), 'start_date': date(2021, 6, 5), 'phone': '555-9102', 'email': 'carlos.williams@psyonix.com', 'salary': 1800.00, 'nationality': 'Mexican', 'active_employee': False, 'afp_id': 3, 'health_plan_id': 3},
+    {'id': 4, 'rut': '14.345.678-3', 'first_name': 'Anna', 'last_name': 'Brown', 'birth_date': date(1992, 11, 2), 'start_date': date(2018, 9, 25), 'phone': '555-1124', 'email': 'anna.brown@psyonix.com', 'salary': 2300.00, 'nationality': 'British', 'active_employee': False, 'afp_id': 4, 'health_plan_id': 1},
+    {'id': 5, 'rut': '18.145.678-4', 'first_name': 'Louis', 'last_name': 'Davis', 'birth_date': date(1995, 2, 15), 'start_date': date(2022, 2, 1), 'phone': '555-1416', 'email': 'louis.davis@psyonix.com', 'salary': 2100.00, 'nationality': 'Canadian', 'active_employee': True, 'afp_id': 5, 'health_plan_id': 2},
+    {'id': 6, 'rut': '16.245.678-5', 'first_name': 'Laura', 'last_name': 'Miller', 'birth_date': date(1997, 6, 25), 'start_date': date(2020, 8, 14), 'phone': '555-1718', 'email': 'laura.miller@psyonix.com', 'salary': 2400.00, 'nationality': 'German', 'active_employee': True, 'afp_id': 6, 'health_plan_id': 3},
+    {'id': 7, 'rut': '16.645.678-6', 'first_name': 'Robert', 'last_name': 'Wilson', 'birth_date': date(1987, 4, 8), 'start_date': date(2017, 10, 12), 'phone': '555-1920', 'email': 'robert.wilson@psyonix.com', 'salary': 2200.00, 'nationality': 'Australian', 'active_employee': False, 'afp_id': 7, 'health_plan_id': 4},
+    {'id': 8, 'rut': '12.945.678-7', 'first_name': 'Fernanda', 'last_name': 'Taylor', 'birth_date': date(1988, 1, 3), 'start_date': date(2021, 4, 8), 'phone': '555-2021', 'email': 'fernanda.taylor@psyonix.com', 'salary': 2700.00, 'nationality': 'Brazilian', 'active_employee': True, 'afp_id': 1, 'health_plan_id': 5},
+    {'id': 9, 'rut': '14.745.678-8', 'first_name': 'George', 'last_name': 'Anderson', 'birth_date': date(1986, 12, 20), 'start_date': date(2020, 3, 14), 'phone': '555-2223', 'email': 'george.anderson@psyonix.com', 'salary': 2600.00, 'nationality': 'American', 'active_employee': False, 'afp_id': 2, 'health_plan_id': 6},
+    {'id': 10, 'rut': '10.345.678-K', 'first_name': 'Claudia', 'last_name': 'Thomas', 'birth_date': date(1983, 10, 30), 'start_date': date(2016, 7, 3), 'phone': '555-2324', 'email': 'claudia.thomas@psyonix.com', 'salary': 1900.00, 'nationality': 'Spanish', 'active_employee': False, 'afp_id': 3, 'health_plan_id': 7},
+    {'id': 11, 'rut': '12.987.654-3', 'first_name': 'Jean', 'last_name': 'Baptiste', 'birth_date': date(1990, 3, 18), 'start_date': date(2021, 7, 12), 'phone': '555-3456', 'email': 'jean.baptiste@psyonix.com', 'salary': 2100.00, 'nationality': 'Haitian', 'active_employee': True, 'afp_id': 4, 'health_plan_id': 8},
+    {'id': 12, 'rut': '19.877.654-4', 'first_name': 'Lucas', 'last_name': 'Rodriguez', 'birth_date': date(1994, 4, 2), 'start_date': date(2022, 1, 20), 'phone': '555-9999', 'email': 'lucas.rodriguez@psyonix.com', 'salary': 2400.00, 'nationality': 'Argentine', 'active_employee': True, 'afp_id': 5, 'health_plan_id': 9},
+    {'id': 13, 'rut': '11.777.111-5', 'first_name': 'Sofia', 'last_name': 'Martinez', 'birth_date': date(1998, 12, 16), 'start_date': date(2023, 7, 5), 'phone': '555-1111', 'email': 'sofia.martinez@psyonix.com', 'salary': 2100.00, 'nationality': 'Chilean', 'active_employee': False, 'afp_id': 1, 'health_plan_id': 10},
+    {'id': 14, 'rut': '20.555.666-7', 'first_name': 'Ariane', 'last_name': 'Dupont', 'birth_date': date(1989, 5, 9), 'start_date': date(2020, 5, 10), 'phone': '555-5555', 'email': 'ariane.dupont@psyonix.com', 'salary': 2800.00, 'nationality': 'French', 'active_employee': False, 'afp_id': 2, 'health_plan_id': 11},
+    {'id': 15, 'rut': '17.876.543-8', 'first_name': 'Hiroshi', 'last_name': 'Tanaka', 'birth_date': date(1992, 10, 21), 'start_date': date(2019, 2, 13), 'phone': '555-8888', 'email': 'hiroshi.tanaka@psyonix.com', 'salary': 2500.00, 'nationality': 'Japanese', 'active_employee': True, 'afp_id': 3, 'health_plan_id': 12},
+    {'id': 16, 'rut': '13.111.222-3', 'first_name': 'Maya', 'last_name': 'Singh', 'birth_date': date(1986, 8, 14), 'start_date': date(2017, 12, 5), 'phone': '555-7777', 'email': 'maya.singh@psyonix.com', 'salary': 2000.00, 'nationality': 'Indian', 'active_employee': True, 'afp_id': 6, 'health_plan_id': 13}
+ ]
 
 
 for data in employee_data:
@@ -323,77 +375,10 @@ for data in employee_position_data:
     session.add(emp_pos)
 session.commit()
 
-# Insert data into AFP table
-afp_data = [
-    {'id': 1, 'name': 'AFP Capital', 'commission_percentage': 1.44},
-    {'id': 2, 'name': 'AFP Cuprum', 'commission_percentage': 1.44},
-    {'id': 3, 'name': 'AFP Habitat', 'commission_percentage': 1.27},
-    {'id': 4, 'name': 'AFP Modelo', 'commission_percentage': 0.58},
-    {'id': 5, 'name': 'AFP Planvital', 'commission_percentage': 1.16},
-    {'id': 6, 'name': 'AFP Provida', 'commission_percentage': 1.45},
-    {'id': 7, 'name': 'AFP Uno', 'commission_percentage': 0.49}
-]
-
-for data in afp_data:
-    afp = AFP(**data)
-    session.add(afp)
-session.commit()
 
 
-# Insert data into HealthPlan, Fonasa, and Isapre tables
-health_plan_data = [
-    {'id': 1, 'name': 'Fonasa Plan A', 'type': 'Fonasa'},
-    {'id': 2, 'name': 'Fonasa Plan B', 'type': 'Fonasa'},
-    {'id': 3, 'name': 'Fonasa Plan C', 'type': 'Fonasa'},
-    {'id': 4, 'name': 'Fonasa Plan D', 'type': 'Fonasa'},
-    {'id': 5, 'name': 'Banmédica S.A.', 'type': 'Isapre'},
-    {'id': 6, 'name': 'Isalud Ltda.', 'type': 'Isapre'},
-    {'id': 7, 'name': 'Colmena Golden Cross S.A.', 'type': 'Isapre'},
-    {'id': 8, 'name': 'Consalud S.A.', 'type': 'Isapre'},
-    {'id': 9, 'name': 'Cruz Blanca S.A.', 'type': 'Isapre'},
-    {'id': 10, 'name': 'Cruz del Norte Ltda.', 'type': 'Isapre'},
-    {'id': 11, 'name': 'Nueva Masvida S.A.', 'type': 'Isapre'},
-    {'id': 12, 'name': 'Fundación Ltda.', 'type': 'Isapre'},
-    {'id': 13, 'name': 'Vida Tres S.A.', 'type': 'Isapre'},
-    {'id': 14, 'name': 'Esencial S.A.', 'type': 'Isapre'}
-]
 
-for data in health_plan_data:
-    health_plan = HealthPlan(**data)
-    session.add(health_plan)
-session.commit()
 
-# Insert data into Fonasa table
-fonasa_data = [
-    {'id': 1, 'health_plan_id': 1, 'discount': 4.00},
-    {'id': 2, 'health_plan_id': 2, 'discount': 6.00},
-    {'id': 3, 'health_plan_id': 3, 'discount': 7.00},
-    {'id': 4, 'health_plan_id': 4, 'discount': 7.00},
-]
-
-for data in fonasa_data:
-    fonasa = Fonasa(**data)
-    session.add(fonasa)
-session.commit()
-
-# Insert data into Isapre table
-isapre_data = [
-    {'id': 1, 'health_plan_id': 5, 'discount': 10.00},
-    {'id': 2, 'health_plan_id': 6, 'discount': 12.00},
-    {'id': 3, 'health_plan_id': 7, 'discount': 8.50},
-    {'id': 4, 'health_plan_id': 8, 'discount': 15.00},
-    {'id': 5, 'health_plan_id': 9, 'discount': 9.00},
-    {'id': 6, 'health_plan_id': 10, 'discount': 11.00},
-    {'id': 7, 'health_plan_id': 11, 'discount': 13.50},
-    {'id': 8, 'health_plan_id': 12, 'discount': 10.00},
-    {'id': 9, 'health_plan_id': 13, 'discount': 14.00},
-    {'id': 10, 'health_plan_id': 14, 'discount': 16.00}
-]
-
-for data in isapre_data:
-    isapre = Isapre(**data)
-    session.add(isapre)
-session.commit()
 
 # Insert data into Contract table
 contract_data = [
@@ -486,20 +471,6 @@ remuneration_data = [
 for data in remuneration_data:
     remuneration = Remuneration(**data)
     session.add(remuneration)
-session.commit()
-
-# Insert data into Bonus table
-bonus_data = [
-    {'id': 1, 'remuneration_id': 1, 'benefit': 500.00},
-    {'id': 2, 'remuneration_id': 2, 'benefit': 300.00},
-    {'id': 3, 'remuneration_id': 3, 'benefit': 400.00},
-    {'id': 4, 'remuneration_id': 4, 'benefit': 200.00},
-    {'id': 5, 'remuneration_id': 5, 'benefit': 350.00}
-]
-
-for data in bonus_data:
-    bonus = Bonus(**data)
-    session.add(bonus)
 session.commit()
 
 # Close the session

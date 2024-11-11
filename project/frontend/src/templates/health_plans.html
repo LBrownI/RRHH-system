@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Plans</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h2 class="text-2xl font-semibold mb-4">Health Plans</h2>
+
+        <div class="overflow-x-auto bg-white shadow rounded-lg">
+            <table class="min-w-full table-auto">
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="px-4 py-2 text-left">Health Plan Name</th>
+                        <th class="px-4 py-2 text-left">Type</th>
+                        <th class="px-4 py-2 text-left">Public Health Discount (Fonasa)</th>
+                        <th class="px-4 py-2 text-left">Private Health Discount (Isapre)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for plan in health_plans %}
+                    <tr class="border-b hover:bg-gray-50">
+                        <td class="px-4 py-2">{{ plan.name }}</td>
+                        <td class="px-4 py-2">{{ plan.type }}</td>
+                        <td class="px-4 py-2">
+                            {% if plan.fonasa %}
+                                {{ plan.fonasa.discount }}%
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                        <td class="px-4 py-2">
+                            {% if plan.isapre %}
+                                {{ plan.isapre.discount }}%
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="px-4 py-2 text-center text-gray-500">No health plans found.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

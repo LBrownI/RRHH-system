@@ -209,6 +209,21 @@ def add_contract(session, contract_data):
     except SQLAlchemyError as e:
         session.rollback()
         return f"Error adding contract: {str(e)}"
+    
+
+def deactivate_employee(session, employee_id):
+    """Deactivate an employee by setting active_employee to False."""
+    try:
+        employee = session.query(Employee).filter_by(id=employee_id).first()
+        if employee:
+            employee.active_employee = False
+            session.commit()
+            return "Employee deactivated successfully."
+        return f"Employee with ID {employee_id} not found."
+    except SQLAlchemyError as e:
+        session.rollback()
+        return f"Error deactivating employee: {str(e)}"
+
 
 def add_training(session, training_data):
     """Add a training record."""
@@ -350,18 +365,115 @@ def all_contracts(session):
 
 def all_vacations(session):
     """Retrieve all vacations and their employee data."""
-    vacations = (
-        session.query(
-            Vacation.id,
-            (Employee.first_name + " " + Employee.last_name).label("name"),
-            Vacation.start_date,
-            Vacation.end_date,
-            Vacation.days_taken,
-            Vacation.accumulated_days,
-            Vacation.long_service_employee
-        )
-        .join(Employee, Vacation.employee_id == Employee.id)
-        .all()
-    )
-    return vacations
+    try:
+        vacations = (session.query(Vacation, Employee).join(Employee, Vacation.employee_id == Employee.id).all())
+        return [
+            {
+                'id': vacation.id,
+                'employee': f"{employee.first_name} {employee.last_name}",
+                'start_date': vacation.start_date,
+                'end_date': vacation.end_date,
+                'days_taken': vacation.days_taken,
+                'accumulated_days': vacation.accumulated_days,
+                'long_service_employee': vacation.long_service_employee,
+            }
+            for vacation, employee in vacations
+        ]
+    except Exception as e:
+        print(f'Error in all_vacations: {e}')
+    return []
 
+def all_remunerations(session):
+    """Retrieve all remunerations and their related employee, AFP, and health plan data."""
+    try:
+        remunerations = (
+            session.query(Remuneration, Employee, AFP, HealthPlan)
+            .join(Employee, Remuneration.employee_id == Employee.id)
+            .join(AFP, Remuneration.afp_id == AFP.id)
+            .join(HealthPlan, Remuneration.health_plan_id == HealthPlan.id)
+            .all()
+        )
+        return [
+            {
+                'id': remuneration.id,
+                'employee': f"{employee.first_name} {employee.last_name}",
+                'afp': afp.name,
+                'health_plan': health_plan.name,
+                'gross_amount': remuneration.gross_amount,
+                'tax': remuneration.tax,
+                'deductions': remuneration.deductions,
+                'bonus': remuneration.bonus,
+                'welfare_contribution': remuneration.welfare_contribution,
+                'net_amount': remuneration.net_amount,
+            }
+            for remuneration, employee, afp, health_plan in remunerations
+        ]
+    except Exception as e:
+        print(f'Error in all_remunerations: {e}')
+    return []
+
+def add_remuneration(session, remuneration_data):
+    """Add a remuneration for an employee."""
+    try:
+        # Fetch the Employee using employee_id
+        employee = session.query(Employee).filter_by(id=remuneration_data['employee_id']).first()
+        
+        if not employee:
+            return f"Employee with ID {remuneration_data['employee_id']} not found."
+        
+        # Auto-complete afp_id and health_plan_id from Employee's AFP and HealthPlan
+        remuneration_data['afp_id'] = employee.afp_id
+        remuneration_data['health_plan_id'] = employee.health_plan_id
+
+        # Ensure numeric fields are converted to float
+        gross_amount = float(remuneration_data.get('gross_amount', 0))
+        tax = float(remuneration_data.get('tax', 0))
+        deductions = float(remuneration_data.get('deductions', 0))
+        bonus = float(remuneration_data.get('bonus', 0))
+        welfare_contribution = float(remuneration_data.get('welfare_contribution', 0))
+        net_amount = float(remuneration_data.get('net_amount', 0))
+
+        # Create new Remuneration record
+        remuneration = Remuneration(
+            employee_id=remuneration_data['employee_id'],
+            afp_id=remuneration_data['afp_id'],
+            health_plan_id=remuneration_data['health_plan_id'],
+            gross_amount=gross_amount,
+            tax=tax,
+            deductions=deductions,
+            bonus=bonus,
+            welfare_contribution=welfare_contribution,
+            net_amount=net_amount
+        )
+
+        # Add to session and commit
+        session.add(remuneration)
+        session.commit()
+        return "Remuneration added successfully."
+
+    except SQLAlchemyError as e:
+        session.rollback()
+        return f"Error adding remuneration: {str(e)}"
+
+def all_health_plans(session):
+    """Retrieve all health plans with their respective discounts."""
+    try:
+        # Query HealthPlan, Fonasa, and Isapre
+        health_plans = session.query(HealthPlan, Fonasa, Isapre). \
+            outerjoin(Fonasa, HealthPlan.id == Fonasa.health_plan_id). \
+            outerjoin(Isapre, HealthPlan.id == Isapre.health_plan_id). \
+            all()
+
+        return [
+            {
+                'health_plan_id': health_plan.id,
+                'name': health_plan.name,
+                'type': health_plan.type,
+                'fonasa_discount': fonasa.discount if fonasa else None,
+                'isapre_discount': isapre.discount if isapre else None,
+            }
+            for health_plan, fonasa, isapre in health_plans
+        ]
+    except Exception as e:
+        print(f'Error in all_health_plans: {e}')
+    return []

@@ -14,7 +14,6 @@ config = {
     'password': mysql_root_password
     }
 
-#engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
 
 with engine.connect() as connection:
@@ -46,7 +45,11 @@ class Employee(Base):
     phone = Column(String(20))
     salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
-    active_employee = Column(Boolean)
+    active_employee = Column(Boolean, default=True)
+    afp_id = Column(Integer, ForeignKey('AFP.id'))
+    health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
+    afp = relationship('AFP', back_populates='employees')  # Relationship to AFP
+    health_plan = relationship('HealthPlan', back_populates='employees')  # Relationship to HealthPlan
     contracts = relationship('Contract', back_populates='employees')
     vacations = relationship('Vacation', back_populates='employees')
     evaluations = relationship('Evaluation', back_populates='employees')
@@ -85,6 +88,7 @@ class AFP(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     commission_percentage = Column(DECIMAL(5, 2))
+    employees = relationship('Employee', back_populates='afp')
     remunerations = relationship('Remuneration', back_populates='afps')
 
 # Vacation model
@@ -139,7 +143,6 @@ class Remuneration(Base):
     employees = relationship('Employee', back_populates='remunerations')
     afps = relationship('AFP', back_populates='remunerations')
     health_plans = relationship('HealthPlan', back_populates='remunerations')
-    bonuses = relationship("Bonus", back_populates="remunerations")
 
 # HealthPlan model
 class HealthPlan(Base):
@@ -147,6 +150,7 @@ class HealthPlan(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100))
     type = Column(String(50))
+    employees = relationship('Employee', back_populates='health_plan')
     fonasa = relationship('Fonasa', back_populates='health_plans')
     isapre = relationship('Isapre', back_populates='health_plans')
     remunerations = relationship('Remuneration', back_populates='health_plans')
@@ -166,14 +170,6 @@ class Isapre(Base):
     health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
     discount = Column(DECIMAL(10, 2)) 
     health_plans = relationship('HealthPlan', back_populates='isapre')
-
-# Bonus model
-class Bonus(Base):
-    __tablename__ = 'Bonus'
-    id = Column(Integer, primary_key=True)
-    remuneration_id = Column(Integer, ForeignKey('Remuneration.id')) 
-    benefit = Column(DECIMAL(10, 2))  
-    remunerations = relationship("Remuneration", back_populates="bonuses")
 
 # Contract model
 class Contract(Base):
