@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Empleado</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/add_employee.css') }}">
+</head>
+<body>
+    <form method="POST" action="{{ url_for('add_employee') }}">
+        <h1>Agregar Nuevo Empleado</h1>
+        
+        <label for="first_name">Nombre:</label>
+        <input type="text" id="first_name" name="first_name" required>
+        
+        <label for="last_name">Apellido:</label>
+        <input type="text" id="last_name" name="last_name" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="phone">Teléfono:</label>
+        <input type="text" id="phone" name="phone" required>
+        
+        <label for="rut">RUT:</label>
+        <input type="text" id="rut" name="rut" required>
+        
+        <label for="position_id">Cargo:</label>
+        <select id="position_id" name="position_id" required>
+            {% for position in job_positions %}
+                <option value="{{ position.id }}">{{ position.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="status">Estado:</label>
+        <select id="status" name="status" required>
+            <option value="1">Activo</option>
+            <option value="0">Inactivo</option>
+        </select>
+
+        <button type="submit">Agregar Empleado</button>
+    </form>
+</body>
+</html>

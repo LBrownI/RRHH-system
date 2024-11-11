@@ -17,7 +17,11 @@
         <div class="content">
           <!-- Employee list -->
           <section class="employee-list">
-            <h2>Employee List</h2>
+            <div class="header-actions">
+              <h2>Employee List</h2>
+              <a href="{{ url_for('add_employee') }}" class="btn-add-employee">Agregar Empleado</a>
+            </div>
+          
             <table class="employee-table">
               <thead>
                 <tr>
@@ -88,6 +92,15 @@
                       </option>
                   {% endfor %}
               </select>
+
+
+              <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="1" {% if request.args.get('status', 'active') == '1' %}selected{% endif %}>Active</option>
+                    <option value="0" {% if request.args.get('status') == '0' %}selected{% endif %}>Inactive</option>
+                    <option value="">All</option>
+
+                </select>
           
               <button type="submit">Apply Filters</button>
           </form>
