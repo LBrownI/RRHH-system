@@ -16,8 +16,12 @@
       <p>{{ error_message }}</p>
   {% else %}
     <div class="user-general-info-container">
-      <div class="photo">
-        <img src="{{ url_for('static', filename='images/user.png') }}" alt="user-photo" />
+      <div>
+        <div class="photo">
+          <img src="{{ url_for('static', filename='images/user.png') }}" alt="user-photo" />
+          <p>test</p>
+        </div>
+        <p>status: {{ status }}</p>
       </div>
       <div class="general-info">
         <p>Name: {{ first_name }} {{ last_name }}</p>

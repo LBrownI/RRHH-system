@@ -69,7 +69,15 @@ def user():
     } if contract else None
 
     # Datos del empleado
-    first_name, last_name, email, phone, rut, position = gi
+    first_name, last_name, email, phone, rut, position, status = gi
+    
+    # Cambiar el estado del empleado a texto
+    if status == 0:
+        status = "Inactive"
+    elif status == 1:
+        status = "Active"
+    else:
+        status = "Unknown"
 
     # Mostrar información faltante
     missing_info = []
@@ -90,6 +98,7 @@ def user():
         phone=phone,
         rut=rut,
         position=position,
+        status=status,
         nationality=ad_info.get('nationality', "Not registered"),
         birth_date=ad_info.get('birth_date', "Not registered"),
         age=ad_info.get('age', "Not available"),

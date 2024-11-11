@@ -132,7 +132,7 @@ def aditional_info(session, employee_id):
 def general_info(session, employee_id):
     """Get basic information about an employee."""
     try:
-        info = session.query(Employee.first_name, Employee.last_name, Employee.email, Employee.phone, Employee.rut, JobPosition.name) \
+        info = session.query(Employee.first_name, Employee.last_name, Employee.email, Employee.phone, Employee.rut, JobPosition.name, Employee.active_employee) \
             .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
             .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
             .filter(Employee.id == employee_id).first()
