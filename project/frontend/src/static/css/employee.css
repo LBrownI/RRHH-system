@@ -23,6 +23,7 @@ button {
 
 /* User General Info Section */
 .user-general-info-container {
+  position: relative;
   display: flex;
   align-items: center;
   background-color: #296b2d;
@@ -34,6 +35,24 @@ button {
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+}
+
+.edit-button{
+  position: absolute;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.edit-button:hover {
+  background-color: #45a049;
 }
 
 .photo {

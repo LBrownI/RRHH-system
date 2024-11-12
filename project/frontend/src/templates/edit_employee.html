@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/edit_employee.css')}}" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css" rel="stylesheet">
+    <title>Edit employee</title>
+</head>
+<body>
+    <!-- general info -->
+    <h1 class="text-xl">Edit employee</h1>
+    <div class="general-info-container">
+        <h2>general info</h2>
+        {% for data in gi %}
+            <div class="flex gap-2 items-center my-1">
+                <p class="w-32">test</p>
+                <input type="text" value="{{ data }}" placeholder="test" class="rounded-lg flex-1"/>
+            </div>
+        {% endfor %}
+    </div>
+    <!-- remove redundancy plssss -->
+    <div class="aditional-info-container mt-4">
+        <h2>Additional Info</h2>
+        <div class="flex gap-2 items-center my-1">
+            <p class="w-32">Net Amount: </p>
+            <input type="text" value="$1000" placeholder="Net Amount" class="rounded-lg flex-1"/>
+        </div>
+        <div class="flex gap-2 items-center my-1">
+            <p class="w-32">Health Plan: </p>
+            <input type="text" value="Fonasa" placeholder="Health Plan" class="rounded-lg flex-1"/>
+        </div>
+        <div class="flex gap-2 items-center my-1">
+            <p class="w-32">Afp: </p>
+            <input type="text" value="AFP Provida" placeholder="Afp" class="rounded-lg flex-1"/>
+        </div>
+        <div class="flex gap-2 items-center my-1">
+            <p class="w-32">Nationality: </p>
+            <input type="text" value="Chilean" placeholder="National" class="rounded-lg flex-1"/>
+        </div>
+    </div>
+</body>
+</html>

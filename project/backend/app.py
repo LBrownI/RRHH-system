@@ -111,7 +111,22 @@ def user():
         missing_info=missing_info,
         contract=contract_data
     )
+    
+@app.route("/edit_employee", methods=['GET', 'POST'])
+def edit_employee():
+    employee_id = 1 # test value
+    gi = general_info(session, employee_id)
+    labels = ['First Name', 'Last Name', 'Email', 'Phone', 'RUT', 'Position', 'Status']
+    data = {}
+    for i in range(len(labels)):
+        data[labels[i]] = gi[i]
+    print("asdasdasd", data)
+    return render_template('edit_employee.html', gi=gi)
 
+@app.route("/test", methods=['GET', 'POST'])
+def test():
+    a = [1, 2, 3, 4, 5]
+    return render_template('test.html', a=a)
 
 @app.route('/companies')
 def show_companies():
