@@ -11,7 +11,7 @@ config = {
     'host': 'localhost',
     'database_name': 'hr',
     'user': 'root',
-    'password': mysql_root_password
+    'password': 'rootpass' 
     }
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}', echo=True)
@@ -35,7 +35,7 @@ class Company(Base):
 # Employee model
 class Employee(Base):
     __tablename__ = 'Employee'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     rut = Column(String(20))  # Equivalent to 'rut'
     first_name = Column(String(50))
     last_name = Column(String(50))

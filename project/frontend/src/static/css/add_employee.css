@@ -20,7 +20,7 @@ h1 {
 }
 
 /* Estilos del formulario */
-form {
+.add_employee_form {
     background-color: #fff;
     padding: 20px;
     border-radius: 8px;
@@ -30,16 +30,18 @@ form {
     box-sizing: border-box;
 }
 
-label {
+.add_employee_form label {
     display: block;
     font-size: 16px;
     color: #333;
     margin-bottom: 8px;
 }
 
-input[type="text"],
-input[type="email"],
-select {
+.add_employee_form input[type="text"],
+.add_employee_form input[type="email"],
+.add_employee_form input[type="number"],
+.add_employee_form input[type="date"],
+.add_employee_form select {
     width: 100%;
     padding: 10px;
     margin-bottom: 15px;
@@ -49,7 +51,7 @@ select {
     font-size: 16px;
 }
 
-button[type="submit"] {
+.add_employee_form button[type="submit"] {
     width: 100%;
     padding: 12px;
     background-color: #4CAF50;
@@ -62,6 +64,6 @@ button[type="submit"] {
     transition: background-color 0.3s ease;
 }
 
-button[type="submit"]:hover {
+.add_employee_form button[type="submit"]:hover {
     background-color: #45a049;
 }
