@@ -15,13 +15,16 @@ app.secret_key = 'magickey'
 def homepage():
     job_position_id = request.args.get('job_position', type=int)
     department_id = request.args.get('department', type=int)
+    status = request.args.get('status', 1)  # Predeterminado 'active'
+
 
     # Get filtered employees
-    employees = get_filtered_employees(session, job_position_id, department_id)
+    employees = get_filtered_employees(session, job_position_id, department_id, status)
     
     # Fetch job positions and departments for dropdown lists
     job_positions = get_job_positions(session)
     departments = get_departments(session)
+    
 
     return render_template('index.html', employees=employees, job_positions=job_positions, departments=departments)
 
@@ -112,6 +115,29 @@ def user():
         contract=contract_data
     )
     
+@app.route('/add_employee', methods=['GET', 'POST'])
+def add_employee():
+    if request.method == 'POST':
+        # Recoge los datos del formulario
+        employee_data = {
+            'first_name': request.form['first_name'],
+            'last_name': request.form['last_name'],
+            'email': request.form['email'],
+            'phone': request.form['phone'],
+            'rut': request.form['rut'],
+            'position_id': request.form['position_id'],
+            'status': request.form['status']
+        }
+
+        # Llama a la función para agregar el empleado
+        result = add_employee(session, employee_data)
+        flash(result)
+        return redirect(url_for('homepage'))
+    
+    # Obtener los cargos para mostrar en el formulario
+    job_positions = get_job_positions(session)
+    return render_template('add_employee.html', job_positions=job_positions)
+
 @app.route("/edit_employee", methods=['GET', 'POST'])
 def edit_employee():
     employee_id = 1 # test value

@@ -47,7 +47,7 @@ body {
 }
 
 .filters select,
-.filters button {
+.filters button{
   width: 100%;
   padding: 10px;
   margin-top: 5px;
@@ -55,13 +55,15 @@ body {
   border: 1px solid #ccc;
 }
 
-.filters button {
+.filters button,
+.btn-add-employee {
   background-color: #4CAF50;
   color: white;
   cursor: pointer;
 }
 
-.filters button:hover {
+.filters button:hover,
+.btn-add-employee:hover {
   background-color: #45a049;
 }
 
@@ -92,4 +94,32 @@ body {
 
 .employee-table tr:hover {
   background-color: #f1f1f1;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 15px; /* Espacio debajo del contenedor */
+}
+
+.header-actions h2 {
+  margin: 0;
+  font-size: 24px;
+  color: #333;
+}
+
+.header-actions .btn-add-employee {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #4CAF50;
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  cursor: pointer;
+  border: none;
+}
+
+.header-actions .btn-add-employee:hover {
+  background-color: #45a049;
 }

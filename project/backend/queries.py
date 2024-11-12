@@ -15,7 +15,7 @@ config = {
     'host': 'localhost',
     'database_name': 'hr',
     'user': 'root',
-    'password': mysql_root_password 
+    'password': mysql_root_password
     }
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
@@ -64,7 +64,7 @@ def get_departments(session):
     """Get all departments."""
     return session.query(Department).all()
 
-def get_filtered_employees(session, job_position_id=None, department_id=None):
+def get_filtered_employees(session, job_position_id=None, department_id=None, status=None):
     """Get employees filtered by job position and/or department."""
     query = (
         session.query(Employee.id, Employee.rut, Employee.first_name, Employee.last_name, JobPosition.name.label('position_name'), Department.name.label('department_name'))
@@ -78,6 +78,9 @@ def get_filtered_employees(session, job_position_id=None, department_id=None):
         query = query.filter(JobPosition.id == job_position_id)
     if department_id:
         query = query.filter(Department.id == department_id)
+    if status:
+        query = query.filter(Employee.active_employee == status)
+
     
     return [
         {
@@ -209,6 +212,25 @@ def add_contract(session, contract_data):
     except SQLAlchemyError as e:
         session.rollback()
         return f"Error adding contract: {str(e)}"
+
+def add_employee(session, employee_data):
+    try:
+        new_employee = Employee(
+            first_name=employee_data['first_name'],
+            last_name=employee_data['last_name'],
+            email=employee_data['email'],
+            phone=employee_data['phone'],
+            rut=employee_data['rut'],
+            position_id=employee_data['position_id'],
+            status=employee_data['status']
+        )
+        session.add(new_employee)
+        session.commit()
+        return "Empleado agregado exitosamente"
+    except Exception as e:
+        session.rollback()
+        return f"Error al agregar el empleado: {e}"
+
     
 
 def deactivate_employee(session, employee_id):
@@ -307,6 +329,7 @@ def department_info(department_id):
     if department:
         return department.name, department.description
     return None
+
 
 def all_companies(session):
     """Retrieve all companies and their data."""
