@@ -103,6 +103,35 @@ def user():
         contract=contract_data
     )
 
+@app.route('/add_employee', methods=['GET', 'POST'])
+def add_employee():
+    if request.method == 'POST':
+        # Recoge los datos del formulario
+        employee_data = {
+            'rut': request.form['rut'],
+            'first_name': request.form['first_name'],
+            'last_name': request.form['last_name'],
+            'birth_date': request.form['birth_date'],
+            'start_date': request.form['start_date'],
+            'email': request.form['email'],
+            'phone': request.form['phone'],
+            'salary': request.form['salary'],
+            'nationality': request.form['nationality'],
+            'afp': request.form['afp_id'],
+            'healthplan': request.form['healthplan_id'],
+        }
+
+        # Llama a la función para agregar el empleado
+        result = add_employee_to_db(session, employee_data)
+        flash(result)
+        return redirect(url_for('homepage'))
+    
+    afps = all_afps(session)
+
+    healthplans = all_health_plans(session)
+    
+    return render_template('add_employee.html', afps=afps, healthplans=healthplans)
+
 
 @app.route('/companies')
 def show_companies():
