@@ -15,8 +15,7 @@ app.secret_key = 'magickey'
 def homepage():
     job_position_id = request.args.get('job_position', type=int)
     department_id = request.args.get('department', type=int)
-    status = request.args.get('status', 1)  # Predeterminado 'active'
-
+    status = request.args.get('status', 1) # Default status is 1 (active)
 
     # Get filtered employees
     employees = get_filtered_employees(session, job_position_id, department_id, status)
@@ -24,7 +23,6 @@ def homepage():
     # Fetch job positions and departments for dropdown lists
     job_positions = get_job_positions(session)
     departments = get_departments(session)
-    
 
     return render_template('index.html', employees=employees, job_positions=job_positions, departments=departments)
 
@@ -73,8 +71,8 @@ def user():
 
     # Datos del empleado
     first_name, last_name, email, phone, rut, position, status = gi
-    
-    # Cambiar el estado del empleado a texto
+
+    #Cambiar el estado del empleado a "Activo" o "Inactivo"
     if status == 0:
         status = "Inactive"
     elif status == 1:
@@ -114,26 +112,36 @@ def user():
         missing_info=missing_info,
         contract=contract_data
     )
-    
+
 @app.route('/add_employee', methods=['GET', 'POST'])
 def add_employee():
     if request.method == 'POST':
         # Recoge los datos del formulario
         employee_data = {
+            'rut': request.form['rut'],
             'first_name': request.form['first_name'],
             'last_name': request.form['last_name'],
+            'birth_date': request.form['birth_date'],
+            'start_date': request.form['start_date'],
             'email': request.form['email'],
             'phone': request.form['phone'],
-            'rut': request.form['rut'],
-            'position_id': request.form['position_id'],
-            'status': request.form['status']
+            'salary': request.form['salary'],
+            'nationality': request.form['nationality'],
+            'afp': request.form['afp_id'],
+            'healthplan': request.form['healthplan_id'],
         }
 
         # Llama a la función para agregar el empleado
-        result = add_employee(session, employee_data)
+        result = add_employee_to_db(session, employee_data)
         flash(result)
         return redirect(url_for('homepage'))
     
+    afps = all_afps(session)
+
+    healthplans = all_health_plans(session)
+    
+    return render_template('add_employee.html', afps=afps, healthplans=healthplans)
+
     # Obtener los cargos para mostrar en el formulario
     job_positions = get_job_positions(session)
     return render_template('add_employee.html', job_positions=job_positions)
@@ -185,7 +193,7 @@ def show_contracts():
 
 
 # Route for the option of adding a new "Contract"
-@app.route('/add_contract', methods=['GET', 'POST'])
+@app.route('/add-contract', methods=['GET', 'POST'])
 def add_contract_page():
     if request.method == 'POST':
         # Gather form data
@@ -227,15 +235,14 @@ def confirm_remove_contract(employee_id):
 
     return redirect(url_for('user', id=employee_id))
 
-
 @app.route('/remuneration')
 def remunerations_page():
     session = Session()
-    remunerations = all_remunerations(session)
+    remuneration = all_remunerations(session)
     session.close()
-    return render_template('remunerations.html', remunerations=remunerations)
+    return render_template('remunerations.html', remunerations=remuneration)
 
-@app.route('/add_remuneration', methods=['GET', 'POST'])
+@app.route('/add-remuneration', methods=['GET', 'POST'])
 def add_remuneration_page():
     if request.method == 'POST':
         remuneration_data = {
@@ -249,25 +256,23 @@ def add_remuneration_page():
             'welfare_contribution': request.form['welfare_contribution'],
             'net_amount': request.form['net_amount']
         }
-
         session = Session()
         result = add_remuneration(session, remuneration_data)
         flash(result)
 
         return redirect(url_for('add_remuneration.html'))
-
-    # Fetch AFP and HealthPlan data for autocomplete
+    
     session = Session()
     afps = session.query(AFP).all()
-    health_plans = session.query(HealthPlan).all()
-
-    return render_template('add_remuneration.html', afps=afps, health_plans=health_plans)
+    healthplans = session.query(HealthPlan).all()
+    
+    return render_template('add_remuneration.html', afps=afps, healthplans=healthplans)
 
 @app.route('/health_plans')
-def health_plans_page():
+def health_plans():
     session = Session()
 
-    # Get all health plans with their discounts
+    #get all health plans with their discounts
     health_plans = all_health_plans(session)
 
     # Return the template with the health plans data

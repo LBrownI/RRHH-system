@@ -15,7 +15,7 @@ config = {
     'host': 'localhost',
     'database_name': 'hr',
     'user': 'root',
-    'password': mysql_root_password
+    'password': 'rootpass'  
     }
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
@@ -106,9 +106,9 @@ def aditional_info(session, employee_id):
             HealthPlan.name.label('health_plan'),
             AFP.name.label('afp_name')
         ).select_from(Employee) \
-        .join(Remuneration, Employee.id == Remuneration.employee_id) \
-        .join(HealthPlan, Remuneration.health_plan_id == HealthPlan.id) \
-        .join(AFP, Remuneration.afp_id == AFP.id) \
+        .outerjoin(Remuneration, Employee.id == Remuneration.employee_id) \
+        .outerjoin(HealthPlan, Remuneration.health_plan_id == HealthPlan.id) \
+        .outerjoin(AFP, Remuneration.afp_id == AFP.id) \
         .filter(Employee.id == employee_id).first()  # Changed to first()
 
         if info:
@@ -136,8 +136,8 @@ def general_info(session, employee_id):
     """Get basic information about an employee."""
     try:
         info = session.query(Employee.first_name, Employee.last_name, Employee.email, Employee.phone, Employee.rut, JobPosition.name, Employee.active_employee) \
-            .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
-            .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
+            .outerjoin(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
+            .outerjoin(JobPosition, EmployeePosition.position_id == JobPosition.id) \
             .filter(Employee.id == employee_id).first()
         return info
     except Exception as e:
@@ -223,16 +223,20 @@ def add_contract(session, contract_data):
         session.rollback()
         return f"Error adding contract: {str(e)}"
 
-def add_employee(session, employee_data):
+def add_employee_to_db(session, employee_data):
     try:
         new_employee = Employee(
+            rut=employee_data['rut'],
             first_name=employee_data['first_name'],
             last_name=employee_data['last_name'],
+            birth_date=employee_data['birth_date'],
+            start_date=employee_data['start_date'],
             email=employee_data['email'],
             phone=employee_data['phone'],
-            rut=employee_data['rut'],
-            position_id=employee_data['position_id'],
-            status=employee_data['status']
+            salary=employee_data['salary'],
+            nationality=employee_data['nationality'],
+            afp_id=employee_data['afp'],
+            health_plan_id=employee_data['healthplan'],
         )
         session.add(new_employee)
         session.commit()
