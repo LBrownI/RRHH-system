@@ -140,14 +140,20 @@ def add_employee():
 
 @app.route("/edit_employee", methods=['GET', 'POST'])
 def edit_employee():
-    employee_id = 1 # test value
+    employee_id = request.args.get('id')
     gi = general_info(session, employee_id)
     labels = ['First Name', 'Last Name', 'Email', 'Phone', 'RUT', 'Position', 'Status']
-    data = {}
+    gi_data = {}
     for i in range(len(labels)):
-        data[labels[i]] = gi[i]
-    print("asdasdasd", data)
-    return render_template('edit_employee.html', gi=gi)
+        gi_data[labels[i]] = gi[i]
+    
+    # NOTE:
+    # It isn't necessary to make a dictionary with labels to aditional info because it is already 
+    # defined as a dict with labels, unlike general_info, which is only defined as an array
+    ad_info = aditional_info(session, employee_id)
+    for key, value in ad_info.items():
+        print(key, value)
+    return render_template('edit_employee.html', gi_data=gi_data, ad_info_data=ad_info)
 
 @app.route('/companies')
 def show_companies():

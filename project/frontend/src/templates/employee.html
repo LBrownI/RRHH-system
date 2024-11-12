@@ -30,7 +30,7 @@
         <p>Rut: {{ rut }}</p>
         <p>Position: {{ position }}</p>
       </div>
-        <a href="/edit_employee">
+        <a href="{{ url_for('edit_employee', id=employee_id) }}">
           <button class="edit-button">Edit</button>
         </a>
     </div>
