@@ -149,11 +149,6 @@ def edit_employee():
     print("asdasdasd", data)
     return render_template('edit_employee.html', gi=gi)
 
-@app.route("/test", methods=['GET', 'POST'])
-def test():
-    a = [1, 2, 3, 4, 5]
-    return render_template('test.html', a=a)
-
 @app.route('/companies')
 def show_companies():
     with Session() as session:
