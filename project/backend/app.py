@@ -141,6 +141,14 @@ def add_employee():
 @app.route("/edit_employee", methods=['GET', 'POST'])
 def edit_employee():
     employee_id = request.args.get('id')
+    
+    if request.method == 'POST':
+        print("oijasdojiasjiodjioasdjoiasjiodojiasdjoisajiodiojasdjioasdiojiojsadioasojdijiosajioasjdjiosadjiosadjiojiodsojiadsjoijadijiojio")
+        first_name = request.form['First Name']
+        last_name = request.form['Last Name']
+        # make query to update the values
+        return redirect(url_for('homepage'))
+    
     gi = general_info(session, employee_id)
     labels = ['First Name', 'Last Name', 'Email', 'Phone', 'RUT', 'Position', 'Status']
     gi_data = {}

@@ -144,6 +144,16 @@ def general_info(session, employee_id):
         print(f'Error in general_info: {e}')
     return None
 
+def update_employee(session, enployee_id):
+    try:
+        for i in range (2):
+            info = session.query(Employee)
+        
+    except Exception as e:
+        print(f'Error in general_info: {e}')
+    return None
+    
+
 def all_employees(session):
     """Retrieve all employees with their rut, first name, last name, position, and department"""
     try:
