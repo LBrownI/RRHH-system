@@ -59,13 +59,15 @@ def user():
         return render_template('employee.html', error_message="Employee not found")
 
     # Obtener el contrato actual
-    contract = session.query(Contract).filter_by(employee_id=employee_id).order_by(Contract.start_date.desc()).first()
+    contract = get_contract_info(session, employee_id)
+    
+    # Order the data to be passed to the template
     contract_data = {
         'contract_type': contract.contract_type,
         'start_date': contract.start_date,
         'end_date': contract.end_date,
         'classification': contract.classification,
-        'position': contract.position_id,
+        'position': contract.name, # it's actually not the name of the contract, but the name of the JobPosition
         'registration_date': contract.registration_date
     } if contract else None
 
@@ -126,7 +128,7 @@ def add_employee():
             'email': request.form['email'],
             'phone': request.form['phone'],
             'salary': request.form['salary'],
-            'nationality': request.form['nationality'],
+            'nationality': request.form['nationality'].capitalize(),
             'afp': request.form['afp_id'],
             'healthplan': request.form['healthplan_id'],
         }

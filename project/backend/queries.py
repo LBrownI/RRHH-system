@@ -144,6 +144,19 @@ def general_info(session, employee_id):
         print(f'Error in general_info: {e}')
     return None
 
+def get_contract_info(session, employee_id):
+    try:
+        contract = session.query(Contract.contract_type, Contract.start_date, 
+                             Contract.end_date, Contract.classification, 
+                             Contract.registration_date, JobPosition.name) \
+                            .join(JobPosition, JobPosition.id==Contract.position_id) \
+                            .filter(Contract.employee_id==employee_id) \
+                            .order_by(Contract.start_date.desc()).first()
+        return contract
+    except Exception as e:
+        print(f'Error in general_info: {e}')
+    return None
+
 def update_employee(session, enployee_id):
     try:
         for i in range (2):
