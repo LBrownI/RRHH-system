@@ -382,6 +382,5 @@ def get_employee_name(employee_rut):
     else:
         return "Does not exist", 404
 
-
 if __name__ == '__main__':
     app.run(debug=True)

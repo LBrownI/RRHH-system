@@ -11,17 +11,17 @@
   {% include 'topbar.html' %}
 </header>
 
-<body>
+<body class="{{ 'active' if status == 'Active' else 'inactive' }}">
   {% if error_message %}
-      <p>{{ error_message }}</p>
+      <p class="error-message">{{ error_message }}</p>
   {% else %}
     <div class="user-general-info-container">
       <div>
         <div class="photo">
           <img src="{{ url_for('static', filename='images/user.png') }}" alt="user-photo" />
-          <p>test</p>
+          <p>{{ first_name }} {{ last_name }}</p> <!-- Show employee name in the photo section -->
         </div>
-        <p>status: {{ status }}</p>
+        <p>Status: {{ status }}</p>
       </div>
       <div class="general-info">
         <p>Name: {{ first_name }} {{ last_name }}</p>
@@ -86,7 +86,7 @@
       <script src="{{ url_for('static', filename='javascript/add_button.js') }}"></script>
     </div>
 
-    <button class="remove-contract-btn" id="" onclick="openRemoveForm()">Deactivate Employee</button>
+    <button class="remove-contract-btn" onclick="openRemoveForm()">Deactivate Employee</button>
 
     <div class="form-popup" id="removeForm">
       <div class="form-container">
@@ -97,8 +97,6 @@
     
     <script src="{{ url_for('static', filename='javascript/remove_button.js') }}"></script>
     
-    
-    </div>
   {% endif %}
 </body>
 </html>

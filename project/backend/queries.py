@@ -148,7 +148,9 @@ def get_contract_info(session, employee_id):
         contract = session.query(Contract.contract_type, Contract.start_date, 
                              Contract.end_date, Contract.classification, 
                              Contract.registration_date, JobPosition.name) \
-                            .join(JobPosition, JobPosition.id==Contract.position_id) \
+                            .join(Employee, Contract.employee_id == Employee.id) \
+                            .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
+                            .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
                             .filter(Contract.employee_id==employee_id) \
                             .order_by(Contract.start_date.desc()).first()
         return contract
