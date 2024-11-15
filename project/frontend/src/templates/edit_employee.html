@@ -27,6 +27,7 @@
                 <input type="text" value="{{ value }}" placeholder="{{ key }}" class="employee-input" name="{{ key }}"/>
             {% endfor %}
         </div>
+        <input type="hidden" name="employee_id" value="{{ employee_id }}">
 
         <button type="submit" class="submit-button">Submit changes</button>
     </form>

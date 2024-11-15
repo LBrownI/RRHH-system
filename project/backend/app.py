@@ -154,10 +154,17 @@ def edit_employee():
     employee_id = request.args.get('id')
     
     if request.method == 'POST':
-        print("oijasdojiasjiodjioasdjoiasjiodojiasdjoisajiodiojasdjioasdiojiojsadioasojdijiosajioasjdjiosadjiosadjiojiodsojiadsjoijadijiojio")
-        first_name = request.form['First Name']
-        last_name = request.form['Last Name']
+        data = {
+            'employee_id': int(request.form['employee_id']),
+            'first_name': request.form['First Name'],
+            'last_name': request.form['Last Name'],
+            'email': request.form['Email'],
+            'phone': request.form['Phone'],
+            'rut': request.form['RUT'],
+        }
         # make query to update the values
+        print("this should be the employee id", data['employee_id'])
+        update_employee(session, data)
         return redirect(url_for('homepage'))
     
     gi = general_info(session, employee_id)
@@ -172,7 +179,7 @@ def edit_employee():
     ad_info = aditional_info(session, employee_id)
     for key, value in ad_info.items():
         print(key, value)
-    return render_template('edit_employee.html', gi_data=gi_data, ad_info_data=ad_info)
+    return render_template('edit_employee.html', gi_data=gi_data, ad_info_data=ad_info, employee_id=employee_id)
 
 @app.route('/companies')
 def show_companies():
