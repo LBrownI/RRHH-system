@@ -527,3 +527,56 @@ def all_health_plans(session):
     except Exception as e:
         print(f'Error in all_health_plans: {e}')
     return []
+
+def add_vacation_to_db(session, vacation_data):
+    """Adds a vacation for an employee to the database."""
+    try:
+        # Convert dates from string to date objects
+        start_date = datetime.strptime(vacation_data['start_date'], '%Y-%m-%d').date()
+        end_date = datetime.strptime(vacation_data['end_date'], '%Y-%m-%d').date()
+
+        # Validate that start_date is before end_date
+        if start_date > end_date:
+            return False, "Start date must be before the end date!"
+
+        # Fetch the employee
+        employee = session.query(Employee).filter_by(id=vacation_data['employee_id']).first()
+        if not employee:
+            return False, "Employee not found!"
+
+        # Check employee's years of service
+        today = datetime.now().date()
+        years_of_service = (today - employee.start_date).days // 365
+
+        # Automatically add vacation days based on years of service
+        if years_of_service >= 1:
+            if employee.long_service_employee:
+                employee.accumulated_days += 20
+            else:
+                employee.accumulated_days += 15
+            session.commit()
+
+        # Check if requested vacation exceeds accumulated days
+        requested_days = (end_date - start_date).days + 1
+        if requested_days > employee.accumulated_days:
+            return False, "Insufficient vacation days!"
+
+        # Update accumulated days
+        employee.accumulated_days -= requested_days
+
+        # Create a new Vacation entry
+        new_vacation = Vacation(
+            employee_id=vacation_data['employee_id'],
+            start_date=start_date,
+            end_date=end_date,
+            days_taken=requested_days,
+            accumulated_days=employee.accumulated_days,
+            long_service_employee=employee.long_service_employee
+        )
+        session.add(new_vacation)
+        session.commit()
+
+        return True, "Vacation added successfully!"
+    except Exception as e:
+        session.rollback()
+        return False, str(e)

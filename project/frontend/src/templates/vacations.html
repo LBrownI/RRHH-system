@@ -32,7 +32,7 @@
                         {% for vacation in vacations %}
                             <tr>
                                 <td class="border border-gray-300 px-4 py-2">{{ vacation.id }}</td>
-                                <td class="border border-gray-300 px-4 py-2">{{ vacation.name }}</td>
+                                <td class="border border-gray-300 px-4 py-2">{{ vacation.employee }}</td> 
                                 <td class="border border-gray-300 px-4 py-2">{{ vacation.start_date }}</td>
                                 <td class="border border-gray-300 px-4 py-2">{{ vacation.end_date }}</td>
                                 <td class="border border-gray-300 px-4 py-2">{{ vacation.days_taken }}</td>
@@ -40,7 +40,7 @@
                                 <td class="border border-gray-300 px-4 py-2">{{ 'Yes' if vacation.long_service_employee else 'No' }}</td>
                             </tr>
                         {% endfor %}
-                    </tbody>                
+                    </tbody>         
                 </table>
             </div>
         </div>

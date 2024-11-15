@@ -344,22 +344,26 @@ def show_vacations():
 
 
 # Route for adding vacation (no database interaction)
-@app.route('/add_vacation', methods=['POST'])
-def register_vacation():
-    
-    employee_id = request.form.get('employee_id')
-    start_date = request.form.get('start_date')
-    end_date = request.form.get('end_date')
+@app.route('/add_vacation', methods=['GET', 'POST'])
+def add_vacation():
+    if request.method == 'POST':
+        # Get form data
+        vacation_data = {
+            'employee_id': request.form['employee_id'],
+            'start_date': request.form['start_date'],
+            'end_date': request.form['end_date']
+        }
 
-    success = True
-    success, message = add_vacation_logic(int(employee_id), start_date, end_date)
-    
-    if success:
-        flash('Vacation registered successfully!', 'success')
-    else:
-        flash(f'Error: {message}', 'danger')
+        # Call the query function
+        success, message = add_vacation_to_db(session, vacation_data)
 
-    return render_template('add_vacation.html')  # Render the HTML form
+        # Provide feedback to the user
+        flash(message)
+        return redirect(url_for('homepage'))
+
+    # Fetch necessary data for the form
+    employees = session.query(Employee).all()
+    return render_template('add_vacation.html', employees=employees)
 
 
 @app.route('/get_employee_name/<string:employee_rut>', methods=['GET'])  # Cambiado a <string:employee_rut>
@@ -369,7 +373,6 @@ def get_employee_name(employee_rut):
         return employee_name  # Return the name as plain text
     else:
         return "Does not exist", 404
-
 
 
 if __name__ == '__main__':
