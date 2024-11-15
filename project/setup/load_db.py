@@ -78,7 +78,6 @@ class JobPosition(Base):
     description = Column(Text)
     department_id = Column(Integer, ForeignKey('Department.id'))  # Foreign key to Department
     departments = relationship('Department', back_populates='job_positions')  # Relationship to Department
-    contracts = relationship('Contract', back_populates='job_positions')
     employees = relationship('Employee', secondary='EmployeePosition', back_populates='job_positions')  # Relationship to Employee
 
 # EmployeePosition association table (Many-to-Many relationship between Employee and JobPosition)
@@ -185,10 +184,8 @@ class Contract(Base):
     start_date = Column(Date)
     end_date = Column(Date)
     classification = Column(String(50))  # Auxiliary, administrative, technical, professional, executive (escalafon)
-    position_id = Column(Integer, ForeignKey('JobPosition.id'))
     registration_date = Column(Date)
     employees = relationship('Employee', back_populates='contracts')  # Relationship to Employee
-    job_positions = relationship('JobPosition', back_populates='contracts')  # Relationship to JobPosition
 # Create the tables in the database
 Base.metadata.create_all(engine)
 
@@ -225,10 +222,10 @@ session.commit()
 
 # Insert data into HealthPlan, Fonasa, and Isapre tables
 health_plan_data = [
-    {'id': 1, 'name': 'Fonasa Plan A', 'type': 'Fonasa'},
-    {'id': 2, 'name': 'Fonasa Plan B', 'type': 'Fonasa'},
-    {'id': 3, 'name': 'Fonasa Plan C', 'type': 'Fonasa'},
-    {'id': 4, 'name': 'Fonasa Plan D', 'type': 'Fonasa'},
+    {'id': 1, 'name': 'Plan A', 'type': 'Fonasa'},
+    {'id': 2, 'name': 'Plan B', 'type': 'Fonasa'},
+    {'id': 3, 'name': 'Plan C', 'type': 'Fonasa'},
+    {'id': 4, 'name': 'Plan D', 'type': 'Fonasa'},
     {'id': 5, 'name': 'Banmédica S.A.', 'type': 'Isapre'},
     {'id': 6, 'name': 'Isalud Ltda.', 'type': 'Isapre'},
     {'id': 7, 'name': 'Colmena Golden Cross S.A.', 'type': 'Isapre'},
@@ -382,22 +379,22 @@ session.commit()
 
 # Insert data into Contract table
 contract_data = [
-    {'id': 1, 'employee_id': 1, 'contract_type': 'Permanent', 'start_date': date(2023, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'Professional', 'position_id': 1, 'registration_date': date(2020, 1, 15)},
-    {'id': 2, 'employee_id': 2, 'contract_type': 'Fixed', 'start_date': date(2019, 3, 10), 'end_date': date(2025, 3, 10), 'classification': 'Administrative', 'position_id': 2, 'registration_date': date(2019, 3, 10)},
-    {'id': 3, 'employee_id': 3, 'contract_type': 'Temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'Technical', 'position_id': 3, 'registration_date': date(2021, 6, 5)},
-    {'id': 4, 'employee_id': 4, 'contract_type': 'Substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'Auxiliary', 'position_id': 4, 'registration_date': date(2018, 9, 25)},
-    {'id': 5, 'employee_id': 5, 'contract_type': 'Permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2022, 2, 1), 'classification': 'Executive', 'position_id': 1, 'registration_date': date(2022, 2, 1)},
-    {'id': 6, 'employee_id': 6, 'contract_type': 'Fixed', 'start_date': date(2020, 8, 14), 'end_date': date(2025, 8, 14), 'classification': 'Professional', 'position_id': 4, 'registration_date': date(2020, 8, 14)},
-    {'id': 7, 'employee_id': 7, 'contract_type': 'Temporary', 'start_date': date(2017, 10, 12), 'end_date': date(2020, 10, 12), 'classification': 'Technical', 'position_id': 3, 'registration_date': date(2017, 10, 12)},
-    {'id': 8, 'employee_id': 8, 'contract_type': 'Permanent', 'start_date': date(2021, 4, 8), 'end_date': date(2021, 4, 8), 'classification': 'Administrative', 'position_id': 5, 'registration_date': date(2021, 4, 8)},
-    {'id': 9, 'employee_id': 9, 'contract_type': 'Substitute', 'start_date': date(2020, 3, 14), 'end_date': date(2022, 3, 14), 'classification': 'Executive', 'position_id': 5, 'registration_date': date(2020, 3, 14)},
-    {'id': 10, 'employee_id': 10, 'contract_type': 'Fixed', 'start_date': date(2016, 7, 3), 'end_date': date(2019, 7, 3), 'classification': 'Professional', 'position_id': 3, 'registration_date': date(2016, 7, 3)},
-    {'id': 11, 'employee_id': 11, 'contract_type': 'Permanent', 'start_date': date(2021, 7, 12), 'end_date': date(2021, 7, 12), 'classification': 'Auxiliary', 'position_id': 1, 'registration_date': date(2021, 7, 12)},
-    {'id': 12, 'employee_id': 12, 'contract_type': 'Fixed', 'start_date': date(2021, 1, 20), 'end_date': date(2025, 1, 20), 'classification': 'Technical', 'position_id': 2, 'registration_date': date(2021, 1, 20)},
-    {'id': 13, 'employee_id': 13, 'contract_type': 'Temporary', 'start_date': date(2021, 11, 15), 'end_date': date(2022, 11, 15), 'classification': 'Administrative', 'position_id': 4, 'registration_date': date(2021, 11, 15)},
-    {'id': 14, 'employee_id': 14, 'contract_type': 'Substitute', 'start_date': date(2022, 5, 1), 'end_date': date(2024, 5, 1), 'classification': 'Executive', 'position_id': 5, 'registration_date': date(2022, 5, 1)},
-    {'id': 15, 'employee_id': 15, 'contract_type': 'Permanent', 'start_date': date(2022, 6, 25), 'end_date': date(2022, 6, 25), 'classification': 'Professional', 'position_id': 3, 'registration_date': date(2022, 6, 25)},
-    {'id': 16, 'employee_id': 16, 'contract_type': 'Fixed', 'start_date': date(2023, 3, 5), 'end_date': date(2026, 3, 5), 'classification': 'Technical', 'position_id': 2, 'registration_date': date(2023, 3, 5)}
+    {'id': 1, 'employee_id': 1, 'contract_type': 'Permanent', 'start_date': date(2023, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'Professional', 'registration_date': date(2020, 1, 15)},
+    {'id': 2, 'employee_id': 2, 'contract_type': 'Fixed', 'start_date': date(2019, 3, 10), 'end_date': date(2025, 3, 10), 'classification': 'Administrative', 'registration_date': date(2019, 3, 10)},
+    {'id': 3, 'employee_id': 3, 'contract_type': 'Temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'Technical', 'registration_date': date(2021, 6, 5)},
+    {'id': 4, 'employee_id': 4, 'contract_type': 'Substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'Auxiliary', 'registration_date': date(2018, 9, 25)},
+    {'id': 5, 'employee_id': 5, 'contract_type': 'Permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2022, 2, 1), 'classification': 'Executive', 'registration_date': date(2022, 2, 1)},
+    {'id': 6, 'employee_id': 6, 'contract_type': 'Fixed', 'start_date': date(2020, 8, 14), 'end_date': date(2025, 8, 14), 'classification': 'Professional', 'registration_date': date(2020, 8, 14)},
+    {'id': 7, 'employee_id': 7, 'contract_type': 'Temporary', 'start_date': date(2017, 10, 12), 'end_date': date(2020, 10, 12), 'classification': 'Technical', 'registration_date': date(2017, 10, 12)},
+    {'id': 8, 'employee_id': 8, 'contract_type': 'Permanent', 'start_date': date(2021, 4, 8), 'end_date': date(2021, 4, 8), 'classification': 'Administrative', 'registration_date': date(2021, 4, 8)},
+    {'id': 9, 'employee_id': 9, 'contract_type': 'Substitute', 'start_date': date(2020, 3, 14), 'end_date': date(2022, 3, 14), 'classification': 'Executive', 'registration_date': date(2020, 3, 14)},
+    {'id': 10, 'employee_id': 10, 'contract_type': 'Fixed', 'start_date': date(2016, 7, 3), 'end_date': date(2019, 7, 3), 'classification': 'Professional', 'registration_date': date(2016, 7, 3)},
+    {'id': 11, 'employee_id': 11, 'contract_type': 'Permanent', 'start_date': date(2021, 7, 12), 'end_date': date(2021, 7, 12), 'classification': 'Auxiliary', 'registration_date': date(2021, 7, 12)},
+    {'id': 12, 'employee_id': 12, 'contract_type': 'Fixed', 'start_date': date(2021, 1, 20), 'end_date': date(2025, 1, 20), 'classification': 'Technical', 'registration_date': date(2021, 1, 20)},
+    {'id': 13, 'employee_id': 13, 'contract_type': 'Temporary', 'start_date': date(2021, 11, 15), 'end_date': date(2022, 11, 15), 'classification': 'Administrative', 'registration_date': date(2021, 11, 15)},
+    {'id': 14, 'employee_id': 14, 'contract_type': 'Substitute', 'start_date': date(2022, 5, 1), 'end_date': date(2024, 5, 1), 'classification': 'Executive', 'registration_date': date(2022, 5, 1)},
+    {'id': 15, 'employee_id': 15, 'contract_type': 'Permanent', 'start_date': date(2022, 6, 25), 'end_date': date(2022, 6, 25), 'classification': 'Professional', 'registration_date': date(2022, 6, 25)},
+    {'id': 16, 'employee_id': 16, 'contract_type': 'Fixed', 'start_date': date(2023, 3, 5), 'end_date': date(2026, 3, 5), 'classification': 'Technical', 'registration_date': date(2023, 3, 5)}
 ]
 
 for data in contract_data:

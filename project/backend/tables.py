@@ -73,7 +73,6 @@ class JobPosition(Base):
     description = Column(Text)
     department_id = Column(Integer, ForeignKey('Department.id'))  # Foreign key to Department
     departments = relationship('Department', back_populates='job_positions')  # Relationship to Department
-    contracts = relationship('Contract', back_populates='job_positions')
     employees = relationship('Employee', secondary='EmployeePosition', back_populates='job_positions')  # Relationship to Employee
 
 # EmployeePosition association table (Many-to-Many relationship between Employee and JobPosition)
@@ -180,9 +179,7 @@ class Contract(Base):
     start_date = Column(Date)
     end_date = Column(Date)
     classification = Column(String(50))  # Auxiliary, administrative, technical, professional, executive (escalafon)
-    position_id = Column(Integer, ForeignKey('JobPosition.id'))
     registration_date = Column(Date)
     employees = relationship('Employee', back_populates='contracts')  # Relationship to Employee
-    job_positions = relationship('JobPosition', back_populates='contracts')  # Relationship to JobPosition
 
 Base.metadata.create_all(engine)
