@@ -1,6 +1,6 @@
 import os
 from decimal import Decimal
-from sqlalchemy import create_engine, text, func
+from sqlalchemy import create_engine, text, func, update
 from sqlalchemy.orm import declarative_base, sessionmaker
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import date, datetime
@@ -69,13 +69,27 @@ def add_remuneration(session, remuneration_data):
         session.rollback()
         return f"Error adding remuneration: {str(e)}"
     
-def update_employee(session, employee_id):
+def update_employee(session, data):
     try:
-        for i in range (2):
-            info = session.query(Employee)
+        # Check if the employee exists
+        employee = session.query(Employee).filter(Employee.id == data['employee_id']).first()
         
+        if employee:
+            # Update the first name
+            employee.first_name = data['first_name']
+            employee.last_name = data['last_name']
+            employee.email = data['email']
+            employee.phone = data['phone']
+            employee.rut = data['rut']
+            session.commit()
+            print(f"Employee {data['employee_id']}'s first name updated to '{data['first_name']}'.")
+        else:
+            print(f"No employee found with ID {data['employee_id']}")
     except Exception as e:
-        print(f'Error in general_info: {e}')
+        session.rollback()  # Roll back the session in case of error
+        print(f'Error updating employee: {e}')
+    finally:
+        session.close()
     return None
 
 
