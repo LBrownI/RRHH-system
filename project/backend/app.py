@@ -219,14 +219,14 @@ def add_contract_page():
 
 
 @app.route('/disable_employee/<int:employee_id>')
-def remove_contract(employee_id):
+def disable_employee(employee_id):
     # Lógica para cargar la información del contrato que se desea eliminar
     employee = Employee.query.get(employee_id)
     return render_template('disable_employee.html', employee=employee)
 
 
 @app.route('/confirm_disable_employee/<int:employee_id>', methods=['POST'])
-def confirm_remove_contract(employee_id):
+def confirm_disable_employee(employee_id):
     # Obtener el contrato usando la función de consulta personalizada
     contract_deactivated = deactivate_employee(session, employee_id)
 
