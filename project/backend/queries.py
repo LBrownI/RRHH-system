@@ -283,16 +283,17 @@ def all_contracts(session):
     """Retrieve all contracts and their employee data."""
     try:
         contracts = session.query(Contract, Employee, JobPosition).join(Employee, Contract.employee_id == Employee.id).join(JobPosition, Contract.position_id == JobPosition.id).all()
+        
         return [
             {
                 'id': contract.id,
                 'employee': f"{employee.first_name} {employee.last_name}",
                 'contract_type': contract.contract_type,
-                'start_date': contract.start_date,
-                'end_date': contract.end_date,
+                'start_date': contract.start_date.strftime('%Y-%m-%d') if contract.start_date else '',
+                'end_date': contract.end_date.strftime('%Y-%m-%d') if contract.end_date else '',
                 'classification': contract.classification,
                 'position': position.name,
-                'registration_date': contract.registration_date,
+                'registration_date': contract.registration_date.strftime('%Y-%m-%d') if contract.registration_date else '',
             }
             for contract, employee, position in contracts
         ]

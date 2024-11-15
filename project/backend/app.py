@@ -189,10 +189,10 @@ def show_afps():
 
 # WORKS, BUT DOES NOT LOOK/FEEL OK 
 @app.route('/contracts')
-def show_contracts():
-    with Session() as session:
-        contracts = all_contracts(session)
-    return render_template('contracts.html', contracts=contracts)
+def contracts():
+    contracts_data = all_contracts(session)
+    return render_template('contracts.html', contracts=contracts_data)
+
 
 
 # Route for the option of adding a new "Contract"
