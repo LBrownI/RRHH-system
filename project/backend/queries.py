@@ -88,8 +88,8 @@ def get_filtered_employees(session, job_position_id=None, department_id=None, st
             "rut": emp.rut,
             "first_name": emp.first_name,
             "last_name": emp.last_name,
-            "position": emp.position_name or "Sin posición",
-            "department": emp.department_name or "Sin departamento",
+            "position": emp.position_name or "No Position",
+            "department": emp.department_name or "No Department",
         }
         for emp in query.all()
     ]
@@ -182,8 +182,8 @@ def all_employees(session):
                 "rut": row.rut,
                 "first_name": row.first_name,
                 "last_name": row.last_name,
-                "position": row.position_name or "Sin posición",
-                "department": row.department_name or "Sin departamento",
+                "position": row.position_name or "No Position",
+                "department": row.department_name or "No Department",
             }
             for row in query.all()
         ]
