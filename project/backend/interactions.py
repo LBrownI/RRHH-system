@@ -25,6 +25,68 @@ Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
 
+# EMPLOYEE Interactions
+def add_employee_to_db(session, employee_data):
+    try:
+        new_employee = Employee(
+            rut=employee_data['rut'],
+            first_name=employee_data['first_name'],
+            last_name=employee_data['last_name'],
+            birth_date=employee_data['birth_date'],
+            start_date=employee_data['start_date'],
+            email=employee_data['email'],
+            phone=employee_data['phone'],
+            salary=employee_data['salary'],
+            nationality=employee_data['nationality'],
+            afp_id=employee_data['afp'],
+            health_plan_id=employee_data['healthplan'],
+        )
+        session.add(new_employee)
+        session.commit()
+        return "Empleado agregado exitosamente"
+    except Exception as e:
+        session.rollback()
+        return f"Error al agregar el empleado: {e}"
+
+def deactivate_employee(session, employee_id):
+    """Deactivate an employee by setting active_employee to False."""
+    try:
+        employee = session.query(Employee).filter_by(id=employee_id).first()
+        if employee:
+            employee.active_employee = False
+            session.commit()
+            return "Employee deactivated successfully."
+        return f"Employee with ID {employee_id} not found."
+    except SQLAlchemyError as e:
+        session.rollback()
+        return f"Error deactivating employee: {str(e)}"
+
+def update_employee(session, data):
+    try:
+        # Check if the employee exists
+        employee = session.query(Employee).filter(Employee.id == data['employee_id']).first()
+        
+        if employee:
+            # Update the first name
+            employee.first_name = data['first_name']
+            employee.last_name = data['last_name']
+            employee.email = data['email']
+            employee.phone = data['phone']
+            employee.rut = data['rut']
+            session.commit()
+            print(f"Employee {data['employee_id']}'s first name updated to '{data['first_name']}'.")
+        else:
+            print(f"No employee found with ID {data['employee_id']}")
+    except Exception as e:
+        session.rollback()  # Roll back the session in case of error
+        print(f'Error updating employee: {e}')
+    finally:
+        session.close()
+    return None
+
+
+
+
 
 def add_remuneration(session, remuneration_data):
     """Add a remuneration for an employee."""
@@ -68,29 +130,6 @@ def add_remuneration(session, remuneration_data):
     except SQLAlchemyError as e:
         session.rollback()
         return f"Error adding remuneration: {str(e)}"
-    
-def update_employee(session, data):
-    try:
-        # Check if the employee exists
-        employee = session.query(Employee).filter(Employee.id == data['employee_id']).first()
-        
-        if employee:
-            # Update the first name
-            employee.first_name = data['first_name']
-            employee.last_name = data['last_name']
-            employee.email = data['email']
-            employee.phone = data['phone']
-            employee.rut = data['rut']
-            session.commit()
-            print(f"Employee {data['employee_id']}'s first name updated to '{data['first_name']}'.")
-        else:
-            print(f"No employee found with ID {data['employee_id']}")
-    except Exception as e:
-        session.rollback()  # Roll back the session in case of error
-        print(f'Error updating employee: {e}')
-    finally:
-        session.close()
-    return None
 
 
 def add_contract(session, contract_data):
@@ -124,77 +163,6 @@ def add_contract(session, contract_data):
     except SQLAlchemyError as e:
         session.rollback()
         return f"Error adding contract: {str(e)}"
-
-def add_employee_to_db(session, employee_data):
-    try:
-        new_employee = Employee(
-            rut=employee_data['rut'],
-            first_name=employee_data['first_name'],
-            last_name=employee_data['last_name'],
-            birth_date=employee_data['birth_date'],
-            start_date=employee_data['start_date'],
-            email=employee_data['email'],
-            phone=employee_data['phone'],
-            salary=employee_data['salary'],
-            nationality=employee_data['nationality'],
-            afp_id=employee_data['afp'],
-            health_plan_id=employee_data['healthplan'],
-        )
-        session.add(new_employee)
-        session.commit()
-        return "Empleado agregado exitosamente"
-    except Exception as e:
-        session.rollback()
-        return f"Error al agregar el empleado: {e}"
-
-    
-
-def deactivate_employee(session, employee_id):
-    """Deactivate an employee by setting active_employee to False."""
-    try:
-        employee = session.query(Employee).filter_by(id=employee_id).first()
-        if employee:
-            employee.active_employee = False
-            session.commit()
-            return "Employee deactivated successfully."
-        return f"Employee with ID {employee_id} not found."
-    except SQLAlchemyError as e:
-        session.rollback()
-        return f"Error deactivating employee: {str(e)}"
-
-
-def add_training(session, training_data):
-    """Add a training record."""
-    try:
-        session.add(Training(**training_data))
-        session.commit()
-        return "Training added successfully."
-    except SQLAlchemyError as e:
-        session.rollback()  # Rollback the transaction on error
-        return f"Error adding training: {str(e)}"
-
-def add_evaluation(session, evaluation_data):
-    """Add an evaluation for an employee."""
-    try:
-        # Get the evaluation factor (numeric grade)
-        evaluation_factor = float(evaluation_data.get('evaluation_factor', 0))
-
-        # Add the rating to the evaluation data
-        rating = (
-             # Determine rating based on the evaluation factor ranges
-            "Excellent" if evaluation_factor == 7 else
-            "Very Good" if 6.5 <= evaluation_factor < 7 else
-            "Good" if 6 <= evaluation_factor < 6.4 else
-            "Satisfactory" if 5 <= evaluation_factor < 6 else
-            "Fair" if 4 >= evaluation_factor > 5 else "Deficient"
-        )
-        evaluation_data['rating'] = rating
-        session.add(Evaluation(**evaluation_data))
-        session.commit()
-        return "Evaluation added successfully."
-    except SQLAlchemyError as e:
-        session.rollback()
-        return f"Error adding evaluation: {str(e)}"
 
 def add_vacation_to_db(session, vacation_data):
     """Adds a vacation for an employee to the database."""
@@ -248,3 +216,38 @@ def add_vacation_to_db(session, vacation_data):
     except Exception as e:
         session.rollback()
         return False, str(e)
+
+def add_training(session, training_data):
+    """Add a training record."""
+    try:
+        session.add(Training(**training_data))
+        session.commit()
+        return "Training added successfully."
+    except SQLAlchemyError as e:
+        session.rollback()  # Rollback the transaction on error
+        return f"Error adding training: {str(e)}"
+
+def add_evaluation(session, evaluation_data):
+    """Add an evaluation for an employee."""
+    try:
+        # Get the evaluation factor (numeric grade)
+        evaluation_factor = float(evaluation_data.get('evaluation_factor', 0))
+
+        # Add the rating to the evaluation data
+        rating = (
+             # Determine rating based on the evaluation factor ranges
+            "Excellent" if evaluation_factor == 7 else
+            "Very Good" if 6.5 <= evaluation_factor < 7 else
+            "Good" if 6 <= evaluation_factor < 6.4 else
+            "Satisfactory" if 5 <= evaluation_factor < 6 else
+            "Fair" if 4 >= evaluation_factor > 5 else "Deficient"
+        )
+        evaluation_data['rating'] = rating
+        session.add(Evaluation(**evaluation_data))
+        session.commit()
+        return "Evaluation added successfully."
+    except SQLAlchemyError as e:
+        session.rollback()
+        return f"Error adding evaluation: {str(e)}"
+
+

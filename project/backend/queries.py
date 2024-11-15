@@ -25,17 +25,66 @@ Base = declarative_base()
 Session = sessionmaker(bind=engine)
 session = Session()
 
-def get_contract_by_employee_id(session, employee_id):
-    """Get the contract associated with a specific employee."""
+# MENU Queries ------------------------------------------------------------------------------------------------|
+def all_afps(session):
+    """Retrieve all afps and their data."""
     try:
-        contract = session.query(Contract).filter_by(employee_id=employee_id).first()
-        return contract
-    except SQLAlchemyError as e:
-        print(f'Error retrieving contract for employee {employee_id}: {e}')
-        return None
+        afps = session.query(AFP).all()
+        return [
+            {
+                'id': afp.id,
+                'name': afp.name,
+                'commission_percentage': afp.commission_percentage,
+            }
+            for afp in afps
+        ]
+    except Exception as e:
+        print(f'Error in all_companies: {e}')
+    return []
+
+def all_health_plans(session):
+    """Retrieve all health plans with their respective discounts."""
+    try:
+        # Query HealthPlan, Fonasa, and Isapre
+        health_plans = session.query(HealthPlan, Fonasa, Isapre). \
+            outerjoin(Fonasa, HealthPlan.id == Fonasa.health_plan_id). \
+            outerjoin(Isapre, HealthPlan.id == Isapre.health_plan_id). \
+            all()
+
+        return [
+            {
+                'health_plan_id': health_plan.id,
+                'name': health_plan.name,
+                'type': health_plan.type,
+                'fonasa_discount': fonasa.discount if fonasa else None,
+                'isapre_discount': isapre.discount if isapre else None,
+            }
+            for health_plan, fonasa, isapre in health_plans
+        ]
+    except Exception as e:
+        print(f'Error in all_health_plans: {e}')
+    return []
+
+def all_companies(session):
+    """Retrieve all companies and their data."""
+    try:
+        companies = session.query(Company).all()
+        return [
+            {
+                'rut': company.rut,
+                'name': company.name,
+                'address': company.address,
+                'phone': company.phone,
+                'industry': company.industry
+            }
+            for company in companies
+        ]
+    except Exception as e:
+        print(f'Error in all_companies: {e}')
+    return []
 
 
-
+# EMPLOYEE Queries ------------------------------------------------------------------------------------------------|
 def search_employee_by_name_or_rut(search_query, session):
     """Search an employee by name or RUT with flexible matching."""
     search_terms = search_query.split()
@@ -54,44 +103,6 @@ def search_employee_by_name_or_rut(search_query, session):
     else:
         result = None
     return result
-
-def get_job_positions(session):
-    """Get all job positions."""
-    return session.query(JobPosition).all()
-
-def get_departments(session):
-    """Get all departments."""
-    return session.query(Department).all()
-
-def get_filtered_employees(session, job_position_id=None, department_id=None, status=None):
-    """Get employees filtered by job position and/or department."""
-    query = (
-        session.query(Employee.id, Employee.rut, Employee.first_name, Employee.last_name, JobPosition.name.label('position_name'), Department.name.label('department_name'))
-        .outerjoin(EmployeePosition, Employee.id == EmployeePosition.employee_id)
-        .outerjoin(JobPosition, EmployeePosition.position_id == JobPosition.id)
-        .outerjoin(Department, JobPosition.department_id == Department.id)
-    )
-
-    # Apply filters if provided
-    if job_position_id:
-        query = query.filter(JobPosition.id == job_position_id)
-    if department_id:
-        query = query.filter(Department.id == department_id)
-    if status:
-        query = query.filter(Employee.active_employee == status)
-
-    
-    return [
-        {
-            "id": emp.id,
-            "rut": emp.rut,
-            "first_name": emp.first_name,
-            "last_name": emp.last_name,
-            "position": emp.position_name or "No Position",
-            "department": emp.department_name or "No Department",
-        }
-        for emp in query.all()
-    ]
 
 def aditional_info(session, employee_id):
     """Get additional information about an employee including net amount, health plan, nationality, birth date, start date, salary, and AFP."""
@@ -143,21 +154,56 @@ def general_info(session, employee_id):
         print(f'Error in general_info: {e}')
     return None
 
-def get_contract_info(session, employee_id):
-    try:
-        contract = session.query(Contract.contract_type, Contract.start_date, 
-                             Contract.end_date, Contract.classification, 
-                             Contract.registration_date, JobPosition.name) \
-                            .join(Employee, Contract.employee_id == Employee.id) \
-                            .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
-                            .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
-                            .filter(Contract.employee_id==employee_id) \
-                            .order_by(Contract.start_date.desc()).first()
-        return contract
-    except Exception as e:
-        print(f'Error in general_info: {e}')
-    return None
+def get_filtered_employees(session, job_position_id=None, department_id=None, status=None):
+    """Get employees filtered by job position and/or department."""
+    query = (
+        session.query(Employee.id, Employee.rut, Employee.first_name, Employee.last_name, JobPosition.name.label('position_name'), Department.name.label('department_name'))
+        .outerjoin(EmployeePosition, Employee.id == EmployeePosition.employee_id)
+        .outerjoin(JobPosition, EmployeePosition.position_id == JobPosition.id)
+        .outerjoin(Department, JobPosition.department_id == Department.id)
+    )
 
+    # Apply filters if provided
+    if job_position_id:
+        query = query.filter(JobPosition.id == job_position_id)
+    if department_id:
+        query = query.filter(Department.id == department_id)
+    if status:
+        query = query.filter(Employee.active_employee == status)
+
+    
+    return [
+        {
+            "id": emp.id,
+            "rut": emp.rut,
+            "first_name": emp.first_name,
+            "last_name": emp.last_name,
+            "position": emp.position_name or "No Position",
+            "department": emp.department_name or "No Department",
+        }
+        for emp in query.all()
+    ]
+
+def get_employees_by_department(department_id):
+    """
+    Fetches all employees who are in positions within a given department.
+    """
+    # Query the employees through the JobPosition and Department relationship
+    employees = session.query(Employee).join(EmployeePosition).join(JobPosition).filter(JobPosition.department_id == department_id).all()
+
+    return employees
+
+def get_employee_name_by_rut(employee_rut):
+    """Fetch employee name by RUT"""
+    session = Session()
+    try:
+        employee = session.query(Employee).filter_by(rut=employee_rut).first()  # Buscar por RUT
+        if employee:
+            return employee.first_name + ' ' + employee.last_name
+        else:
+            return None
+    finally:
+        session.close()
 
 def all_employees(session):
     """Retrieve all employees with their rut, first name, last name, position, and department"""
@@ -183,17 +229,25 @@ def all_employees(session):
         print(f'Error in all_employees: {e}')
     return []
 
-def get_employee_name_by_rut(employee_rut):
-    """Fetch employee name by RUT"""
-    session = Session()
-    try:
-        employee = session.query(Employee).filter_by(rut=employee_rut).first()  # Buscar por RUT
-        if employee:
-            return employee.first_name + ' ' + employee.last_name
-        else:
-            return None
-    finally:
-        session.close()
+
+#OTHER Queries ------------------------------------------------------------------------------------------------|
+def get_job_positions(session):
+    """Get all job positions."""
+    return session.query(JobPosition).all()
+
+def get_departments(session):
+    """Get all departments."""
+    return session.query(Department).all()
+
+def department_info(department_id):
+    """
+    Fetches department name and description by department ID.
+    """
+    department = session.query(Department).filter(Department.id == department_id).first()
+
+    if department:
+        return department.name, department.description
+    return None
 
 
 def get_all_evaluations(session):
@@ -225,87 +279,6 @@ def get_all_trainings(session):
         }
         for train, employee in trainings
     ]
-
-def get_employees_by_department(department_id):
-    """
-    Fetches all employees who are in positions within a given department.
-    """
-    # Query the employees through the JobPosition and Department relationship
-    employees = session.query(Employee).join(EmployeePosition).join(JobPosition).filter(JobPosition.department_id == department_id).all()
-
-    return employees
-
-def department_info(department_id):
-    """
-    Fetches department name and description by department ID.
-    """
-    # Query for the department name and description
-    department = session.query(Department).filter(Department.id == department_id).first()
-
-    if department:
-        return department.name, department.description
-    return None
-
-
-def all_companies(session):
-    """Retrieve all companies and their data."""
-    try:
-        companies = session.query(Company).all()
-        return [
-            {
-                'rut': company.rut,
-                'name': company.name,
-                'address': company.address,
-                'phone': company.phone,
-                'industry': company.industry
-            }
-            for company in companies
-        ]
-    except Exception as e:
-        print(f'Error in all_companies: {e}')
-    return []
-
-def all_afps(session):
-    """Retrieve all afps and their data."""
-    try:
-        afps = session.query(AFP).all()
-        return [
-            {
-                'id': afp.id,
-                'name': afp.name,
-                'commission_percentage': afp.commission_percentage,
-            }
-            for afp in afps
-        ]
-    except Exception as e:
-        print(f'Error in all_companies: {e}')
-    return []
-
-def all_contracts(session):
-    """Retrieve all contracts and their employee data."""
-    try:
-        contracts = session.query(Contract, Employee, JobPosition) \
-            .join(Employee, Contract.employee_id == Employee.id) \
-            .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
-            .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
-            .all()
-        
-        return [
-            {
-                'id': contract.id,
-                'employee': f"{employee.first_name} {employee.last_name}",
-                'contract_type': contract.contract_type,
-                'start_date': contract.start_date,
-                'end_date': contract.end_date,
-                'classification': contract.classification,
-                'position': position.name,
-                'registration_date': contract.registration_date,
-            }
-            for contract, employee, position in contracts
-        ]
-    except Exception as e:
-        print(f'Error in all_contracts: {e}')
-    return []
 
 def all_vacations(session):
     """Retrieve all vacations and their employee data."""
@@ -357,26 +330,53 @@ def all_remunerations(session):
     return []
 
 
-def all_health_plans(session):
-    """Retrieve all health plans with their respective discounts."""
+# CONTRACT Queries
+def get_contract_by_employee_id(session, employee_id):
+    """Get the contract associated with a specific employee."""
     try:
-        # Query HealthPlan, Fonasa, and Isapre
-        health_plans = session.query(HealthPlan, Fonasa, Isapre). \
-            outerjoin(Fonasa, HealthPlan.id == Fonasa.health_plan_id). \
-            outerjoin(Isapre, HealthPlan.id == Isapre.health_plan_id). \
-            all()
+        contract = session.query(Contract).filter_by(employee_id=employee_id).first()
+        return contract
+    except SQLAlchemyError as e:
+        print(f'Error retrieving contract for employee {employee_id}: {e}')
+        return None
 
+def all_contracts(session):
+    """Retrieve all contracts and their employee data."""
+    try:
+        contracts = session.query(Contract, Employee, JobPosition) \
+            .join(Employee, Contract.employee_id == Employee.id) \
+            .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
+            .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
+            .all()
+        
         return [
             {
-                'health_plan_id': health_plan.id,
-                'name': health_plan.name,
-                'type': health_plan.type,
-                'fonasa_discount': fonasa.discount if fonasa else None,
-                'isapre_discount': isapre.discount if isapre else None,
+                'id': contract.id,
+                'employee': f"{employee.first_name} {employee.last_name}",
+                'contract_type': contract.contract_type,
+                'start_date': contract.start_date,
+                'end_date': contract.end_date,
+                'classification': contract.classification,
+                'position': position.name,
+                'registration_date': contract.registration_date,
             }
-            for health_plan, fonasa, isapre in health_plans
+            for contract, employee, position in contracts
         ]
     except Exception as e:
-        print(f'Error in all_health_plans: {e}')
+        print(f'Error in all_contracts: {e}')
     return []
 
+def get_contract_info(session, employee_id):
+    try:
+        contract = session.query(Contract.contract_type, Contract.start_date, 
+                             Contract.end_date, Contract.classification, 
+                             Contract.registration_date, JobPosition.name) \
+                            .join(Employee, Contract.employee_id == Employee.id) \
+                            .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
+                            .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
+                            .filter(Contract.employee_id==employee_id) \
+                            .order_by(Contract.start_date.desc()).first()
+        return contract
+    except Exception as e:
+        print(f'Error in general_info: {e}')
+    return None

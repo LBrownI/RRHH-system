@@ -181,50 +181,6 @@ def edit_employee():
         print(key, value)
     return render_template('edit_employee.html', gi_data=gi_data, ad_info_data=ad_info, employee_id=employee_id)
 
-@app.route('/companies')
-def show_companies():
-    with Session() as session:
-        companies = all_companies(session)
-    return render_template('companies.html', companies=companies)
-
-
-@app.route('/afps')
-def show_afps():
-    with Session() as session:
-        afps = all_afps(session)
-    return render_template('afps.html', afps=afps)
-
-# WORKS, BUT DOES NOT LOOK/FEEL OK 
-@app.route('/contracts')
-def show_contracts():
-    with Session() as session:
-        contracts = all_contracts(session)
-    return render_template('contracts.html', contracts=contracts)
-
-
-# Route for the option of adding a new "Contract"
-@app.route('/add-contract', methods=['GET', 'POST'])
-def add_contract_page():
-    if request.method == 'POST':
-        # Gather form data
-        contract_data = {
-            'employee_rut': request.form['employee_rut'],  # Cambiado de employee_id a employee_rut
-            'contract_type': request.form['contract_type'],
-            'start_date': request.form['start_date'],
-            'end_date': request.form['end_date'],
-            'classification': request.form['classification']
-        }
-
-        # Fetch the session and call the add_contract function
-        session = Session()
-        message = add_contract(session, contract_data)
-        flash(message)
-        
-        return redirect(url_for('add_contract_page'))
-
-    return render_template('add_contract.html')
-
-
 @app.route('/disable_employee/<int:employee_id>')
 def disable_employee(employee_id):
     # Lógica para cargar la información del contrato que se desea eliminar
@@ -245,6 +201,33 @@ def confirm_disable_employee(employee_id):
 
     return redirect(url_for('user', id=employee_id))
 
+# MENU PAGES ------------------------------------------------------------------------------------------------|
+
+@app.route('/afps')
+def show_afps():
+    with Session() as session:
+        afps = all_afps(session)
+    return render_template('afps.html', afps=afps)
+
+
+@app.route('/companies')
+def show_companies():
+    with Session() as session:
+        companies = all_companies(session)
+    return render_template('companies.html', companies=companies)
+
+@app.route('/health_plans')
+def health_plans():
+    session = Session()
+
+    #get all health plans with their discounts
+    health_plans = all_health_plans(session)
+
+    # Return the template with the health plans data
+    return render_template('health_plans.html', health_plans=health_plans)
+
+# TOPBAR PAGES ------------------------------------------------------------------------------------------------|
+
 @app.route('/remuneration')
 def remunerations_page():
     session = Session()
@@ -252,7 +235,7 @@ def remunerations_page():
     session.close()
     return render_template('remunerations.html', remunerations=remuneration)
 
-@app.route('/add-remuneration', methods=['GET', 'POST'])
+@app.route('/add_remuneration', methods=['GET', 'POST'])
 def add_remuneration_page():
     if request.method == 'POST':
         remuneration_data = {
@@ -278,15 +261,63 @@ def add_remuneration_page():
     
     return render_template('add_remuneration.html', afps=afps, healthplans=healthplans)
 
-@app.route('/health_plans')
-def health_plans():
-    session = Session()
+@app.route('/contracts')
+def show_contracts():
+    with Session() as session:
+        contracts = all_contracts(session)
+    return render_template('contracts.html', contracts=contracts)
 
-    #get all health plans with their discounts
-    health_plans = all_health_plans(session)
+# Route for the option of adding a new "Contract"
+@app.route('/add_contract', methods=['GET', 'POST'])
+def add_contract_page():
+    if request.method == 'POST':
+        # Gather form data
+        contract_data = {
+            'employee_rut': request.form['employee_rut'],  # Cambiado de employee_id a employee_rut
+            'contract_type': request.form['contract_type'],
+            'start_date': request.form['start_date'],
+            'end_date': request.form['end_date'],
+            'classification': request.form['classification']
+        }
 
-    # Return the template with the health plans data
-    return render_template('health_plans.html', health_plans=health_plans)
+        # Fetch the session and call the add_contract function
+        session = Session()
+        message = add_contract(session, contract_data)
+        flash(message)
+        
+        return redirect(url_for('add_contract_page'))
+
+    return render_template('add_contract.html')
+
+@app.route('/vacations')
+def show_vacations():
+    with Session() as session:
+        vacations = all_vacations(session)
+    return render_template('vacations.html', vacations=vacations)
+
+
+# Route for adding vacation (no database interaction)
+@app.route('/add_vacation', methods=['GET', 'POST'])
+def add_vacation():
+    if request.method == 'POST':
+        # Get form data
+        vacation_data = {
+            'employee_id': request.form['employee_id'],
+            'start_date': request.form['start_date'],
+            'end_date': request.form['end_date']
+        }
+
+        # Call the query function
+        success, message = add_vacation_to_db(session, vacation_data)
+
+        # Provide feedback to the user
+        flash(message)
+        return redirect(url_for('homepage'))
+
+    # Fetch necessary data for the form
+    employees = session.query(Employee).all()
+    return render_template('add_vacation.html', employees=employees)
+
 
 @app.route('/train-eval')
 def eval_train():
@@ -294,7 +325,6 @@ def eval_train():
         evaluations = get_all_evaluations(session)
         trainings = get_all_trainings(session)
     return render_template('train_eval.html', evaluations=evaluations, trainings=trainings)
-
 
 @app.route('/add-evaluation', methods=['GET', 'POST'])
 def handle_add_evaluation():
@@ -342,37 +372,6 @@ def department():
         dep_name=dep_info[0] if dep_info else "Unknown Department",
         employees=employees
     )
-
-# PENDING TO SOLVE THE ADDING FEATURE
-@app.route('/vacations')
-def show_vacations():
-    with Session() as session:
-        vacations = all_vacations(session)
-    return render_template('vacations.html', vacations=vacations)
-
-
-# Route for adding vacation (no database interaction)
-@app.route('/add_vacation', methods=['GET', 'POST'])
-def add_vacation():
-    if request.method == 'POST':
-        # Get form data
-        vacation_data = {
-            'employee_id': request.form['employee_id'],
-            'start_date': request.form['start_date'],
-            'end_date': request.form['end_date']
-        }
-
-        # Call the query function
-        success, message = add_vacation_to_db(session, vacation_data)
-
-        # Provide feedback to the user
-        flash(message)
-        return redirect(url_for('homepage'))
-
-    # Fetch necessary data for the form
-    employees = session.query(Employee).all()
-    return render_template('add_vacation.html', employees=employees)
-
 
 @app.route('/get_employee_name/<string:employee_rut>', methods=['GET'])  # Cambiado a <string:employee_rut>
 def get_employee_name(employee_rut):
