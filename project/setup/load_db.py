@@ -195,8 +195,26 @@ session = Session()
 
 # Insert data into Company table
 company_data = [
-    {'id': 1, 'rut': '76.123.456-7', 'name': 'TechCorp', 'address': '123 Main Street', 'phone': '555-0100', 'industry': 'Technology'},
-    {'id': 2, 'rut': '78.234.567-8', 'name': 'HealthSolutions', 'address': '456 Oak Avenue', 'phone': '555-0200', 'industry': 'Healthcare'}
+    # Fictional Media Companies
+    {'id': 1, 'rut': '80.345.678-9', 'name': 'Capsule Corp', 'address': '1 Capsule Blvd, West City', 'phone': '555-0300', 'industry': 'Technology'},
+    {'id': 2, 'rut': '80.456.789-0', 'name': 'Los Pollos Hermanos', 'address': '123 Chicken Lane, Albuquerque', 'phone': '555-0400', 'industry': 'Food & Restaurant'},
+    {'id': 3, 'rut': '81.567.890-1', 'name': 'Wayne Enterprises', 'address': '1007 Gotham City St', 'phone': '555-0500', 'industry': 'Technology'},
+    {'id': 4, 'rut': '82.678.901-2', 'name': 'Stark Industries', 'address': '10880 Malibu Point, California', 'phone': '555-0600', 'industry': 'Technology'},
+    {'id': 5, 'rut': '83.789.012-3', 'name': 'Umbrella Corporation', 'address': '1 Raccoon City', 'phone': '555-0700', 'industry': 'Pharmaceuticals'},
+    {'id': 6, 'rut': '84.890.123-4', 'name': 'NERV', 'address': '2 Shiroyama, Tokyo-3', 'phone': '555-0800', 'industry': 'Defense & Research'},
+    
+    # Famous Gaming Companies
+    {'id': 7, 'rut': '85.901.234-5', 'name': 'Bethesda Game Studios', 'address': '123 Elder Scrolls Blvd', 'phone': '555-0900', 'industry': 'Gaming'},
+    {'id': 8, 'rut': '86.012.345-6', 'name': 'Xbox Game Studios', 'address': '1 Xbox Plaza, Redmond', 'phone': '555-1000', 'industry': 'Gaming'},
+    {'id': 9, 'rut': '87.123.456-7', 'name': 'Netease', 'address': '999 Game Ave, Hangzhou', 'phone': '555-1100', 'industry': 'Gaming'},
+    {'id': 10, 'rut': '88.234.567-8', 'name': 'Square Enix', 'address': '1-6-1, Shinjuku, Tokyo', 'phone': '555-1200', 'industry': 'Gaming'},
+    {'id': 11, 'rut': '89.345.678-9', 'name': 'Ubisoft', 'address': '28 Rue Armand Carrel, Paris', 'phone': '555-1300', 'industry': 'Gaming'},
+    {'id': 12, 'rut': '90.456.789-0', 'name': 'Valve Corporation', 'address': '104 2nd Ave, Bellevue', 'phone': '555-1400', 'industry': 'Gaming'},
+    {'id': 13, 'rut': '91.567.890-1', 'name': 'Capcom', 'address': '3-1-1, Shibuya, Tokyo', 'phone': '555-1500', 'industry': 'Gaming'},
+    {'id': 14, 'rut': '92.678.901-2', 'name': 'Nintendo', 'address': '11-1, Kamitoba, Kyoto', 'phone': '555-1600', 'industry': 'Gaming'},
+    {'id': 15, 'rut': '93.789.012-3', 'name': 'Re-Logic', 'address': '7000 W. Sligh Ave, Tampa', 'phone': '555-1700', 'industry': 'Gaming'},
+    {'id': 16, 'rut': '94.890.123-4', 'name': 'Riot Games', 'address': '123 Riot Ave, Los Angeles', 'phone': '555-1800', 'industry': 'Gaming'},
+    {'id': 17, 'rut': '95.901.234-5', 'name': 'Blizzard Entertainment', 'address': '1 Blizzard Way, Irvine', 'phone': '555-1900', 'industry': 'Gaming'}
 ]
 
 for data in company_data:
@@ -379,21 +397,21 @@ session.commit()
 
 # Insert data into Contract table
 contract_data = [
-    {'id': 1, 'employee_id': 1, 'contract_type': 'Permanent', 'start_date': date(2023, 1, 15), 'end_date': date(2023, 1, 15), 'classification': 'Professional', 'registration_date': date(2020, 1, 15)},
+    {'id': 1, 'employee_id': 1, 'contract_type': 'Permanent', 'start_date': date(2023, 1, 15), 'end_date': None, 'classification': 'Professional', 'registration_date': date(2020, 1, 15)},
     {'id': 2, 'employee_id': 2, 'contract_type': 'Fixed', 'start_date': date(2019, 3, 10), 'end_date': date(2025, 3, 10), 'classification': 'Administrative', 'registration_date': date(2019, 3, 10)},
     {'id': 3, 'employee_id': 3, 'contract_type': 'Temporary', 'start_date': date(2021, 6, 5), 'end_date': date(2022, 6, 5), 'classification': 'Technical', 'registration_date': date(2021, 6, 5)},
     {'id': 4, 'employee_id': 4, 'contract_type': 'Substitute', 'start_date': date(2018, 9, 25), 'end_date': date(2021, 9, 25), 'classification': 'Auxiliary', 'registration_date': date(2018, 9, 25)},
-    {'id': 5, 'employee_id': 5, 'contract_type': 'Permanent', 'start_date': date(2022, 2, 1), 'end_date': date(2022, 2, 1), 'classification': 'Executive', 'registration_date': date(2022, 2, 1)},
+    {'id': 5, 'employee_id': 5, 'contract_type': 'Permanent', 'start_date': date(2022, 2, 1), 'end_date': None, 'classification': 'Executive', 'registration_date': date(2022, 2, 1)},
     {'id': 6, 'employee_id': 6, 'contract_type': 'Fixed', 'start_date': date(2020, 8, 14), 'end_date': date(2025, 8, 14), 'classification': 'Professional', 'registration_date': date(2020, 8, 14)},
     {'id': 7, 'employee_id': 7, 'contract_type': 'Temporary', 'start_date': date(2017, 10, 12), 'end_date': date(2020, 10, 12), 'classification': 'Technical', 'registration_date': date(2017, 10, 12)},
-    {'id': 8, 'employee_id': 8, 'contract_type': 'Permanent', 'start_date': date(2021, 4, 8), 'end_date': date(2021, 4, 8), 'classification': 'Administrative', 'registration_date': date(2021, 4, 8)},
+    {'id': 8, 'employee_id': 8, 'contract_type': 'Permanent', 'start_date': date(2021, 4, 8), 'end_date': None, 'classification': 'Administrative', 'registration_date': date(2021, 4, 8)},
     {'id': 9, 'employee_id': 9, 'contract_type': 'Substitute', 'start_date': date(2020, 3, 14), 'end_date': date(2022, 3, 14), 'classification': 'Executive', 'registration_date': date(2020, 3, 14)},
     {'id': 10, 'employee_id': 10, 'contract_type': 'Fixed', 'start_date': date(2016, 7, 3), 'end_date': date(2019, 7, 3), 'classification': 'Professional', 'registration_date': date(2016, 7, 3)},
-    {'id': 11, 'employee_id': 11, 'contract_type': 'Permanent', 'start_date': date(2021, 7, 12), 'end_date': date(2021, 7, 12), 'classification': 'Auxiliary', 'registration_date': date(2021, 7, 12)},
+    {'id': 11, 'employee_id': 11, 'contract_type': 'Permanent', 'start_date': date(2021, 7, 12), 'end_date': None, 'classification': 'Auxiliary', 'registration_date': date(2021, 7, 12)},
     {'id': 12, 'employee_id': 12, 'contract_type': 'Fixed', 'start_date': date(2021, 1, 20), 'end_date': date(2025, 1, 20), 'classification': 'Technical', 'registration_date': date(2021, 1, 20)},
     {'id': 13, 'employee_id': 13, 'contract_type': 'Temporary', 'start_date': date(2021, 11, 15), 'end_date': date(2022, 11, 15), 'classification': 'Administrative', 'registration_date': date(2021, 11, 15)},
     {'id': 14, 'employee_id': 14, 'contract_type': 'Substitute', 'start_date': date(2022, 5, 1), 'end_date': date(2024, 5, 1), 'classification': 'Executive', 'registration_date': date(2022, 5, 1)},
-    {'id': 15, 'employee_id': 15, 'contract_type': 'Permanent', 'start_date': date(2022, 6, 25), 'end_date': date(2022, 6, 25), 'classification': 'Professional', 'registration_date': date(2022, 6, 25)},
+    {'id': 15, 'employee_id': 15, 'contract_type': 'Permanent', 'start_date': date(2022, 6, 25), 'end_date': None, 'classification': 'Professional', 'registration_date': date(2022, 6, 25)},
     {'id': 16, 'employee_id': 16, 'contract_type': 'Fixed', 'start_date': date(2023, 3, 5), 'end_date': date(2026, 3, 5), 'classification': 'Technical', 'registration_date': date(2023, 3, 5)}
 ]
 

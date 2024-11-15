@@ -282,7 +282,12 @@ def all_afps(session):
 def all_contracts(session):
     """Retrieve all contracts and their employee data."""
     try:
-        contracts = session.query(Contract, Employee, JobPosition).join(Employee, Contract.employee_id == Employee.id).join(JobPosition, Contract.position_id == JobPosition.id).all()
+        contracts = session.query(Contract, Employee, JobPosition) \
+            .join(Employee, Contract.employee_id == Employee.id) \
+            .join(EmployeePosition, Employee.id == EmployeePosition.employee_id) \
+            .join(JobPosition, EmployeePosition.position_id == JobPosition.id) \
+            .all()
+        
         return [
             {
                 'id': contract.id,
