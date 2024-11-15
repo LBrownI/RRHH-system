@@ -22,7 +22,6 @@
                 <thead>
                     <tr class="bg-gray-200">
                         <th class="px-4 py-2 text-left">Health Plan Name</th>
-                        <th class="px-4 py-2 text-left">Type</th>
                         <th class="px-4 py-2 text-left">Discount</th>
                     </tr>
                 </thead>
@@ -30,7 +29,6 @@
                     {% for plan in health_plans if plan.type == 'Fonasa' %}
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-4 py-2">{{ plan.name }}</td>
-                        <td class="px-4 py-2">{{ plan.type }}</td>
                         <td class="px-4 py-2">{{ plan.fonasa_discount }}%</td>
                     </tr>
                     {% else %}
@@ -49,7 +47,6 @@
                 <thead>
                     <tr class="bg-gray-200">
                         <th class="px-4 py-2 text-left">Health Plan Name</th>
-                        <th class="px-4 py-2 text-left">Type</th>
                         <th class="px-4 py-2 text-left">Discount</th>
                     </tr>
                 </thead>
@@ -57,7 +54,6 @@
                     {% for plan in health_plans if plan.type == 'Isapre' %}
                     <tr class="border-b hover:bg-gray-50">
                         <td class="px-4 py-2">{{ plan.name }}</td>
-                        <td class="px-4 py-2">{{ plan.type }}</td>
                         <td class="px-4 py-2">{{ plan.isapre_discount }}%</td>
                     </tr>
                     {% else %}
