@@ -343,35 +343,23 @@ def show_vacations():
     return render_template('vacations.html', vacations=vacations)
 
 
-# Route for register vacation page
-@app.route('/register_vacation')
-def register_vacation():
-    return render_template('register_vacation.html')  # Render the HTML form
-
-
 # Route for adding vacation (no database interaction)
 @app.route('/add_vacation', methods=['POST'])
-def add_vacation():
-
+def register_vacation():
+    
     employee_id = request.form.get('employee_id')
     start_date = request.form.get('start_date')
     end_date = request.form.get('end_date')
-    
-    # Mock success and message (bypassing actual vacation logic)
-    success = True
-    message = "Mock: Vacation added!"
 
-    # Original setup
-    """  
-    Call vacation logic from vacation_logic.py
+    success = True
     success, message = add_vacation_logic(int(employee_id), start_date, end_date)
-    """ 
+    
     if success:
         flash('Vacation registered successfully!', 'success')
     else:
         flash(f'Error: {message}', 'danger')
-    
-    return redirect('/register_vacation')
+
+    return render_template('add_vacation.html')  # Render the HTML form
 
 
 @app.route('/get_employee_name/<string:employee_rut>', methods=['GET'])  # Cambiado a <string:employee_rut>
