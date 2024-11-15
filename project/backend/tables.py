@@ -43,6 +43,7 @@ class Employee(Base):
     start_date = Column(Date)
     email = Column(String(320))
     phone = Column(String(20))
+    salary = Column(DECIMAL(10, 2))
     nationality = Column(String(50))
     active_employee = Column(Boolean, default=True)
     afp_id = Column(Integer, ForeignKey('AFP.id'))
