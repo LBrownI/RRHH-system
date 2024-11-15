@@ -40,11 +40,11 @@ class Employee(Base):
     first_name = Column(String(50))
     last_name = Column(String(50))
     birth_date = Column(Date)
-    start_date = Column(Date)
+    start_date = Column(Date) #################################################### ISSUE ################################################################
     email = Column(String(320))
     phone = Column(String(20))
     nationality = Column(String(50))
-    active_employee = Column(Boolean, default=True)
+    active_employee = Column(Boolean, default=True) #################################################### ISSUE ################################################################
     afp_id = Column(Integer, ForeignKey('AFP.id'))
     health_plan_id = Column(Integer, ForeignKey('HealthPlan.id'))
     afp = relationship('AFP', back_populates='employees')  # Relationship to AFP
@@ -173,12 +173,13 @@ class Isapre(Base):
 class Contract(Base):
     __tablename__ = 'Contract'
     id = Column(Integer, primary_key=True)
-    employee_id = Column(Integer, ForeignKey('Employee.id'))
-    contract_type = Column(String(50))  # Fixed, temporary, replacement, permanent (contrata, suplencia, reemplazo, planta)
-    start_date = Column(Date)
-    end_date = Column(Date)
-    classification = Column(String(50))  # Auxiliary, administrative, technical, professional, executive (escalafon)
-    registration_date = Column(Date)
+    employee_id = Column(Integer, ForeignKey('employee.id'), nullable=False)
+    contract_type = Column(String, nullable=False) # Fixed, temporary, replacement, permanent
+    start_date = Column(Date, nullable=False)
+    end_date = Column(Date, nullable=True)  # end_date can be NULL for Permanent contracts
+    classification = Column(String, nullable=False) # Auxiliary, administrative, technical, professional, executive
+    registration_date = Column(Date, nullable=False)
     employees = relationship('Employee', back_populates='contracts')  # Relationship to Employee
 
 Base.metadata.create_all(engine)
+
