@@ -1,7 +1,6 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash
 from queries import *
-from vacation_logic import *
 
 app = Flask(
     __name__, 
