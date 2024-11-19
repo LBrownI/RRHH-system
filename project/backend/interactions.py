@@ -84,9 +84,25 @@ def update_employee(session, data):
         session.close()
     return None
 
-
-
-
+def add_company_to_db(session, company_data):
+    """
+    Adds a new company to the database using the provided data.
+    """
+    try:
+        # Create a new Company instance with the provided data
+        new_company = Company(
+            rut=company_data['rut'],
+            name=company_data['name'],
+            address=company_data['address'],
+            phone=company_data['phone'],
+            industry=company_data['industry']
+        )
+        session.add(new_company)
+        session.commit()
+        return "Company added successfully"
+    except Exception as e:
+        session.rollback()
+        return f"Error adding company: {e}"
 
 def add_remuneration(session, remuneration_data):
     """Add a remuneration for an employee."""
@@ -132,37 +148,47 @@ def add_remuneration(session, remuneration_data):
         return f"Error adding remuneration: {str(e)}"
 
 
-def add_contract(session, contract_data):
-    """Add a contract for an employee."""
+def add_contract(session, employee_id, contract_type, start_date, end_date, classification, position_name, department_name):
+    """
+    Adds a new contract to the database, creating the position and department if they don't exist.
+    """
     try:
-        # Fetch the Employee using employee_rut
-        employee = session.query(Employee).filter_by(rut=contract_data['employee_rut']).first()
+        # Check or create department
+        department = session.query(Department).filter_by(name=department_name).first()
+        if not department:
+            department = Department(name=department_name, description=f"Department {department_name}")
+            session.add(department)
+            session.flush()  # Ensure department ID is available immediately
         
-        if not employee:
-            return f"Employee with RUT {contract_data['employee_rut']} not found."
+        # Check or create position
+        position = session.query(JobPosition).filter_by(name=position_name, department_id=department.id).first()
+        if not position:
+            position = JobPosition(name=position_name, description=f"Position {position_name}", department_id=department.id)
+            session.add(position)
+            session.flush()  # Ensure position ID is available immediately
 
-        # Fetch the position_id from the EmployeePosition table using employee.id
-        employee_position = session.query(EmployeePosition).filter_by(employee_id=employee.id).first()
+        # Associate position with the employee
+        employee_position = session.query(EmployeePosition).filter_by(employee_id=employee_id, position_id=position.id).first()
         if not employee_position:
-            return f"Position for employee with RUT {contract_data['employee_rut']} not found."
-
-        # Auto-complete position_id and registration_date
-        contract_data['position_id'] = employee_position.position_id
-        contract_data['employee_id'] = employee.id
-        contract_data['registration_date'] = date.today()
-
-        # Remove 'employee_rut' from contract_data as it is not a field in the Contract model
-        contract_data.pop('employee_rut', None)
-
-        # Create the Contract object and add it to the session
-        contract = Contract(**contract_data)
-        session.add(contract)
+            employee_position = EmployeePosition(employee_id=employee_id, position_id=position.id)
+            session.add(employee_position)
+        
+        # Create contract
+        new_contract = Contract(
+            employee_id=employee_id,
+            contract_type=contract_type,
+            start_date=start_date,
+            end_date=end_date,
+            classification=classification,
+            registration_date=date.today()
+        )
+        session.add(new_contract)
         session.commit()
-
-        return "Contract added successfully."
-    except SQLAlchemyError as e:
+        return {"success": True, "message": "Contract added successfully!"}
+    except Exception as e:
         session.rollback()
-        return f"Error adding contract: {str(e)}"
+        return {"success": False, "message": str(e)}
+
 
 def add_vacation_to_db(session, vacation_data):
     """Adds a vacation for an employee to the database."""
@@ -227,6 +253,8 @@ def add_training(session, training_data):
         session.rollback()  # Rollback the transaction on error
         return f"Error adding training: {str(e)}"
 
+
+#OLD
 def add_evaluation(session, evaluation_data):
     """Add an evaluation for an employee."""
     try:
@@ -249,5 +277,24 @@ def add_evaluation(session, evaluation_data):
     except SQLAlchemyError as e:
         session.rollback()
         return f"Error adding evaluation: {str(e)}"
+    
+#NEW
+def add_evaluation_to_db(session, evaluation_data):
+    try:
+        new_evaluation = Evaluation(
+            employee_id=evaluation_data['employee_id'],
+            evaluation_date=evaluation_data['evaluation_date'],
+            evaluator=evaluation_data['evaluator'],
+            evaluation_factor=evaluation_data['evaluation_factor'],
+            rating=evaluation_data['rating'],
+            comments=evaluation_data['comments'],
+        )
+        session.add(new_evaluation)
+        session.commit()
+        return "Evaluation added successfully"
+    except Exception as e:
+        session.rollback()
+        return f"Error adding evaluation: {e}"
+
 
 

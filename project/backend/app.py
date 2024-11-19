@@ -216,6 +216,26 @@ def show_companies():
         companies = all_companies(session)
     return render_template('companies.html', companies=companies)
 
+@app.route('/add_company', methods=['GET', 'POST'])
+def add_company():
+    if request.method == 'POST':
+        # Gather form data
+        company_data = {
+            'rut': request.form['rut'],
+            'name': request.form['name'],
+            'address': request.form['address'],
+            'phone': request.form['phone'],
+            'industry': request.form['industry'].capitalize(),
+        }
+
+        # Call the function to add the company
+        result = add_company_to_db(session, company_data)
+        flash(result)
+        return redirect(url_for('homepage'))  # Redirect to homepage or appropriate view
+    
+    return render_template('add_company.html')
+
+
 @app.route('/health_plans')
 def health_plans():
     session = Session()
