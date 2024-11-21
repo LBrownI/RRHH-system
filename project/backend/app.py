@@ -366,33 +366,6 @@ def handle_add_evaluation():
     return render_template('add_eval.html')
 
 
-@app.route('/department')
-def department():
-    """
-    Fetches the department details by ID from the URL query parameter.
-    Also, fetches all employees belonging to the department.
-    """
-    department_id = request.args.get('id')
-
-    if not department_id:
-        return render_template('department.html', error_message="No department ID provided")
-
-    # Fetch department info (name and description)
-    dep_info = department_info(department_id)
-
-    # Fetch all employees belonging to the department
-    employees = get_employees_by_department(department_id)
-
-    if not employees:
-        return render_template('department.html', error_message="No employees found for this department")
-
-    # Pass department info (name) and employee list to the template
-    return render_template(
-        'department.html',
-        dep_name=dep_info[0] if dep_info else "Unknown Department",
-        employees=employees
-    )
-
 @app.route('/get_employee_name/<string:employee_rut>', methods=['GET'])  # Cambiado a <string:employee_rut>
 def get_employee_name(employee_rut):
     employee_name = get_employee_name_by_rut(employee_rut)  # Llamamos a la nueva función
