@@ -56,6 +56,27 @@
           <option value="professional">Professional</option>
           <option value="executive">Executive</option>
       </select><br>
+
+      <label for="job_position">Job Position:</label>
+              <select id="job_position" name="job_position">
+                  {% for position in job_positions %}
+                      <option value="{{ position.id }}" {% if request.args.get('job_position') == position.id|string %}selected{% endif %}>
+                          {{ position.name }}
+                      </option>
+                  {% endfor %}
+              </select>
+          
+              <label for="department">Department:</label>
+              <select id="department" name="department">
+                  {% for department in departments %}
+                      <option value="{{ department.id }}" {% if request.args.get('department') == department.id|string %}selected{% endif %}>
+                          {{ department.name }}
+                      </option>
+                  {% endfor %}
+              </select>
+
+
+
       
       <button type="submit">Add Contract</button>
     </form>

@@ -75,7 +75,7 @@ def user():
     # Datos del empleado
     first_name, last_name, email, phone, rut, position, status = gi
 
-    #Cambiar el estado del empleado a "Activo" o "Inactivo"
+    # Cambiar el estado del empleado a "Activo" o "Inactivo"
     if status == 0:
         status = "Inactive"
     elif status == 1:
@@ -92,7 +92,11 @@ def user():
     if ad_info.get('health_plan') == "No health plan registered":
         missing_info.append("No health plan registered")
 
-    # Pasar los datos a la plantilla, incluyendo el contrato actual
+    # Obtener job positions y departments
+    job_positions = get_job_positions(session)
+    departments = get_departments(session)
+
+    # Pasar los datos a la plantilla, incluyendo el contrato actual y los job_positions y departments
     return render_template(
         'employee.html',
         employee_id=employee_id,
@@ -113,8 +117,11 @@ def user():
         health_plan=ad_info.get('health_plan', "Not registered"),
         afp_name=ad_info.get('afp_name', "Not registered"),
         missing_info=missing_info,
-        contract=contract_data
+        contract=contract_data,
+        job_positions=job_positions,  # Pasa las posiciones de trabajo
+        departments=departments       # Pasa los departamentos
     )
+
 
 @app.route('/add_employee', methods=['GET', 'POST'])
 def add_employee():
@@ -216,7 +223,7 @@ def show_companies():
         companies = all_companies(session)
     return render_template('companies.html', companies=companies)
 
-@app.route('/add_company', methods=['GET', 'POST'])
+@app.route('/add_company', methods=['GET', 'POST']) 
 def add_company():
     if request.method == 'POST':
         # Gather form data
@@ -231,9 +238,12 @@ def add_company():
         # Call the function to add the company
         result = add_company_to_db(session, company_data)
         flash(result)
+        job_positions = get_job_positions(session)
+        departments = get_departments(session)
+
         return redirect(url_for('homepage'))  # Redirect to homepage or appropriate view
     
-    return render_template('add_company.html')
+    return render_template('add_company.html', job_positions=job_positions, departments=departments)
 
 
 @app.route('/health_plans')
@@ -291,23 +301,49 @@ def show_contracts():
 @app.route('/add_contract', methods=['GET', 'POST'])
 def add_contract_page():
     if request.method == 'POST':
-        # Gather form data
+        # Recolectar datos del formulario
         contract_data = {
-            'employee_rut': request.form['employee_rut'],  # Cambiado de employee_id a employee_rut
-            'contract_type': request.form['contract_type'],
-            'start_date': request.form['start_date'],
-            'end_date': request.form['end_date'],
-            'classification': request.form['classification']
+            'employee_id': request.form.get('employee_id'),  # Cambiar a employee_id si se utiliza internamente
+            'contract_type': request.form.get('contract_type'),
+            'start_date': request.form.get('start_date'),
+            'end_date': request.form.get('end_date'),
+            'classification': request.form.get('classification'),
+            'position': request.form.get('position'),
+            'department_name': request.form.get('department_name')
         }
 
-        # Fetch the session and call the add_contract function
-        session = Session()
-        message = add_contract(session, contract_data)
-        flash(message)
+        # Validar que los campos obligatorios están presentes
+        required_fields = ['employee_id', 'contract_type', 'start_date', 'position', 'department_name']
+        missing_fields = [field for field in required_fields if not contract_data.get(field)]
         
-        return redirect(url_for('add_contract_page'))
+        if missing_fields:
+            flash(f"Error: Missing fields: {', '.join(missing_fields)}", 'danger')
+            return redirect(url_for('add_contract_page'))
 
-    return render_template('add_contract.html')
+        # Intentar agregar el contrato
+        session = Session()
+        try:
+            message = add_contract(session, contract_data)
+            flash(message, 'success')
+            return redirect(url_for('show_contracts'))  # Redirigir a la página de contratos
+        except Exception as e:
+            session.rollback()
+            flash(f"Error adding contract: {e}", 'danger')
+        finally:
+            session.close()
+    
+    # Preparar datos para el formulario
+    with Session() as session:
+        employees = session.query(Employee).all()
+        job_positions = get_job_positions(session)
+        departments = get_departments(session)
+    return render_template(
+        'add_contract.html', 
+        employees=employees,
+        job_positions=job_positions,
+        departments=departments
+    )
+
 
 @app.route('/vacations')
 def show_vacations():
