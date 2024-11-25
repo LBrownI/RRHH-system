@@ -205,6 +205,16 @@ def get_employee_name_by_rut(employee_rut):
     finally:
         session.close()
 
+
+def get_employee_id_by_rut(session, rut):
+    """Get the employee ID by RUT."""
+    try:
+        employee = session.query(Employee.id).filter_by(rut=rut).first()
+        return employee.id if employee else None
+    except Exception as e:
+        print(f'Error in get_employee_id_by_rut: {e}')
+        return None
+
 def all_employees(session):
     """Retrieve all employees with their rut, first name, last name, position, and department"""
     try:

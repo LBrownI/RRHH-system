@@ -148,10 +148,21 @@ def add_remuneration(session, remuneration_data):
         return f"Error adding remuneration: {str(e)}"
 
 
-def add_contract(session, employee_id, contract_type, start_date, end_date, classification, position_name, department_name):
+def add_contract(session, contract_data):
     """
     Adds a new contract to the database, creating the position and department if they don't exist.
     """
+
+    department_name = contract_data['department']
+    position_name = contract_data['job_position']
+    employee_id = contract_data['employee_id']
+    contract_type = contract_data['contract_type']
+    start_date = contract_data['start_date']
+    end_date = contract_data['end_date']
+    classification = contract_data['classification']
+
+    # Fetch the employee ID using the provided RUT
+
     try:
         # Check or create department
         department = session.query(Department).filter_by(name=department_name).first()

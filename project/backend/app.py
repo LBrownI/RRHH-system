@@ -301,19 +301,20 @@ def show_contracts():
 @app.route('/add_contract', methods=['GET', 'POST'])
 def add_contract_page():
     if request.method == 'POST':
-        # Recolectar datos del formulario
+        session = Session()
+
         contract_data = {
-            'employee_id': request.form.get('employee_id'),  # Cambiar a employee_id si se utiliza internamente
+            'employee_id': get_employee_id_by_rut(session, request.form.get('employee_rut')),  
             'contract_type': request.form.get('contract_type'),
             'start_date': request.form.get('start_date'),
             'end_date': request.form.get('end_date'),
             'classification': request.form.get('classification'),
-            'position': request.form.get('position'),
-            'department_name': request.form.get('department_name')
+            'job_position': request.form.get('job_position'),
+            'department': request.form.get('department')
         }
 
         # Validar que los campos obligatorios están presentes
-        required_fields = ['employee_id', 'contract_type', 'start_date', 'position', 'department_name']
+        required_fields = ['employee_id', 'contract_type', 'start_date', 'job_position', 'department']
         missing_fields = [field for field in required_fields if not contract_data.get(field)]
         
         if missing_fields:
@@ -321,7 +322,6 @@ def add_contract_page():
             return redirect(url_for('add_contract_page'))
 
         # Intentar agregar el contrato
-        session = Session()
         try:
             message = add_contract(session, contract_data)
             flash(message, 'success')
