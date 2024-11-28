@@ -1,5 +1,4 @@
 # RRHH-system
-# Employee Vacation Management System
 
 This project is a **Flask-based HR management system** designed to streamline employee and organizational data management. It allows administrators to manage employee records, contracts, vacations, training, evaluations, remuneration details, and more. The application uses **SQLAlchemy** for efficient database interactions and employs HTML templates and CSS styling for the frontend, minimizing reliance on JavaScript.
 
