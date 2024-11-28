@@ -98,7 +98,7 @@ class Vacation(Base):
     start_date = Column(Date)
     end_date = Column(Date)
     days_taken = Column(Integer)
-    accumulated_days = Column(Integer)
+    accumulated_days = Column(Integer, default = 15)
     long_service_employee = Column(Boolean) 
     employees = relationship('Employee', back_populates='vacations')
 

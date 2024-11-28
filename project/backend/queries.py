@@ -14,7 +14,7 @@ config = {
     'host': 'localhost',
     'database_name': 'hr',
     'user': 'root',
-    'password': mysql_root_password 
+    'password': mysql_root_password
     }
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)

@@ -29,3 +29,18 @@ body {
 .form-container .btn.cancel {
     background-color: red;
 }
+.btn-add-vacation {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #4CAF50;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-add-vacation:hover {
+    background-color: #45a049;
+}
+    

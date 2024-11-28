@@ -217,25 +217,13 @@ def add_vacation_to_db(session, vacation_data):
         if not employee:
             return False, "Employee not found!"
 
-        # Check employee's years of service
-        today = datetime.now().date()
-        years_of_service = (today - employee.start_date).days // 365
-
-        # Automatically add vacation days based on years of service
-        if years_of_service >= 1:
-            if employee.long_service_employee:
-                employee.accumulated_days += 20
-            else:
-                employee.accumulated_days += 15
-            session.commit()
-
         # Check if requested vacation exceeds accumulated days
         requested_days = (end_date - start_date).days + 1
-        if requested_days > employee.accumulated_days:
+        if requested_days > vacation_data['accumulated_days']:
             return False, "Insufficient vacation days!"
 
         # Update accumulated days
-        employee.accumulated_days -= requested_days
+        vacation_data['accumulated_days'] -= requested_days
 
         # Create a new Vacation entry
         new_vacation = Vacation(
@@ -243,8 +231,8 @@ def add_vacation_to_db(session, vacation_data):
             start_date=start_date,
             end_date=end_date,
             days_taken=requested_days,
-            accumulated_days=employee.accumulated_days,
-            long_service_employee=employee.long_service_employee
+            accumulated_days=vacation_data['accumulated_days'],
+            long_service_employee=vacation_data['long_service_employee']
         )
         session.add(new_vacation)
         session.commit()

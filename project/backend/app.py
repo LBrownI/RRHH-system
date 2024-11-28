@@ -358,21 +358,27 @@ def add_vacation():
     if request.method == 'POST':
         # Get form data
         vacation_data = {
-            'employee_id': request.form['employee_id'],
+            'employee_id': get_employee_id_by_rut(session, request.form.get('employee_rut')),
             'start_date': request.form['start_date'],
-            'end_date': request.form['end_date']
+            'end_date': request.form['end_date'],
+            'days_taken': int(request.form['days_taken']),  # Convert to int
+            'accumulated_days': int(request.form['accumulated_days']),  # Convert to int
+            'long_service_employee': request.form.get('long_service_employee', False)
         }
 
+
+        # Convert checkbox value to boolean
+        vacation_data['long_service_employee'] = vacation_data['long_service_employee'] == "on"
+
         # Call the query function
-        success, message = add_vacation_to_db(session, vacation_data)
+        message = add_vacation_to_db(session, vacation_data)
 
         # Provide feedback to the user
         flash(message)
-        return redirect(url_for('homepage'))
+        return redirect(url_for('show_vacations'))
 
-    # Fetch necessary data for the form
-    employees = session.query(Employee).all()
-    return render_template('add_vacation.html', employees=employees)
+    return render_template('add_vacation.html')
+
 
 
 @app.route('/train-eval')

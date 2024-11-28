@@ -45,16 +45,12 @@
             </div>
         </div>
 
-        <!-- Add Vacation Button and Form Popup -->
-        <button class="open-button" onclick="openForm()">Add Vacation</button>
+        <!-- Add Vacation Button -->
+        <a href="{{ url_for('add_vacation') }}" 
+            class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded shadow-lg transition duration-300">
+            Add Vacation
+        </a>
 
-        <div class="form-popup" id="vacationForm">
-            <div class="form-container">
-                {% include 'add_vacation.html' %}
-                <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-            </div>
-            <script src="{{ url_for('static', filename='javascript/add_button.js') }}"></script>
-        </div>
     </div>
 </body>
 </html>
