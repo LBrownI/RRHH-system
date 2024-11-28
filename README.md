@@ -140,6 +140,5 @@ Follow one of the three methods below to set up the project:
 ---
 
 Choose the method that best suits your environment or deployment needs.
-```
 
 
