@@ -197,7 +197,7 @@ def get_employee_name_by_rut(employee_rut):
     """Fetch employee name by RUT"""
     session = Session()
     try:
-        employee = session.query(Employee).filter_by(rut=employee_rut).first()  # Buscar por RUT
+        employee = session.query(Employee).filter_by(rut=employee_rut).first()
         if employee:
             return employee.first_name + ' ' + employee.last_name
         else:

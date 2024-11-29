@@ -28,38 +28,38 @@ def homepage():
     return render_template('index.html', employees=employees, job_positions=job_positions, departments=departments)
 
 
-# Ruta para el perfil del empleado con búsqueda integrada
+# Route for employee profile with integrated search
 @app.route('/employee')
 def user():
     search_query = request.args.get('search_query')
     
-    # Realizar la búsqueda si hay un parámetro de búsqueda
+    # Perform the search if there is a search parameter
     if search_query:
         employee = search_employee_by_name_or_rut(search_query, session)
         
-        # Redireccionar al perfil si se encuentra un empleado
+        # Redirect to profile if an employee is found
         if employee:
-            return redirect(url_for('user', id=employee.id))  # Cambio aquí para asegurar redireccionamiento con ?id
+            return redirect(url_for('user', id=employee.id))  # Change here to ensure redirection with ?id
 
-        # Mostrar mensaje de error si el empleado no es encontrado
+        # Show error message if the employee is not found
         return render_template('index.html', error_message="Employee not found")
     
-    # Obtener el ID del empleado si no hay parámetro de búsqueda
+    # Get the employee ID if there is no search parameter
     employee_id = request.args.get('id')
 
     if not employee_id:
-        # Mostrar mensaje si no se proporciona employee_id
+        # Show message if no employee_id is provided
         return render_template('employee.html', error_message="No employee ID provided")
 
-    # Obtener la información del empleado
+    # Get employee information
     gi = general_info(session, employee_id)
     ad_info = aditional_info(session, employee_id)
 
-    # Verificar si falta información general
+    # Check if general information is missing
     if not gi:
         return render_template('employee.html', error_message="Employee not found")
 
-    # Obtener el contrato actual
+    # Get the current contract
     contract = get_contract_info(session, employee_id)
     
     # Order the data to be passed to the template
@@ -72,10 +72,10 @@ def user():
         'registration_date': contract.registration_date
     } if contract else None
 
-    # Datos del empleado
+    # Employee data
     first_name, last_name, email, phone, rut, position, status = gi
 
-    # Cambiar el estado del empleado a "Activo" o "Inactivo"
+    # Change employee status to "Active" or "Inactive"
     if status == 0:
         status = "Inactive"
     elif status == 1:
@@ -83,7 +83,7 @@ def user():
     else:
         status = "Unknown"
 
-    # Mostrar información faltante
+    # Show missing information
     missing_info = []
     if not ad_info:
         missing_info.append("No additional info available")
@@ -92,11 +92,11 @@ def user():
     if ad_info.get('health_plan') == "No health plan registered":
         missing_info.append("No health plan registered")
 
-    # Obtener job positions y departments
+    # Get job positions and departments
     job_positions = get_job_positions(session)
     departments = get_departments(session)
 
-    # Pasar los datos a la plantilla, incluyendo el contrato actual y los job_positions y departments
+    # Pass the data to the template, including the current contract and job_positions and departments
     return render_template(
         'employee.html',
         employee_id=employee_id,
@@ -118,15 +118,15 @@ def user():
         afp_name=ad_info.get('afp_name', "Not registered"),
         missing_info=missing_info,
         contract=contract_data,
-        job_positions=job_positions,  # Pasa las posiciones de trabajo
-        departments=departments       # Pasa los departamentos
+        job_positions=job_positions,  # Pass job positions
+        departments=departments       # Pass departments
     )
 
 
 @app.route('/add_employee', methods=['GET', 'POST'])
 def add_employee():
     if request.method == 'POST':
-        # Recoge los datos del formulario
+        # Collect form data
         employee_data = {
             'rut': request.form['rut'],
             'first_name': request.form['first_name'],
@@ -141,7 +141,7 @@ def add_employee():
             'healthplan': request.form['healthplan_id'],
         }
 
-        # Llama a la función para agregar el empleado
+        # Call the function to add the employee
         result = add_employee_to_db(session, employee_data)
         flash(result)
         return redirect(url_for('homepage'))
@@ -152,7 +152,7 @@ def add_employee():
     
     return render_template('add_employee.html', afps=afps, healthplans=healthplans)
 
-    # Obtener los cargos para mostrar en el formulario
+    # Get job positions to display in the form
     job_positions = get_job_positions(session)
     return render_template('add_employee.html', job_positions=job_positions)
 
@@ -190,17 +190,17 @@ def edit_employee():
 
 @app.route('/disable_employee/<int:employee_id>')
 def disable_employee(employee_id):
-    # Lógica para cargar la información del contrato que se desea eliminar
+    # Logic to load the information of the contract to be deleted
     employee = Employee.query.get(employee_id)
     return render_template('disable_employee.html', employee=employee)
 
 
 @app.route('/confirm_disable_employee/<int:employee_id>', methods=['POST'])
 def confirm_disable_employee(employee_id):
-    # Obtener el contrato usando la función de consulta personalizada
+    # Get the contract using the custom query function
     contract_deactivated = deactivate_employee(session, employee_id)
 
-    # Mostrar mensaje de éxito o error
+    # Show success or error message
     if contract_deactivated:
         flash('Contract successfully deactivated', 'success')
     else:
@@ -250,7 +250,7 @@ def add_company():
 def health_plans():
     session = Session()
 
-    #get all health plans with their discounts
+    # Get all health plans with their discounts
     health_plans = all_health_plans(session)
 
     # Return the template with the health plans data
@@ -313,7 +313,7 @@ def add_contract_page():
             'department': request.form.get('department')
         }
 
-        # Validar que los campos obligatorios están presentes
+        # Validate that required fields are present
         required_fields = ['employee_id', 'contract_type', 'start_date', 'job_position', 'department']
         missing_fields = [field for field in required_fields if not contract_data.get(field)]
         
@@ -321,18 +321,18 @@ def add_contract_page():
             flash(f"Error: Missing fields: {', '.join(missing_fields)}", 'danger')
             return redirect(url_for('add_contract_page'))
 
-        # Intentar agregar el contrato
+        # Try to add the contract
         try:
             message = add_contract(session, contract_data)
             flash(message, 'success')
-            return redirect(url_for('show_contracts'))  # Redirigir a la página de contratos
+            return redirect(url_for('show_contracts'))  # Redirect to contracts page
         except Exception as e:
             session.rollback()
             flash(f"Error adding contract: {e}", 'danger')
         finally:
             session.close()
     
-    # Preparar datos para el formulario
+    # Prepare data for the form
     with Session() as session:
         employees = session.query(Employee).all()
         job_positions = get_job_positions(session)
@@ -408,9 +408,9 @@ def handle_add_evaluation():
     return render_template('add_eval.html')
 
 
-@app.route('/get_employee_name/<string:employee_rut>', methods=['GET'])  # Cambiado a <string:employee_rut>
+@app.route('/get_employee_name/<string:employee_rut>', methods=['GET'])  # Changed to <string:employee_rut>
 def get_employee_name(employee_rut):
-    employee_name = get_employee_name_by_rut(employee_rut)  # Llamamos a la nueva función
+    employee_name = get_employee_name_by_rut(employee_rut)  # Call the new function
     if employee_name:
         return employee_name  # Return the name as plain text
     else:
