@@ -67,7 +67,7 @@ Follow one of the three methods below to set up the project:
 go to http://172.214.209.5:5000/
 
 - BEWARE: This is 1 commit behind 
-- Feature missing: add remuneration button on /remuneration page, to add a remuneration go manually to /add_remuneration
+- Feature missing: add remuneration button on /remuneration page. To add a remuneration go manually to /add_remuneration
 ---
 
 ### 2. **Manual Setup (Old School)**
