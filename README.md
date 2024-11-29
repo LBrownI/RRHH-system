@@ -51,6 +51,7 @@ This project is a **Flask-based HR management system** designed to streamline em
   - MySQL
 - **Others**:
   - Docker
+  - Microsoft Azure
 
 ---
 
@@ -64,31 +65,12 @@ Follow one of the three methods below to set up the project:
 ### 1. **Connect to Azure Virtual Machine (VM)**
 
 go to http://172.214.209.5:5000/
+
+BEWARE: This is 1 commit behind 
+Feature missing: add remuneration button on /remuneration page, to add a remuneration go manually to /add_remuneration
 ---
 
-### 2. **Using Docker**
-
-1. **Clone the repository**:  
-   ```bash
-   git clone https://github.com/LBrownI/RRHH-system.git
-   cd RRHH-system
-   ```
-
-2. **Ensure Docker is installed**:  
-   Make sure Docker and Docker Compose are installed on your system.  
-
-3. **Build and run the application**:  
-   The repository includes a `Dockerfile` and a `docker-compose.yml` file. Use the following command to start the application:  
-   ```bash
-   docker-compose up --build
-   ```
-
-4. **Access the application**:  
-   Open a web browser and go to `http://localhost:5000`.
-
----
-
-### 3. **Manual Setup (Old School)**
+### 2. **Manual Setup (Old School)**
 
 1. **Clone the repository**:  
    ```bash
@@ -98,18 +80,18 @@ go to http://172.214.209.5:5000/
 
 2. **Install Python and dependencies**:  
    - Install Python 3.12 or higher.  
-   - Install dependencies:  
+   - Install dependencies (inside project folder):  
      ```bash
      pip install -r requirements.txt
      ```
 
 3. **Set up the database**:  
-   Initialize the database with SQLAlchemy models by running the setup script load_db.py.  
+   Initialize the database with SQLAlchemy models by running the setup script load_db.py (located on /project/setup/).  
 
 4. **Run the application**:  
-   Start the Flask development server:  
+   Start the Flask development server (in folder project/backend/):  
    ```bash
-   flask run --host=0.0.0.0 --port=5000
+   python app.py
    ```
 
 5. **Access the application**:  
