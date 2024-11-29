@@ -16,6 +16,10 @@
     <!-- Training Section -->
     <div class="mb-4">
         <h2 class="text-xl font-semibold mb-2">Trainings</h2>
+        <a href="{{ url_for('handle_add_training') }}" 
+               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded inline-block">
+               Add Training
+            </a>
         <div class="overflow-auto h-[80vh]"> <!-- Fixed height with scrollable -->
             <table class="table-auto w-full border border-gray-300">
                 <colgroup>
@@ -55,6 +59,10 @@
     <!-- Evaluation Section -->
     <div>
         <h2 class="text-xl font-semibold mb-2">Evaluations</h2>
+        <a href="{{ url_for('handle_add_evaluation') }}" 
+               class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded inline-block">
+               Add Evaluation
+            </a>
         <div class="overflow-auto h-[80vh]"> <!-- Fixed height with scrollable -->
             <table class="table-auto w-full border border-gray-300">
                 <colgroup>

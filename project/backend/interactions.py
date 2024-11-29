@@ -14,7 +14,7 @@ config = {
     'host': 'localhost',
     'database_name': 'hr',
     'user': 'root',
-    'password': mysql_root_password 
+    'password': mysql_root_password
     }
 
 engine = create_engine(f'mysql+pymysql://{config["user"]}:{config["password"]}@{config["host"]}/{config["database_name"]}', echo=True)
@@ -26,7 +26,9 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 # EMPLOYEE Interactions
+
 def add_employee_to_db(session, employee_data):
+    """Add an employee to the database."""
     try:
         new_employee = Employee(
             rut=employee_data['rut'],
@@ -62,6 +64,7 @@ def deactivate_employee(session, employee_id):
         return f"Error deactivating employee: {str(e)}"
 
 def update_employee(session, data):
+    """Update an employee's information."""
     try:
         # Check if the employee exists
         employee = session.query(Employee).filter(Employee.id == data['employee_id']).first()

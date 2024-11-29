@@ -238,12 +238,15 @@ def add_company():
         # Call the function to add the company
         result = add_company_to_db(session, company_data)
         flash(result)
-        job_positions = get_job_positions(session)
-        departments = get_departments(session)
+        return redirect(url_for('show_companies'))  # Redirect to homepage or appropriate view
 
-        return redirect(url_for('homepage'))  # Redirect to homepage or appropriate view
-    
+    # Fetch job positions and departments for the form (if needed)
+    job_positions = get_job_positions(session)
+    departments = get_departments(session)
+
+    # Render the form for GET requests
     return render_template('add_company.html', job_positions=job_positions, departments=departments)
+
 
 
 @app.route('/health_plans')
@@ -268,22 +271,18 @@ def remunerations_page():
 @app.route('/add_remuneration', methods=['GET', 'POST'])
 def add_remuneration_page():
     if request.method == 'POST':
-        remuneration_data = {
-            'employee_id': request.form['employee_id'],
-            'afp_id': request.form['afp_id'],
-            'health_plan_id': request.form['health_plan_id'],
-            'gross_amount': request.form['gross_amount'],
-            'tax': request.form['tax'],
-            'deductions': request.form['deductions'],
-            'bonus': request.form['bonus'],
-            'welfare_contribution': request.form['welfare_contribution'],
-            'net_amount': request.form['net_amount']
-        }
-        session = Session()
-        result = add_remuneration(session, remuneration_data)
-        flash(result)
+        with Session() as session:
+            remuneration_data = {
+                'employee_id': get_employee_id_by_rut(session,request.form['employee_rut']),
+                'afp_id': request.form['afp_id'],
+                'healthplan_id': request.form['healthplan_id'],
+                'gross_amount': request.form['gross_amount'],
+                'tax': request.form['tax'],
+                'welfare_contribution': request.form['welfare_contribution'],
+            }
+            result = add_remuneration(session, remuneration_data)
+            flash(result)
 
-        return redirect(url_for('add_remuneration.html'))
     
     session = Session()
     afps = session.query(AFP).all()
@@ -355,44 +354,47 @@ def show_vacations():
 # Route for adding vacation (no database interaction)
 @app.route('/add_vacation', methods=['GET', 'POST'])
 def add_vacation():
-    if request.method == 'POST':
-        # Get form data
-        vacation_data = {
-            'employee_id': get_employee_id_by_rut(session, request.form.get('employee_rut')),
-            'start_date': request.form['start_date'],
-            'end_date': request.form['end_date'],
-            'days_taken': int(request.form['days_taken']),  # Convert to int
-            'accumulated_days': int(request.form['accumulated_days']),  # Convert to int
-            'long_service_employee': request.form.get('long_service_employee', False)
-        }
+    with Session() as session:
+        if request.method == 'POST':
+            
+            # Get form data
+            vacation_data = {
+                'employee_id': get_employee_id_by_rut(session, request.form.get('employee_rut')),
+                'start_date': request.form['start_date'],
+                'end_date': request.form['end_date'],
+                'days_taken': int(request.form['days_taken']),  # Convert to int
+                'accumulated_days': int(request.form['accumulated_days']),  # Convert to int
+                'long_service_employee': request.form.get('long_service_employee', False)
+            }
 
 
-        # Convert checkbox value to boolean
-        vacation_data['long_service_employee'] = vacation_data['long_service_employee'] == "on"
+            # Convert checkbox value to boolean
+            vacation_data['long_service_employee'] = vacation_data['long_service_employee'] == "on"
 
-        # Call the query function
-        message = add_vacation_to_db(session, vacation_data)
+            # Call the query function
+            message = add_vacation_to_db(session, vacation_data)
 
-        # Provide feedback to the user
-        flash(message)
-        return redirect(url_for('show_vacations'))
+            # Provide feedback to the user
+            flash(message)
+            return redirect(url_for('show_vacations'))
 
     return render_template('add_vacation.html')
 
 
 
-@app.route('/train-eval')
+@app.route('/train_eval')
 def eval_train():
     with Session() as session:
         evaluations = get_all_evaluations(session)
         trainings = get_all_trainings(session)
     return render_template('train_eval.html', evaluations=evaluations, trainings=trainings)
 
-@app.route('/add-evaluation', methods=['GET', 'POST'])
+@app.route('/add_evaluation', methods=['GET', 'POST'])
 def handle_add_evaluation():
     if request.method == 'POST':
+        session = Session()
         evaluation_data = {
-            'employee_id': request.form['employee_id'],
+            'employee_id': get_employee_id_by_rut(session, request.form.get('employee_rut')),
             'evaluation_date': request.form['evaluation_date'],
             'evaluator': request.form['evaluator'],
             'evaluation_factor': request.form['evaluation_factor'],
@@ -403,10 +405,29 @@ def handle_add_evaluation():
         result = add_evaluation(session, evaluation_data)
         flash(result)
 
-        return redirect(url_for('train_eval'))
+        return redirect(url_for('eval_train'))
     
     return render_template('add_eval.html')
 
+@app.route('/add_training', methods=['GET', 'POST'])
+def handle_add_training():
+    if request.method == 'POST':
+        session = Session()
+        training_data = {
+            'employee_id': get_employee_id_by_rut(session, request.form.get('employee_rut')),
+            'training_date': request.form['training_date'],
+            'course': request.form['course'],
+            'score': request.form['score'],
+            'institution': request.form['institution'],
+            'comments': request.form['comments']
+        }
+        session = Session()
+        result = add_training(session, training_data)
+        flash(result)
+
+        return redirect(url_for('eval_train'))
+    
+    return render_template('add_train.html')
 
 @app.route('/get_employee_name/<string:employee_rut>', methods=['GET'])  # Changed to <string:employee_rut>
 def get_employee_name(employee_rut):
