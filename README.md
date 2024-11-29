@@ -80,13 +80,20 @@ go to http://172.214.209.5:5000/
 
 2. **Install Python and dependencies**:  
    - Install Python 3.12 or higher. (https://www.python.org/downloads/) 
+   - Install Docker (https://www.docker.com/)
    - Install dependencies (inside project folder):  
      ```bash
      pip install -r requirements.txt
      ```
 
-3. **Set up the database**:  
-   Initialize the database with SQLAlchemy models by running the setup script load_db.py (located on /project/setup/).  
+3. **Set up the database**: 
+   - With docker installed do in terminal (inside project folder)
+    ```bash
+     docker compose up
+     ```
+     If you have the port occupied edit the compose.yml in project folder to fit your needs.
+   - Setup a environment variable named: MYSQL_ROOT_PASSWORD and value: a301rrhh (or edit password in tables.py, queries.py and load_db.py)
+   - Initialize the database with SQLAlchemy models by running the setup script load_db.py (located on /project/setup/).  
 
 4. **Run the application**:  
    Start the Flask development server (in folder project/backend/):  
