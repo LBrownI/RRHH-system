@@ -63,29 +63,7 @@ Follow one of the three methods below to set up the project:
 
 ### 1. **Connect to Azure Virtual Machine (VM)**
 
-1. **Log in to your Azure VM**:  
-   Use SSH to connect to your Azure VM.  
-   ```bash
-   ssh alan@<ip de alan>
-   ```
-
-2. **Clone the repository**:  
-   ```bash
-   git clone https://github.com/LBrownI/RRHH-system.git
-   cd RRHH-system
-   ```
-
-3. **Install dependencies**:  
-   Ensure Python and pip are installed, then run:  
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Run the application**:  
-   ```bash
-   flask run --host=0.0.0.0 --port=5000
-   ```
-
+go to http://172.214.209.5:5000/
 ---
 
 ### 2. **Using Docker**
