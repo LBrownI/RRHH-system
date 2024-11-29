@@ -79,7 +79,7 @@ Feature missing: add remuneration button on /remuneration page, to add a remuner
    ```
 
 2. **Install Python and dependencies**:  
-   - Install Python 3.12 or higher.  
+   - Install Python 3.12 or higher. (https://www.python.org/downloads/) 
    - Install dependencies (inside project folder):  
      ```bash
      pip install -r requirements.txt
