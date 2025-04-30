@@ -62,7 +62,7 @@ Follow one of the three methods below to set up the project:
 
 ---
 
-### 1. **Connect to Azure Virtual Machine (VM)**
+### 1. **Connect to Azure Virtual Machine (VM) DOES NOT WORK AS OF 30/04/2025**
 
 go to http://172.214.209.5:5000/
 
